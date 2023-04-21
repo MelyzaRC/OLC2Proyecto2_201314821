@@ -1,0 +1,5 @@
+#ifndef TYPE_ERROR_HPP
+#define TYPE_ERROR_HPP
+
+enum TipoError { LEXICO, SINTACTICO, SEMANTICO};
+#endif // TYPE_ERROR_HPP

@@ -1,0 +1,5831 @@
+Grammar
+
+    0 $accept: inicio END
+
+    1 inicio: list_func
+
+    2 list_func: list_func funcion
+    3          | funcion
+
+    4 funcion: RINT ID PARABRE func_list PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+    5        | RINT ID PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+    6        | RINT R_MAIN PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+    7        | RVOID ID PARABRE func_list PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+    8        | RVOID ID PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+    9        | RVOID R_MAIN PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+   10        | otro_tipo_func ID PARABRE func_list PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+   11        | otro_tipo_func ID PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+   12        | RSTRUCT ID LLAVEABRE dec_list LLAVECIERRA
+
+   13 dec_list: dec_list tipo ID PTCOMA
+   14         | tipo ID PTCOMA
+
+   15 otro_tipo_func: RFLOAT
+   16               | RSTRING
+   17               | RBOOL
+
+   18 func_list: func_list COMA tipo ID
+   19          | tipo ID
+
+   20 list_inst_func: list_inst_func instruccion_funcion
+   21               | instruccion_funcion
+
+   22 instruccion_funcion: instruccion_return PTCOMA
+   23                    | declaracion PTCOMA
+   24                    | func_printf PTCOMA
+   25                    | incremento_instruccion PTCOMA
+   26                    | asignacion PTCOMA
+   27                    | declaracion_sin_valor PTCOMA
+   28                    | instruccion_if
+   29                    | instruccion_while
+   30                    | instruccion_for
+   31                    | declaracion_arreglo
+   32                    | creation_struct
+   33                    | instrucciones_vector
+   34                    | call_instruction
+
+   35 instruccion_return: RRETURN expresion
+   36                   | RRETURN
+
+   37 call_instruction: ID PARABRE lista_expresiones_printf PARCIERRA PTCOMA
+   38                 | ID PARABRE PARCIERRA PTCOMA
+   39                 | ID PUNTO ID IGUAL expresion PTCOMA
+
+   40 instrucciones_vector: ID PUNTO RPUSHBACK PARABRE expresion PARCIERRA PTCOMA
+   41                     | ID PUNTO RPUSHFRONT PARABRE expresion PARCIERRA PTCOMA
+   42                     | ID PUNTO RREMOVE PARABRE expresion PARCIERRA PTCOMA
+
+   43 declaracion_arreglo: RVECTOR MENOR tipo MAYOR ID PTCOMA
+   44                    | RVECTOR MENOR tipo MAYOR ID IGUAL CORABRE lista_expresiones_printf CORCIERRA PTCOMA
+   45                    | RVECTOR MENOR tipo MAYOR ID IGUAL CORABRE CORCIERRA PTCOMA
+
+   46 creation_struct: RSTRUCT ID ID IGUAL LLAVEABRE lista_expresiones_printf LLAVECIERRA PTCOMA
+   47                | RSTRUCT ID ID PTCOMA
+
+   48 declaracion: tipo ID IGUAL expresion
+
+   49 tipo: RINT
+   50     | RFLOAT
+   51     | RSTRING
+   52     | RBOOL
+
+   53 expresion: expresion OPSUMA expresion
+   54          | expresion OPRESTA expresion
+   55          | expresion OPMULTIPLICACION expresion
+   56          | expresion OPDIVISION expresion
+   57          | expresion OPMODULO expresion
+   58          | expresion IGUAL IGUAL expresion
+   59          | expresion NOIGUAL expresion
+   60          | expresion MAYOR expresion
+   61          | expresion MENOR expresion
+   62          | expresion MAYOR IGUAL expresion
+   63          | expresion MENOR IGUAL expresion
+   64          | expresion RAND expresion
+   65          | expresion ROR expresion
+   66          | NOT expresion
+   67          | MASMAS ID
+   68          | ID MASMAS
+   69          | PARABRE expresion PARCIERRA
+   70          | OPRESTA expresion
+   71          | RATOI PARABRE expresion PARCIERRA
+   72          | RATOF PARABRE expresion PARCIERRA
+   73          | RIOTA PARABRE expresion PARCIERRA
+   74          | op_vector
+   75          | primitivo
+   76          | RMEAN PARABRE ID PARCIERRA
+   77          | RMEDIAN PARABRE ID PARCIERRA
+   78          | RMODE PARABRE ID PARCIERRA
+   79          | call_expr
+
+   80 call_expr: ID PARABRE lista_expresiones_printf PARCIERRA
+   81          | ID PARABRE PARCIERRA
+
+   82 primitivo: TIPO_INTEGER
+   83          | TIPO_STRING
+   84          | TIPO_FLOAT
+   85          | TIPO_BOOL_TRUE
+   86          | TIPO_BOOL_FALSE
+   87          | llamada_variable
+
+   88 op_vector: ID CORABRE expresion CORCIERRA
+   89          | ID PUNTO RGET PARABRE expresion PARCIERRA
+   90          | ID PUNTO RSIZE PARABRE PARCIERRA
+
+   91 llamada_variable: ID
+   92                 | ID PUNTO ID
+
+   93 func_printf: RPRINTF PARABRE lista_expresiones_printf PARCIERRA
+
+   94 lista_expresiones_printf: lista_expresiones_printf COMA expresion
+   95                         | expresion
+
+   96 incremento_instruccion: ID MASMAS
+   97                       | MASMAS ID
+
+   98 asignacion: ID IGUAL expresion
+   99           | ID CORABRE expresion CORCIERRA IGUAL expresion
+
+  100 declaracion_sin_valor: tipo ID
+
+  101 instruccion_if: R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA list_elseif list_else
+  102               | R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA list_elseif
+  103               | R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA list_else
+  104               | R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA
+
+  105 cuerpo_if: cuerpo_if instruccion_if_cuerpo
+  106          | instruccion_if_cuerpo
+
+  107 instruccion_if_cuerpo: func_printf PTCOMA
+  108                      | instruccion_for
+  109                      | instruccion_if
+  110                      | incremento_instruccion PTCOMA
+  111                      | asignacion PTCOMA
+  112                      | RBREAK PTCOMA
+  113                      | RCONTINUE PTCOMA
+  114                      | instruccion_while
+  115                      | declaracion PTCOMA
+  116                      | declaracion_sin_valor PTCOMA
+  117                      | creation_struct
+  118                      | declaracion_arreglo
+  119                      | instrucciones_vector
+  120                      | instruccion_return PTCOMA
+
+  121 list_elseif: list_elseif R_ELSE R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA
+  122            | R_ELSE R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA
+
+  123 list_else: R_ELSE LLAVEABRE cuerpo_if LLAVECIERRA
+
+  124 instruccion_while: RWHILE PARABRE expresion PARCIERRA LLAVEABRE cuerpo_while LLAVECIERRA
+
+  125 cuerpo_while: cuerpo_while instruccion_while_cuerpo
+  126             | instruccion_while_cuerpo
+
+  127 instruccion_while_cuerpo: func_printf PTCOMA
+  128                         | instruccion_for
+  129                         | instruccion_if
+  130                         | incremento_instruccion PTCOMA
+  131                         | asignacion PTCOMA
+  132                         | RBREAK PTCOMA
+  133                         | RCONTINUE PTCOMA
+  134                         | instruccion_while
+  135                         | declaracion PTCOMA
+  136                         | declaracion_sin_valor PTCOMA
+  137                         | creation_struct
+  138                         | declaracion_arreglo
+  139                         | instrucciones_vector
+  140                         | instruccion_return PTCOMA
+
+  141 instruccion_for: RFOR PARABRE declaracion_for PTCOMA expresion PTCOMA incremento_for PARCIERRA LLAVEABRE cuerpo_for LLAVECIERRA
+
+  142 declaracion_for: declaracion
+  143                | asignacion
+  144                | declaracion_sin_valor
+
+  145 incremento_for: asignacion
+  146               | incremento_instruccion
+
+  147 cuerpo_for: cuerpo_for instruccion_for_cuerpo
+  148           | instruccion_for_cuerpo
+
+  149 instruccion_for_cuerpo: func_printf PTCOMA
+  150                       | instruccion_for
+  151                       | instruccion_if
+  152                       | incremento_instruccion PTCOMA
+  153                       | asignacion PTCOMA
+  154                       | RBREAK PTCOMA
+  155                       | RCONTINUE PTCOMA
+  156                       | instruccion_while
+  157                       | declaracion PTCOMA
+  158                       | declaracion_sin_valor PTCOMA
+  159                       | creation_struct
+  160                       | declaracion_arreglo
+  161                       | instrucciones_vector
+  162                       | instruccion_return PTCOMA
+
+
+Terminals, with rules where they appear
+
+    END (0) 0
+    error (256)
+    LLAVEABRE <std::string> (258) 4 5 6 7 8 9 10 11 12 46 101 102 103 104 121 122 123 124 141
+    LLAVECIERRA <std::string> (259) 4 5 6 7 8 9 10 11 12 46 101 102 103 104 121 122 123 124 141
+    RINT <std::string> (260) 4 5 6 49
+    RFLOAT <std::string> (261) 15 50
+    RSTRING <std::string> (262) 16 51
+    RBOOL <std::string> (263) 17 52
+    RPRINTF <std::string> (264) 93
+    IGUAL <std::string> (265) 39 44 45 46 48 58 62 63 98 99
+    PTCOMA <std::string> (266) 13 14 22 23 24 25 26 27 37 38 39 40 41 42 43 44 45 46 47 107 110 111 112 113 115 116 120 127 130 131 132 133 135 136 140 141 149 152 153 154 155 157 158 162
+    OPSUMA <std::string> (267) 53
+    OPRESTA <std::string> (268) 54 70
+    OPMULTIPLICACION <std::string> (269) 55
+    OPDIVISION <std::string> (270) 56
+    OPMODULO <std::string> (271) 57
+    PARABRE <std::string> (272) 4 5 6 7 8 9 10 11 37 38 40 41 42 69 71 72 73 76 77 78 80 81 89 90 93 101 102 103 104 121 122 124 141
+    PARCIERRA <std::string> (273) 4 5 6 7 8 9 10 11 37 38 40 41 42 69 71 72 73 76 77 78 80 81 89 90 93 101 102 103 104 121 122 124 141
+    TIPO_INTEGER <std::string> (274) 82
+    TIPO_FLOAT <std::string> (275) 84
+    TIPO_STRING <std::string> (276) 83
+    TIPO_BOOL_TRUE <std::string> (277) 85
+    TIPO_BOOL_FALSE <std::string> (278) 86
+    ID <std::string> (279) 4 5 7 8 10 11 12 13 14 18 19 37 38 39 40 41 42 43 44 45 46 47 48 67 68 76 77 78 80 81 88 89 90 91 92 96 97 98 99 100
+    MAYOR <std::string> (280) 43 44 45 60 62
+    MENOR <std::string> (281) 43 44 45 61 63
+    R_IF <std::string> (282) 101 102 103 104 121 122
+    R_ELSE <std::string> (283) 121 122 123
+    R_MAIN <std::string> (284) 6 9
+    RVOID <std::string> (285) 7 8 9
+    RAND <std::string> (286) 64
+    ROR <std::string> (287) 65
+    NOT <std::string> (288) 66
+    NOIGUAL <std::string> (289) 59
+    RWHILE <std::string> (290) 124
+    RFOR <std::string> (291) 141
+    RBREAK <std::string> (292) 112 132 154
+    MASMAS <std::string> (293) 67 68 96 97
+    RCONTINUE <std::string> (294) 113 133 155
+    COMA <std::string> (295) 18 94
+    RIOTA <std::string> (296) 73
+    RATOI <std::string> (297) 71
+    RATOF <std::string> (298) 72
+    RSTRUCT <std::string> (299) 12 46 47
+    PUNTO <std::string> (300) 39 40 41 42 89 90 92
+    RVECTOR <std::string> (301) 43 44 45
+    CORABRE <std::string> (302) 44 45 88 99
+    CORCIERRA <std::string> (303) 44 45 88 99
+    RGET <std::string> (304) 89
+    RSIZE <std::string> (305) 90
+    RPUSHBACK <std::string> (306) 40
+    RPUSHFRONT <std::string> (307) 41
+    RREMOVE <std::string> (308) 42
+    RRETURN <std::string> (309) 35 36
+    RMEAN <std::string> (310) 76
+    RMEDIAN <std::string> (311) 77
+    RMODE <std::string> (312) 78
+
+
+Nonterminals, with rules where they appear
+
+    $accept (58)
+        on left: 0
+    inicio <list_instruction*> (59)
+        on left: 1
+        on right: 0
+    list_func <list_instruction*> (60)
+        on left: 2 3
+        on right: 1 2
+    funcion <instruction*> (61)
+        on left: 4 5 6 7 8 9 10 11 12
+        on right: 2 3
+    dec_list <map_struct_dec*> (62)
+        on left: 13 14
+        on right: 12 13
+    otro_tipo_func <TipoDato> (63)
+        on left: 15 16 17
+        on right: 10 11
+    func_list <map_struct_dec*> (64)
+        on left: 18 19
+        on right: 4 7 10 18
+    list_inst_func <list_instruction*> (65)
+        on left: 20 21
+        on right: 4 5 6 7 8 9 10 11 20
+    instruccion_funcion <instruction*> (66)
+        on left: 22 23 24 25 26 27 28 29 30 31 32 33 34
+        on right: 20 21
+    instruccion_return <instruction_return*> (67)
+        on left: 35 36
+        on right: 22 120 140 162
+    call_instruction <instruction*> (68)
+        on left: 37 38 39
+        on right: 34
+    instrucciones_vector <instruction*> (69)
+        on left: 40 41 42
+        on right: 33 119 139 161
+    declaracion_arreglo <create_vector*> (70)
+        on left: 43 44 45
+        on right: 31 118 138 160
+    creation_struct <create_struct*> (71)
+        on left: 46 47
+        on right: 32 117 137 159
+    declaracion <declaration*> (72)
+        on left: 48
+        on right: 23 115 135 142 157
+    tipo <TipoDato> (73)
+        on left: 49 50 51 52
+        on right: 13 14 18 19 43 44 45 48 100
+    expresion <expression*> (74)
+        on left: 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79
+        on right: 35 39 40 41 42 48 53 54 55 56 57 58 59 60 61 62 63 64 65 66 69 70 71 72 73 88 89 94 95 98 99 101 102 103 104 121 122 124 141
+    call_expr <call_exp*> (75)
+        on left: 80 81
+        on right: 79
+    primitivo <expression*> (76)
+        on left: 82 83 84 85 86 87
+        on right: 75
+    op_vector <expression*> (77)
+        on left: 88 89 90
+        on right: 74
+    llamada_variable <expression*> (78)
+        on left: 91 92
+        on right: 87
+    func_printf <func_printf*> (79)
+        on left: 93
+        on right: 24 107 127 149
+    lista_expresiones_printf <lista_expresiones*> (80)
+        on left: 94 95
+        on right: 37 44 46 80 93 94
+    incremento_instruccion <incremento*> (81)
+        on left: 96 97
+        on right: 25 110 130 146 152
+    asignacion <instruction*> (82)
+        on left: 98 99
+        on right: 26 111 131 143 145 153
+    declaracion_sin_valor <declaracion_sin_valor*> (83)
+        on left: 100
+        on right: 27 116 136 144 158
+    instruccion_if <instruction_if*> (84)
+        on left: 101 102 103 104
+        on right: 28 109 129 151
+    cuerpo_if <list_instruction_second*> (85)
+        on left: 105 106
+        on right: 101 102 103 104 105 121 122 123
+    instruccion_if_cuerpo <instruction*> (86)
+        on left: 107 108 109 110 111 112 113 114 115 116 117 118 119 120
+        on right: 105 106
+    list_elseif <list_instruction_second*> (87)
+        on left: 121 122
+        on right: 101 102 121
+    list_else <list_instruction_second*> (88)
+        on left: 123
+        on right: 101 103
+    instruccion_while <instruction_while*> (89)
+        on left: 124
+        on right: 29 114 134 156
+    cuerpo_while <list_instruction_second*> (90)
+        on left: 125 126
+        on right: 124 125
+    instruccion_while_cuerpo <instruction*> (91)
+        on left: 127 128 129 130 131 132 133 134 135 136 137 138 139 140
+        on right: 125 126
+    instruccion_for <instruction_for*> (92)
+        on left: 141
+        on right: 30 108 128 150
+    declaracion_for <instruction*> (93)
+        on left: 142 143 144
+        on right: 141
+    incremento_for <instruction*> (94)
+        on left: 145 146
+        on right: 141
+    cuerpo_for <list_instruction_second*> (95)
+        on left: 147 148
+        on right: 141 147
+    instruccion_for_cuerpo <instruction*> (96)
+        on left: 149 150 151 152 153 154 155 156 157 158 159 160 161 162
+        on right: 147 148
+
+
+State 0
+
+    0 $accept: . inicio END
+
+    RINT     shift, and go to state 1
+    RFLOAT   shift, and go to state 2
+    RSTRING  shift, and go to state 3
+    RBOOL    shift, and go to state 4
+    RVOID    shift, and go to state 5
+    RSTRUCT  shift, and go to state 6
+
+    inicio          go to state 7
+    list_func       go to state 8
+    funcion         go to state 9
+    otro_tipo_func  go to state 10
+
+
+State 1
+
+    4 funcion: RINT . ID PARABRE func_list PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+    5        | RINT . ID PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+    6        | RINT . R_MAIN PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+
+    ID      shift, and go to state 11
+    R_MAIN  shift, and go to state 12
+
+
+State 2
+
+   15 otro_tipo_func: RFLOAT .
+
+    $default  reduce using rule 15 (otro_tipo_func)
+
+
+State 3
+
+   16 otro_tipo_func: RSTRING .
+
+    $default  reduce using rule 16 (otro_tipo_func)
+
+
+State 4
+
+   17 otro_tipo_func: RBOOL .
+
+    $default  reduce using rule 17 (otro_tipo_func)
+
+
+State 5
+
+    7 funcion: RVOID . ID PARABRE func_list PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+    8        | RVOID . ID PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+    9        | RVOID . R_MAIN PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+
+    ID      shift, and go to state 13
+    R_MAIN  shift, and go to state 14
+
+
+State 6
+
+   12 funcion: RSTRUCT . ID LLAVEABRE dec_list LLAVECIERRA
+
+    ID  shift, and go to state 15
+
+
+State 7
+
+    0 $accept: inicio . END
+
+    END  shift, and go to state 16
+
+
+State 8
+
+    1 inicio: list_func .
+    2 list_func: list_func . funcion
+
+    RINT     shift, and go to state 1
+    RFLOAT   shift, and go to state 2
+    RSTRING  shift, and go to state 3
+    RBOOL    shift, and go to state 4
+    RVOID    shift, and go to state 5
+    RSTRUCT  shift, and go to state 6
+
+    $default  reduce using rule 1 (inicio)
+
+    funcion         go to state 17
+    otro_tipo_func  go to state 10
+
+
+State 9
+
+    3 list_func: funcion .
+
+    $default  reduce using rule 3 (list_func)
+
+
+State 10
+
+   10 funcion: otro_tipo_func . ID PARABRE func_list PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+   11        | otro_tipo_func . ID PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+
+    ID  shift, and go to state 18
+
+
+State 11
+
+    4 funcion: RINT ID . PARABRE func_list PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+    5        | RINT ID . PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+
+    PARABRE  shift, and go to state 19
+
+
+State 12
+
+    6 funcion: RINT R_MAIN . PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+
+    PARABRE  shift, and go to state 20
+
+
+State 13
+
+    7 funcion: RVOID ID . PARABRE func_list PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+    8        | RVOID ID . PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+
+    PARABRE  shift, and go to state 21
+
+
+State 14
+
+    9 funcion: RVOID R_MAIN . PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+
+    PARABRE  shift, and go to state 22
+
+
+State 15
+
+   12 funcion: RSTRUCT ID . LLAVEABRE dec_list LLAVECIERRA
+
+    LLAVEABRE  shift, and go to state 23
+
+
+State 16
+
+    0 $accept: inicio END .
+
+    $default  accept
+
+
+State 17
+
+    2 list_func: list_func funcion .
+
+    $default  reduce using rule 2 (list_func)
+
+
+State 18
+
+   10 funcion: otro_tipo_func ID . PARABRE func_list PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+   11        | otro_tipo_func ID . PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+
+    PARABRE  shift, and go to state 24
+
+
+State 19
+
+    4 funcion: RINT ID PARABRE . func_list PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+    5        | RINT ID PARABRE . PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+
+    RINT       shift, and go to state 25
+    RFLOAT     shift, and go to state 26
+    RSTRING    shift, and go to state 27
+    RBOOL      shift, and go to state 28
+    PARCIERRA  shift, and go to state 29
+
+    func_list  go to state 30
+    tipo       go to state 31
+
+
+State 20
+
+    6 funcion: RINT R_MAIN PARABRE . PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+
+    PARCIERRA  shift, and go to state 32
+
+
+State 21
+
+    7 funcion: RVOID ID PARABRE . func_list PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+    8        | RVOID ID PARABRE . PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+
+    RINT       shift, and go to state 25
+    RFLOAT     shift, and go to state 26
+    RSTRING    shift, and go to state 27
+    RBOOL      shift, and go to state 28
+    PARCIERRA  shift, and go to state 33
+
+    func_list  go to state 34
+    tipo       go to state 31
+
+
+State 22
+
+    9 funcion: RVOID R_MAIN PARABRE . PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+
+    PARCIERRA  shift, and go to state 35
+
+
+State 23
+
+   12 funcion: RSTRUCT ID LLAVEABRE . dec_list LLAVECIERRA
+
+    RINT     shift, and go to state 25
+    RFLOAT   shift, and go to state 26
+    RSTRING  shift, and go to state 27
+    RBOOL    shift, and go to state 28
+
+    dec_list  go to state 36
+    tipo      go to state 37
+
+
+State 24
+
+   10 funcion: otro_tipo_func ID PARABRE . func_list PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+   11        | otro_tipo_func ID PARABRE . PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+
+    RINT       shift, and go to state 25
+    RFLOAT     shift, and go to state 26
+    RSTRING    shift, and go to state 27
+    RBOOL      shift, and go to state 28
+    PARCIERRA  shift, and go to state 38
+
+    func_list  go to state 39
+    tipo       go to state 31
+
+
+State 25
+
+   49 tipo: RINT .
+
+    $default  reduce using rule 49 (tipo)
+
+
+State 26
+
+   50 tipo: RFLOAT .
+
+    $default  reduce using rule 50 (tipo)
+
+
+State 27
+
+   51 tipo: RSTRING .
+
+    $default  reduce using rule 51 (tipo)
+
+
+State 28
+
+   52 tipo: RBOOL .
+
+    $default  reduce using rule 52 (tipo)
+
+
+State 29
+
+    5 funcion: RINT ID PARABRE PARCIERRA . LLAVEABRE list_inst_func LLAVECIERRA
+
+    LLAVEABRE  shift, and go to state 40
+
+
+State 30
+
+    4 funcion: RINT ID PARABRE func_list . PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+   18 func_list: func_list . COMA tipo ID
+
+    PARCIERRA  shift, and go to state 41
+    COMA       shift, and go to state 42
+
+
+State 31
+
+   19 func_list: tipo . ID
+
+    ID  shift, and go to state 43
+
+
+State 32
+
+    6 funcion: RINT R_MAIN PARABRE PARCIERRA . LLAVEABRE list_inst_func LLAVECIERRA
+
+    LLAVEABRE  shift, and go to state 44
+
+
+State 33
+
+    8 funcion: RVOID ID PARABRE PARCIERRA . LLAVEABRE list_inst_func LLAVECIERRA
+
+    LLAVEABRE  shift, and go to state 45
+
+
+State 34
+
+    7 funcion: RVOID ID PARABRE func_list . PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+   18 func_list: func_list . COMA tipo ID
+
+    PARCIERRA  shift, and go to state 46
+    COMA       shift, and go to state 42
+
+
+State 35
+
+    9 funcion: RVOID R_MAIN PARABRE PARCIERRA . LLAVEABRE list_inst_func LLAVECIERRA
+
+    LLAVEABRE  shift, and go to state 47
+
+
+State 36
+
+   12 funcion: RSTRUCT ID LLAVEABRE dec_list . LLAVECIERRA
+   13 dec_list: dec_list . tipo ID PTCOMA
+
+    LLAVECIERRA  shift, and go to state 48
+    RINT         shift, and go to state 25
+    RFLOAT       shift, and go to state 26
+    RSTRING      shift, and go to state 27
+    RBOOL        shift, and go to state 28
+
+    tipo  go to state 49
+
+
+State 37
+
+   14 dec_list: tipo . ID PTCOMA
+
+    ID  shift, and go to state 50
+
+
+State 38
+
+   11 funcion: otro_tipo_func ID PARABRE PARCIERRA . LLAVEABRE list_inst_func LLAVECIERRA
+
+    LLAVEABRE  shift, and go to state 51
+
+
+State 39
+
+   10 funcion: otro_tipo_func ID PARABRE func_list . PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA
+   18 func_list: func_list . COMA tipo ID
+
+    PARCIERRA  shift, and go to state 52
+    COMA       shift, and go to state 42
+
+
+State 40
+
+    5 funcion: RINT ID PARABRE PARCIERRA LLAVEABRE . list_inst_func LLAVECIERRA
+
+    RINT     shift, and go to state 25
+    RFLOAT   shift, and go to state 26
+    RSTRING  shift, and go to state 27
+    RBOOL    shift, and go to state 28
+    RPRINTF  shift, and go to state 53
+    ID       shift, and go to state 54
+    R_IF     shift, and go to state 55
+    RWHILE   shift, and go to state 56
+    RFOR     shift, and go to state 57
+    MASMAS   shift, and go to state 58
+    RSTRUCT  shift, and go to state 59
+    RVECTOR  shift, and go to state 60
+    RRETURN  shift, and go to state 61
+
+    list_inst_func          go to state 62
+    instruccion_funcion     go to state 63
+    instruccion_return      go to state 64
+    call_instruction        go to state 65
+    instrucciones_vector    go to state 66
+    declaracion_arreglo     go to state 67
+    creation_struct         go to state 68
+    declaracion             go to state 69
+    tipo                    go to state 70
+    func_printf             go to state 71
+    incremento_instruccion  go to state 72
+    asignacion              go to state 73
+    declaracion_sin_valor   go to state 74
+    instruccion_if          go to state 75
+    instruccion_while       go to state 76
+    instruccion_for         go to state 77
+
+
+State 41
+
+    4 funcion: RINT ID PARABRE func_list PARCIERRA . LLAVEABRE list_inst_func LLAVECIERRA
+
+    LLAVEABRE  shift, and go to state 78
+
+
+State 42
+
+   18 func_list: func_list COMA . tipo ID
+
+    RINT     shift, and go to state 25
+    RFLOAT   shift, and go to state 26
+    RSTRING  shift, and go to state 27
+    RBOOL    shift, and go to state 28
+
+    tipo  go to state 79
+
+
+State 43
+
+   19 func_list: tipo ID .
+
+    $default  reduce using rule 19 (func_list)
+
+
+State 44
+
+    6 funcion: RINT R_MAIN PARABRE PARCIERRA LLAVEABRE . list_inst_func LLAVECIERRA
+
+    RINT     shift, and go to state 25
+    RFLOAT   shift, and go to state 26
+    RSTRING  shift, and go to state 27
+    RBOOL    shift, and go to state 28
+    RPRINTF  shift, and go to state 53
+    ID       shift, and go to state 54
+    R_IF     shift, and go to state 55
+    RWHILE   shift, and go to state 56
+    RFOR     shift, and go to state 57
+    MASMAS   shift, and go to state 58
+    RSTRUCT  shift, and go to state 59
+    RVECTOR  shift, and go to state 60
+    RRETURN  shift, and go to state 61
+
+    list_inst_func          go to state 80
+    instruccion_funcion     go to state 63
+    instruccion_return      go to state 64
+    call_instruction        go to state 65
+    instrucciones_vector    go to state 66
+    declaracion_arreglo     go to state 67
+    creation_struct         go to state 68
+    declaracion             go to state 69
+    tipo                    go to state 70
+    func_printf             go to state 71
+    incremento_instruccion  go to state 72
+    asignacion              go to state 73
+    declaracion_sin_valor   go to state 74
+    instruccion_if          go to state 75
+    instruccion_while       go to state 76
+    instruccion_for         go to state 77
+
+
+State 45
+
+    8 funcion: RVOID ID PARABRE PARCIERRA LLAVEABRE . list_inst_func LLAVECIERRA
+
+    RINT     shift, and go to state 25
+    RFLOAT   shift, and go to state 26
+    RSTRING  shift, and go to state 27
+    RBOOL    shift, and go to state 28
+    RPRINTF  shift, and go to state 53
+    ID       shift, and go to state 54
+    R_IF     shift, and go to state 55
+    RWHILE   shift, and go to state 56
+    RFOR     shift, and go to state 57
+    MASMAS   shift, and go to state 58
+    RSTRUCT  shift, and go to state 59
+    RVECTOR  shift, and go to state 60
+    RRETURN  shift, and go to state 61
+
+    list_inst_func          go to state 81
+    instruccion_funcion     go to state 63
+    instruccion_return      go to state 64
+    call_instruction        go to state 65
+    instrucciones_vector    go to state 66
+    declaracion_arreglo     go to state 67
+    creation_struct         go to state 68
+    declaracion             go to state 69
+    tipo                    go to state 70
+    func_printf             go to state 71
+    incremento_instruccion  go to state 72
+    asignacion              go to state 73
+    declaracion_sin_valor   go to state 74
+    instruccion_if          go to state 75
+    instruccion_while       go to state 76
+    instruccion_for         go to state 77
+
+
+State 46
+
+    7 funcion: RVOID ID PARABRE func_list PARCIERRA . LLAVEABRE list_inst_func LLAVECIERRA
+
+    LLAVEABRE  shift, and go to state 82
+
+
+State 47
+
+    9 funcion: RVOID R_MAIN PARABRE PARCIERRA LLAVEABRE . list_inst_func LLAVECIERRA
+
+    RINT     shift, and go to state 25
+    RFLOAT   shift, and go to state 26
+    RSTRING  shift, and go to state 27
+    RBOOL    shift, and go to state 28
+    RPRINTF  shift, and go to state 53
+    ID       shift, and go to state 54
+    R_IF     shift, and go to state 55
+    RWHILE   shift, and go to state 56
+    RFOR     shift, and go to state 57
+    MASMAS   shift, and go to state 58
+    RSTRUCT  shift, and go to state 59
+    RVECTOR  shift, and go to state 60
+    RRETURN  shift, and go to state 61
+
+    list_inst_func          go to state 83
+    instruccion_funcion     go to state 63
+    instruccion_return      go to state 64
+    call_instruction        go to state 65
+    instrucciones_vector    go to state 66
+    declaracion_arreglo     go to state 67
+    creation_struct         go to state 68
+    declaracion             go to state 69
+    tipo                    go to state 70
+    func_printf             go to state 71
+    incremento_instruccion  go to state 72
+    asignacion              go to state 73
+    declaracion_sin_valor   go to state 74
+    instruccion_if          go to state 75
+    instruccion_while       go to state 76
+    instruccion_for         go to state 77
+
+
+State 48
+
+   12 funcion: RSTRUCT ID LLAVEABRE dec_list LLAVECIERRA .
+
+    $default  reduce using rule 12 (funcion)
+
+
+State 49
+
+   13 dec_list: dec_list tipo . ID PTCOMA
+
+    ID  shift, and go to state 84
+
+
+State 50
+
+   14 dec_list: tipo ID . PTCOMA
+
+    PTCOMA  shift, and go to state 85
+
+
+State 51
+
+   11 funcion: otro_tipo_func ID PARABRE PARCIERRA LLAVEABRE . list_inst_func LLAVECIERRA
+
+    RINT     shift, and go to state 25
+    RFLOAT   shift, and go to state 26
+    RSTRING  shift, and go to state 27
+    RBOOL    shift, and go to state 28
+    RPRINTF  shift, and go to state 53
+    ID       shift, and go to state 54
+    R_IF     shift, and go to state 55
+    RWHILE   shift, and go to state 56
+    RFOR     shift, and go to state 57
+    MASMAS   shift, and go to state 58
+    RSTRUCT  shift, and go to state 59
+    RVECTOR  shift, and go to state 60
+    RRETURN  shift, and go to state 61
+
+    list_inst_func          go to state 86
+    instruccion_funcion     go to state 63
+    instruccion_return      go to state 64
+    call_instruction        go to state 65
+    instrucciones_vector    go to state 66
+    declaracion_arreglo     go to state 67
+    creation_struct         go to state 68
+    declaracion             go to state 69
+    tipo                    go to state 70
+    func_printf             go to state 71
+    incremento_instruccion  go to state 72
+    asignacion              go to state 73
+    declaracion_sin_valor   go to state 74
+    instruccion_if          go to state 75
+    instruccion_while       go to state 76
+    instruccion_for         go to state 77
+
+
+State 52
+
+   10 funcion: otro_tipo_func ID PARABRE func_list PARCIERRA . LLAVEABRE list_inst_func LLAVECIERRA
+
+    LLAVEABRE  shift, and go to state 87
+
+
+State 53
+
+   93 func_printf: RPRINTF . PARABRE lista_expresiones_printf PARCIERRA
+
+    PARABRE  shift, and go to state 88
+
+
+State 54
+
+   37 call_instruction: ID . PARABRE lista_expresiones_printf PARCIERRA PTCOMA
+   38                 | ID . PARABRE PARCIERRA PTCOMA
+   39                 | ID . PUNTO ID IGUAL expresion PTCOMA
+   40 instrucciones_vector: ID . PUNTO RPUSHBACK PARABRE expresion PARCIERRA PTCOMA
+   41                     | ID . PUNTO RPUSHFRONT PARABRE expresion PARCIERRA PTCOMA
+   42                     | ID . PUNTO RREMOVE PARABRE expresion PARCIERRA PTCOMA
+   96 incremento_instruccion: ID . MASMAS
+   98 asignacion: ID . IGUAL expresion
+   99           | ID . CORABRE expresion CORCIERRA IGUAL expresion
+
+    IGUAL    shift, and go to state 89
+    PARABRE  shift, and go to state 90
+    MASMAS   shift, and go to state 91
+    PUNTO    shift, and go to state 92
+    CORABRE  shift, and go to state 93
+
+
+State 55
+
+  101 instruccion_if: R_IF . PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA list_elseif list_else
+  102               | R_IF . PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA list_elseif
+  103               | R_IF . PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA list_else
+  104               | R_IF . PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA
+
+    PARABRE  shift, and go to state 94
+
+
+State 56
+
+  124 instruccion_while: RWHILE . PARABRE expresion PARCIERRA LLAVEABRE cuerpo_while LLAVECIERRA
+
+    PARABRE  shift, and go to state 95
+
+
+State 57
+
+  141 instruccion_for: RFOR . PARABRE declaracion_for PTCOMA expresion PTCOMA incremento_for PARCIERRA LLAVEABRE cuerpo_for LLAVECIERRA
+
+    PARABRE  shift, and go to state 96
+
+
+State 58
+
+   97 incremento_instruccion: MASMAS . ID
+
+    ID  shift, and go to state 97
+
+
+State 59
+
+   46 creation_struct: RSTRUCT . ID ID IGUAL LLAVEABRE lista_expresiones_printf LLAVECIERRA PTCOMA
+   47                | RSTRUCT . ID ID PTCOMA
+
+    ID  shift, and go to state 98
+
+
+State 60
+
+   43 declaracion_arreglo: RVECTOR . MENOR tipo MAYOR ID PTCOMA
+   44                    | RVECTOR . MENOR tipo MAYOR ID IGUAL CORABRE lista_expresiones_printf CORCIERRA PTCOMA
+   45                    | RVECTOR . MENOR tipo MAYOR ID IGUAL CORABRE CORCIERRA PTCOMA
+
+    MENOR  shift, and go to state 99
+
+
+State 61
+
+   35 instruccion_return: RRETURN . expresion
+   36                   | RRETURN .
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    $default  reduce using rule 36 (instruccion_return)
+
+    expresion         go to state 116
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 62
+
+    5 funcion: RINT ID PARABRE PARCIERRA LLAVEABRE list_inst_func . LLAVECIERRA
+   20 list_inst_func: list_inst_func . instruccion_funcion
+
+    LLAVECIERRA  shift, and go to state 121
+    RINT         shift, and go to state 25
+    RFLOAT       shift, and go to state 26
+    RSTRING      shift, and go to state 27
+    RBOOL        shift, and go to state 28
+    RPRINTF      shift, and go to state 53
+    ID           shift, and go to state 54
+    R_IF         shift, and go to state 55
+    RWHILE       shift, and go to state 56
+    RFOR         shift, and go to state 57
+    MASMAS       shift, and go to state 58
+    RSTRUCT      shift, and go to state 59
+    RVECTOR      shift, and go to state 60
+    RRETURN      shift, and go to state 61
+
+    instruccion_funcion     go to state 122
+    instruccion_return      go to state 64
+    call_instruction        go to state 65
+    instrucciones_vector    go to state 66
+    declaracion_arreglo     go to state 67
+    creation_struct         go to state 68
+    declaracion             go to state 69
+    tipo                    go to state 70
+    func_printf             go to state 71
+    incremento_instruccion  go to state 72
+    asignacion              go to state 73
+    declaracion_sin_valor   go to state 74
+    instruccion_if          go to state 75
+    instruccion_while       go to state 76
+    instruccion_for         go to state 77
+
+
+State 63
+
+   21 list_inst_func: instruccion_funcion .
+
+    $default  reduce using rule 21 (list_inst_func)
+
+
+State 64
+
+   22 instruccion_funcion: instruccion_return . PTCOMA
+
+    PTCOMA  shift, and go to state 123
+
+
+State 65
+
+   34 instruccion_funcion: call_instruction .
+
+    $default  reduce using rule 34 (instruccion_funcion)
+
+
+State 66
+
+   33 instruccion_funcion: instrucciones_vector .
+
+    $default  reduce using rule 33 (instruccion_funcion)
+
+
+State 67
+
+   31 instruccion_funcion: declaracion_arreglo .
+
+    $default  reduce using rule 31 (instruccion_funcion)
+
+
+State 68
+
+   32 instruccion_funcion: creation_struct .
+
+    $default  reduce using rule 32 (instruccion_funcion)
+
+
+State 69
+
+   23 instruccion_funcion: declaracion . PTCOMA
+
+    PTCOMA  shift, and go to state 124
+
+
+State 70
+
+   48 declaracion: tipo . ID IGUAL expresion
+  100 declaracion_sin_valor: tipo . ID
+
+    ID  shift, and go to state 125
+
+
+State 71
+
+   24 instruccion_funcion: func_printf . PTCOMA
+
+    PTCOMA  shift, and go to state 126
+
+
+State 72
+
+   25 instruccion_funcion: incremento_instruccion . PTCOMA
+
+    PTCOMA  shift, and go to state 127
+
+
+State 73
+
+   26 instruccion_funcion: asignacion . PTCOMA
+
+    PTCOMA  shift, and go to state 128
+
+
+State 74
+
+   27 instruccion_funcion: declaracion_sin_valor . PTCOMA
+
+    PTCOMA  shift, and go to state 129
+
+
+State 75
+
+   28 instruccion_funcion: instruccion_if .
+
+    $default  reduce using rule 28 (instruccion_funcion)
+
+
+State 76
+
+   29 instruccion_funcion: instruccion_while .
+
+    $default  reduce using rule 29 (instruccion_funcion)
+
+
+State 77
+
+   30 instruccion_funcion: instruccion_for .
+
+    $default  reduce using rule 30 (instruccion_funcion)
+
+
+State 78
+
+    4 funcion: RINT ID PARABRE func_list PARCIERRA LLAVEABRE . list_inst_func LLAVECIERRA
+
+    RINT     shift, and go to state 25
+    RFLOAT   shift, and go to state 26
+    RSTRING  shift, and go to state 27
+    RBOOL    shift, and go to state 28
+    RPRINTF  shift, and go to state 53
+    ID       shift, and go to state 54
+    R_IF     shift, and go to state 55
+    RWHILE   shift, and go to state 56
+    RFOR     shift, and go to state 57
+    MASMAS   shift, and go to state 58
+    RSTRUCT  shift, and go to state 59
+    RVECTOR  shift, and go to state 60
+    RRETURN  shift, and go to state 61
+
+    list_inst_func          go to state 130
+    instruccion_funcion     go to state 63
+    instruccion_return      go to state 64
+    call_instruction        go to state 65
+    instrucciones_vector    go to state 66
+    declaracion_arreglo     go to state 67
+    creation_struct         go to state 68
+    declaracion             go to state 69
+    tipo                    go to state 70
+    func_printf             go to state 71
+    incremento_instruccion  go to state 72
+    asignacion              go to state 73
+    declaracion_sin_valor   go to state 74
+    instruccion_if          go to state 75
+    instruccion_while       go to state 76
+    instruccion_for         go to state 77
+
+
+State 79
+
+   18 func_list: func_list COMA tipo . ID
+
+    ID  shift, and go to state 131
+
+
+State 80
+
+    6 funcion: RINT R_MAIN PARABRE PARCIERRA LLAVEABRE list_inst_func . LLAVECIERRA
+   20 list_inst_func: list_inst_func . instruccion_funcion
+
+    LLAVECIERRA  shift, and go to state 132
+    RINT         shift, and go to state 25
+    RFLOAT       shift, and go to state 26
+    RSTRING      shift, and go to state 27
+    RBOOL        shift, and go to state 28
+    RPRINTF      shift, and go to state 53
+    ID           shift, and go to state 54
+    R_IF         shift, and go to state 55
+    RWHILE       shift, and go to state 56
+    RFOR         shift, and go to state 57
+    MASMAS       shift, and go to state 58
+    RSTRUCT      shift, and go to state 59
+    RVECTOR      shift, and go to state 60
+    RRETURN      shift, and go to state 61
+
+    instruccion_funcion     go to state 122
+    instruccion_return      go to state 64
+    call_instruction        go to state 65
+    instrucciones_vector    go to state 66
+    declaracion_arreglo     go to state 67
+    creation_struct         go to state 68
+    declaracion             go to state 69
+    tipo                    go to state 70
+    func_printf             go to state 71
+    incremento_instruccion  go to state 72
+    asignacion              go to state 73
+    declaracion_sin_valor   go to state 74
+    instruccion_if          go to state 75
+    instruccion_while       go to state 76
+    instruccion_for         go to state 77
+
+
+State 81
+
+    8 funcion: RVOID ID PARABRE PARCIERRA LLAVEABRE list_inst_func . LLAVECIERRA
+   20 list_inst_func: list_inst_func . instruccion_funcion
+
+    LLAVECIERRA  shift, and go to state 133
+    RINT         shift, and go to state 25
+    RFLOAT       shift, and go to state 26
+    RSTRING      shift, and go to state 27
+    RBOOL        shift, and go to state 28
+    RPRINTF      shift, and go to state 53
+    ID           shift, and go to state 54
+    R_IF         shift, and go to state 55
+    RWHILE       shift, and go to state 56
+    RFOR         shift, and go to state 57
+    MASMAS       shift, and go to state 58
+    RSTRUCT      shift, and go to state 59
+    RVECTOR      shift, and go to state 60
+    RRETURN      shift, and go to state 61
+
+    instruccion_funcion     go to state 122
+    instruccion_return      go to state 64
+    call_instruction        go to state 65
+    instrucciones_vector    go to state 66
+    declaracion_arreglo     go to state 67
+    creation_struct         go to state 68
+    declaracion             go to state 69
+    tipo                    go to state 70
+    func_printf             go to state 71
+    incremento_instruccion  go to state 72
+    asignacion              go to state 73
+    declaracion_sin_valor   go to state 74
+    instruccion_if          go to state 75
+    instruccion_while       go to state 76
+    instruccion_for         go to state 77
+
+
+State 82
+
+    7 funcion: RVOID ID PARABRE func_list PARCIERRA LLAVEABRE . list_inst_func LLAVECIERRA
+
+    RINT     shift, and go to state 25
+    RFLOAT   shift, and go to state 26
+    RSTRING  shift, and go to state 27
+    RBOOL    shift, and go to state 28
+    RPRINTF  shift, and go to state 53
+    ID       shift, and go to state 54
+    R_IF     shift, and go to state 55
+    RWHILE   shift, and go to state 56
+    RFOR     shift, and go to state 57
+    MASMAS   shift, and go to state 58
+    RSTRUCT  shift, and go to state 59
+    RVECTOR  shift, and go to state 60
+    RRETURN  shift, and go to state 61
+
+    list_inst_func          go to state 134
+    instruccion_funcion     go to state 63
+    instruccion_return      go to state 64
+    call_instruction        go to state 65
+    instrucciones_vector    go to state 66
+    declaracion_arreglo     go to state 67
+    creation_struct         go to state 68
+    declaracion             go to state 69
+    tipo                    go to state 70
+    func_printf             go to state 71
+    incremento_instruccion  go to state 72
+    asignacion              go to state 73
+    declaracion_sin_valor   go to state 74
+    instruccion_if          go to state 75
+    instruccion_while       go to state 76
+    instruccion_for         go to state 77
+
+
+State 83
+
+    9 funcion: RVOID R_MAIN PARABRE PARCIERRA LLAVEABRE list_inst_func . LLAVECIERRA
+   20 list_inst_func: list_inst_func . instruccion_funcion
+
+    LLAVECIERRA  shift, and go to state 135
+    RINT         shift, and go to state 25
+    RFLOAT       shift, and go to state 26
+    RSTRING      shift, and go to state 27
+    RBOOL        shift, and go to state 28
+    RPRINTF      shift, and go to state 53
+    ID           shift, and go to state 54
+    R_IF         shift, and go to state 55
+    RWHILE       shift, and go to state 56
+    RFOR         shift, and go to state 57
+    MASMAS       shift, and go to state 58
+    RSTRUCT      shift, and go to state 59
+    RVECTOR      shift, and go to state 60
+    RRETURN      shift, and go to state 61
+
+    instruccion_funcion     go to state 122
+    instruccion_return      go to state 64
+    call_instruction        go to state 65
+    instrucciones_vector    go to state 66
+    declaracion_arreglo     go to state 67
+    creation_struct         go to state 68
+    declaracion             go to state 69
+    tipo                    go to state 70
+    func_printf             go to state 71
+    incremento_instruccion  go to state 72
+    asignacion              go to state 73
+    declaracion_sin_valor   go to state 74
+    instruccion_if          go to state 75
+    instruccion_while       go to state 76
+    instruccion_for         go to state 77
+
+
+State 84
+
+   13 dec_list: dec_list tipo ID . PTCOMA
+
+    PTCOMA  shift, and go to state 136
+
+
+State 85
+
+   14 dec_list: tipo ID PTCOMA .
+
+    $default  reduce using rule 14 (dec_list)
+
+
+State 86
+
+   11 funcion: otro_tipo_func ID PARABRE PARCIERRA LLAVEABRE list_inst_func . LLAVECIERRA
+   20 list_inst_func: list_inst_func . instruccion_funcion
+
+    LLAVECIERRA  shift, and go to state 137
+    RINT         shift, and go to state 25
+    RFLOAT       shift, and go to state 26
+    RSTRING      shift, and go to state 27
+    RBOOL        shift, and go to state 28
+    RPRINTF      shift, and go to state 53
+    ID           shift, and go to state 54
+    R_IF         shift, and go to state 55
+    RWHILE       shift, and go to state 56
+    RFOR         shift, and go to state 57
+    MASMAS       shift, and go to state 58
+    RSTRUCT      shift, and go to state 59
+    RVECTOR      shift, and go to state 60
+    RRETURN      shift, and go to state 61
+
+    instruccion_funcion     go to state 122
+    instruccion_return      go to state 64
+    call_instruction        go to state 65
+    instrucciones_vector    go to state 66
+    declaracion_arreglo     go to state 67
+    creation_struct         go to state 68
+    declaracion             go to state 69
+    tipo                    go to state 70
+    func_printf             go to state 71
+    incremento_instruccion  go to state 72
+    asignacion              go to state 73
+    declaracion_sin_valor   go to state 74
+    instruccion_if          go to state 75
+    instruccion_while       go to state 76
+    instruccion_for         go to state 77
+
+
+State 87
+
+   10 funcion: otro_tipo_func ID PARABRE func_list PARCIERRA LLAVEABRE . list_inst_func LLAVECIERRA
+
+    RINT     shift, and go to state 25
+    RFLOAT   shift, and go to state 26
+    RSTRING  shift, and go to state 27
+    RBOOL    shift, and go to state 28
+    RPRINTF  shift, and go to state 53
+    ID       shift, and go to state 54
+    R_IF     shift, and go to state 55
+    RWHILE   shift, and go to state 56
+    RFOR     shift, and go to state 57
+    MASMAS   shift, and go to state 58
+    RSTRUCT  shift, and go to state 59
+    RVECTOR  shift, and go to state 60
+    RRETURN  shift, and go to state 61
+
+    list_inst_func          go to state 138
+    instruccion_funcion     go to state 63
+    instruccion_return      go to state 64
+    call_instruction        go to state 65
+    instrucciones_vector    go to state 66
+    declaracion_arreglo     go to state 67
+    creation_struct         go to state 68
+    declaracion             go to state 69
+    tipo                    go to state 70
+    func_printf             go to state 71
+    incremento_instruccion  go to state 72
+    asignacion              go to state 73
+    declaracion_sin_valor   go to state 74
+    instruccion_if          go to state 75
+    instruccion_while       go to state 76
+    instruccion_for         go to state 77
+
+
+State 88
+
+   93 func_printf: RPRINTF PARABRE . lista_expresiones_printf PARCIERRA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion                 go to state 139
+    call_expr                 go to state 117
+    primitivo                 go to state 118
+    op_vector                 go to state 119
+    llamada_variable          go to state 120
+    lista_expresiones_printf  go to state 140
+
+
+State 89
+
+   98 asignacion: ID IGUAL . expresion
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 141
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 90
+
+   37 call_instruction: ID PARABRE . lista_expresiones_printf PARCIERRA PTCOMA
+   38                 | ID PARABRE . PARCIERRA PTCOMA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    PARCIERRA        shift, and go to state 142
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion                 go to state 139
+    call_expr                 go to state 117
+    primitivo                 go to state 118
+    op_vector                 go to state 119
+    llamada_variable          go to state 120
+    lista_expresiones_printf  go to state 143
+
+
+State 91
+
+   96 incremento_instruccion: ID MASMAS .
+
+    $default  reduce using rule 96 (incremento_instruccion)
+
+
+State 92
+
+   39 call_instruction: ID PUNTO . ID IGUAL expresion PTCOMA
+   40 instrucciones_vector: ID PUNTO . RPUSHBACK PARABRE expresion PARCIERRA PTCOMA
+   41                     | ID PUNTO . RPUSHFRONT PARABRE expresion PARCIERRA PTCOMA
+   42                     | ID PUNTO . RREMOVE PARABRE expresion PARCIERRA PTCOMA
+
+    ID          shift, and go to state 144
+    RPUSHBACK   shift, and go to state 145
+    RPUSHFRONT  shift, and go to state 146
+    RREMOVE     shift, and go to state 147
+
+
+State 93
+
+   99 asignacion: ID CORABRE . expresion CORCIERRA IGUAL expresion
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 148
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 94
+
+  101 instruccion_if: R_IF PARABRE . expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA list_elseif list_else
+  102               | R_IF PARABRE . expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA list_elseif
+  103               | R_IF PARABRE . expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA list_else
+  104               | R_IF PARABRE . expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 149
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 95
+
+  124 instruccion_while: RWHILE PARABRE . expresion PARCIERRA LLAVEABRE cuerpo_while LLAVECIERRA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 150
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 96
+
+  141 instruccion_for: RFOR PARABRE . declaracion_for PTCOMA expresion PTCOMA incremento_for PARCIERRA LLAVEABRE cuerpo_for LLAVECIERRA
+
+    RINT     shift, and go to state 25
+    RFLOAT   shift, and go to state 26
+    RSTRING  shift, and go to state 27
+    RBOOL    shift, and go to state 28
+    ID       shift, and go to state 151
+
+    declaracion            go to state 152
+    tipo                   go to state 70
+    asignacion             go to state 153
+    declaracion_sin_valor  go to state 154
+    declaracion_for        go to state 155
+
+
+State 97
+
+   97 incremento_instruccion: MASMAS ID .
+
+    $default  reduce using rule 97 (incremento_instruccion)
+
+
+State 98
+
+   46 creation_struct: RSTRUCT ID . ID IGUAL LLAVEABRE lista_expresiones_printf LLAVECIERRA PTCOMA
+   47                | RSTRUCT ID . ID PTCOMA
+
+    ID  shift, and go to state 156
+
+
+State 99
+
+   43 declaracion_arreglo: RVECTOR MENOR . tipo MAYOR ID PTCOMA
+   44                    | RVECTOR MENOR . tipo MAYOR ID IGUAL CORABRE lista_expresiones_printf CORCIERRA PTCOMA
+   45                    | RVECTOR MENOR . tipo MAYOR ID IGUAL CORABRE CORCIERRA PTCOMA
+
+    RINT     shift, and go to state 25
+    RFLOAT   shift, and go to state 26
+    RSTRING  shift, and go to state 27
+    RBOOL    shift, and go to state 28
+
+    tipo  go to state 157
+
+
+State 100
+
+   70 expresion: OPRESTA . expresion
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 158
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 101
+
+   69 expresion: PARABRE . expresion PARCIERRA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 159
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 102
+
+   82 primitivo: TIPO_INTEGER .
+
+    $default  reduce using rule 82 (primitivo)
+
+
+State 103
+
+   84 primitivo: TIPO_FLOAT .
+
+    $default  reduce using rule 84 (primitivo)
+
+
+State 104
+
+   83 primitivo: TIPO_STRING .
+
+    $default  reduce using rule 83 (primitivo)
+
+
+State 105
+
+   85 primitivo: TIPO_BOOL_TRUE .
+
+    $default  reduce using rule 85 (primitivo)
+
+
+State 106
+
+   86 primitivo: TIPO_BOOL_FALSE .
+
+    $default  reduce using rule 86 (primitivo)
+
+
+State 107
+
+   68 expresion: ID . MASMAS
+   80 call_expr: ID . PARABRE lista_expresiones_printf PARCIERRA
+   81          | ID . PARABRE PARCIERRA
+   88 op_vector: ID . CORABRE expresion CORCIERRA
+   89          | ID . PUNTO RGET PARABRE expresion PARCIERRA
+   90          | ID . PUNTO RSIZE PARABRE PARCIERRA
+   91 llamada_variable: ID .
+   92                 | ID . PUNTO ID
+
+    PARABRE  shift, and go to state 160
+    MASMAS   shift, and go to state 161
+    PUNTO    shift, and go to state 162
+    CORABRE  shift, and go to state 163
+
+    $default  reduce using rule 91 (llamada_variable)
+
+
+State 108
+
+   66 expresion: NOT . expresion
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 164
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 109
+
+   67 expresion: MASMAS . ID
+
+    ID  shift, and go to state 165
+
+
+State 110
+
+   73 expresion: RIOTA . PARABRE expresion PARCIERRA
+
+    PARABRE  shift, and go to state 166
+
+
+State 111
+
+   71 expresion: RATOI . PARABRE expresion PARCIERRA
+
+    PARABRE  shift, and go to state 167
+
+
+State 112
+
+   72 expresion: RATOF . PARABRE expresion PARCIERRA
+
+    PARABRE  shift, and go to state 168
+
+
+State 113
+
+   76 expresion: RMEAN . PARABRE ID PARCIERRA
+
+    PARABRE  shift, and go to state 169
+
+
+State 114
+
+   77 expresion: RMEDIAN . PARABRE ID PARCIERRA
+
+    PARABRE  shift, and go to state 170
+
+
+State 115
+
+   78 expresion: RMODE . PARABRE ID PARCIERRA
+
+    PARABRE  shift, and go to state 171
+
+
+State 116
+
+   35 instruccion_return: RRETURN expresion .
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+    $default  reduce using rule 35 (instruccion_return)
+
+
+State 117
+
+   79 expresion: call_expr .
+
+    $default  reduce using rule 79 (expresion)
+
+
+State 118
+
+   75 expresion: primitivo .
+
+    $default  reduce using rule 75 (expresion)
+
+
+State 119
+
+   74 expresion: op_vector .
+
+    $default  reduce using rule 74 (expresion)
+
+
+State 120
+
+   87 primitivo: llamada_variable .
+
+    $default  reduce using rule 87 (primitivo)
+
+
+State 121
+
+    5 funcion: RINT ID PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA .
+
+    $default  reduce using rule 5 (funcion)
+
+
+State 122
+
+   20 list_inst_func: list_inst_func instruccion_funcion .
+
+    $default  reduce using rule 20 (list_inst_func)
+
+
+State 123
+
+   22 instruccion_funcion: instruccion_return PTCOMA .
+
+    $default  reduce using rule 22 (instruccion_funcion)
+
+
+State 124
+
+   23 instruccion_funcion: declaracion PTCOMA .
+
+    $default  reduce using rule 23 (instruccion_funcion)
+
+
+State 125
+
+   48 declaracion: tipo ID . IGUAL expresion
+  100 declaracion_sin_valor: tipo ID .
+
+    IGUAL  shift, and go to state 183
+
+    $default  reduce using rule 100 (declaracion_sin_valor)
+
+
+State 126
+
+   24 instruccion_funcion: func_printf PTCOMA .
+
+    $default  reduce using rule 24 (instruccion_funcion)
+
+
+State 127
+
+   25 instruccion_funcion: incremento_instruccion PTCOMA .
+
+    $default  reduce using rule 25 (instruccion_funcion)
+
+
+State 128
+
+   26 instruccion_funcion: asignacion PTCOMA .
+
+    $default  reduce using rule 26 (instruccion_funcion)
+
+
+State 129
+
+   27 instruccion_funcion: declaracion_sin_valor PTCOMA .
+
+    $default  reduce using rule 27 (instruccion_funcion)
+
+
+State 130
+
+    4 funcion: RINT ID PARABRE func_list PARCIERRA LLAVEABRE list_inst_func . LLAVECIERRA
+   20 list_inst_func: list_inst_func . instruccion_funcion
+
+    LLAVECIERRA  shift, and go to state 184
+    RINT         shift, and go to state 25
+    RFLOAT       shift, and go to state 26
+    RSTRING      shift, and go to state 27
+    RBOOL        shift, and go to state 28
+    RPRINTF      shift, and go to state 53
+    ID           shift, and go to state 54
+    R_IF         shift, and go to state 55
+    RWHILE       shift, and go to state 56
+    RFOR         shift, and go to state 57
+    MASMAS       shift, and go to state 58
+    RSTRUCT      shift, and go to state 59
+    RVECTOR      shift, and go to state 60
+    RRETURN      shift, and go to state 61
+
+    instruccion_funcion     go to state 122
+    instruccion_return      go to state 64
+    call_instruction        go to state 65
+    instrucciones_vector    go to state 66
+    declaracion_arreglo     go to state 67
+    creation_struct         go to state 68
+    declaracion             go to state 69
+    tipo                    go to state 70
+    func_printf             go to state 71
+    incremento_instruccion  go to state 72
+    asignacion              go to state 73
+    declaracion_sin_valor   go to state 74
+    instruccion_if          go to state 75
+    instruccion_while       go to state 76
+    instruccion_for         go to state 77
+
+
+State 131
+
+   18 func_list: func_list COMA tipo ID .
+
+    $default  reduce using rule 18 (func_list)
+
+
+State 132
+
+    6 funcion: RINT R_MAIN PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA .
+
+    $default  reduce using rule 6 (funcion)
+
+
+State 133
+
+    8 funcion: RVOID ID PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA .
+
+    $default  reduce using rule 8 (funcion)
+
+
+State 134
+
+    7 funcion: RVOID ID PARABRE func_list PARCIERRA LLAVEABRE list_inst_func . LLAVECIERRA
+   20 list_inst_func: list_inst_func . instruccion_funcion
+
+    LLAVECIERRA  shift, and go to state 185
+    RINT         shift, and go to state 25
+    RFLOAT       shift, and go to state 26
+    RSTRING      shift, and go to state 27
+    RBOOL        shift, and go to state 28
+    RPRINTF      shift, and go to state 53
+    ID           shift, and go to state 54
+    R_IF         shift, and go to state 55
+    RWHILE       shift, and go to state 56
+    RFOR         shift, and go to state 57
+    MASMAS       shift, and go to state 58
+    RSTRUCT      shift, and go to state 59
+    RVECTOR      shift, and go to state 60
+    RRETURN      shift, and go to state 61
+
+    instruccion_funcion     go to state 122
+    instruccion_return      go to state 64
+    call_instruction        go to state 65
+    instrucciones_vector    go to state 66
+    declaracion_arreglo     go to state 67
+    creation_struct         go to state 68
+    declaracion             go to state 69
+    tipo                    go to state 70
+    func_printf             go to state 71
+    incremento_instruccion  go to state 72
+    asignacion              go to state 73
+    declaracion_sin_valor   go to state 74
+    instruccion_if          go to state 75
+    instruccion_while       go to state 76
+    instruccion_for         go to state 77
+
+
+State 135
+
+    9 funcion: RVOID R_MAIN PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA .
+
+    $default  reduce using rule 9 (funcion)
+
+
+State 136
+
+   13 dec_list: dec_list tipo ID PTCOMA .
+
+    $default  reduce using rule 13 (dec_list)
+
+
+State 137
+
+   11 funcion: otro_tipo_func ID PARABRE PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA .
+
+    $default  reduce using rule 11 (funcion)
+
+
+State 138
+
+   10 funcion: otro_tipo_func ID PARABRE func_list PARCIERRA LLAVEABRE list_inst_func . LLAVECIERRA
+   20 list_inst_func: list_inst_func . instruccion_funcion
+
+    LLAVECIERRA  shift, and go to state 186
+    RINT         shift, and go to state 25
+    RFLOAT       shift, and go to state 26
+    RSTRING      shift, and go to state 27
+    RBOOL        shift, and go to state 28
+    RPRINTF      shift, and go to state 53
+    ID           shift, and go to state 54
+    R_IF         shift, and go to state 55
+    RWHILE       shift, and go to state 56
+    RFOR         shift, and go to state 57
+    MASMAS       shift, and go to state 58
+    RSTRUCT      shift, and go to state 59
+    RVECTOR      shift, and go to state 60
+    RRETURN      shift, and go to state 61
+
+    instruccion_funcion     go to state 122
+    instruccion_return      go to state 64
+    call_instruction        go to state 65
+    instrucciones_vector    go to state 66
+    declaracion_arreglo     go to state 67
+    creation_struct         go to state 68
+    declaracion             go to state 69
+    tipo                    go to state 70
+    func_printf             go to state 71
+    incremento_instruccion  go to state 72
+    asignacion              go to state 73
+    declaracion_sin_valor   go to state 74
+    instruccion_if          go to state 75
+    instruccion_while       go to state 76
+    instruccion_for         go to state 77
+
+
+State 139
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+   95 lista_expresiones_printf: expresion .
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+    $default  reduce using rule 95 (lista_expresiones_printf)
+
+
+State 140
+
+   93 func_printf: RPRINTF PARABRE lista_expresiones_printf . PARCIERRA
+   94 lista_expresiones_printf: lista_expresiones_printf . COMA expresion
+
+    PARCIERRA  shift, and go to state 187
+    COMA       shift, and go to state 188
+
+
+State 141
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+   98 asignacion: ID IGUAL expresion .
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+    $default  reduce using rule 98 (asignacion)
+
+
+State 142
+
+   38 call_instruction: ID PARABRE PARCIERRA . PTCOMA
+
+    PTCOMA  shift, and go to state 189
+
+
+State 143
+
+   37 call_instruction: ID PARABRE lista_expresiones_printf . PARCIERRA PTCOMA
+   94 lista_expresiones_printf: lista_expresiones_printf . COMA expresion
+
+    PARCIERRA  shift, and go to state 190
+    COMA       shift, and go to state 188
+
+
+State 144
+
+   39 call_instruction: ID PUNTO ID . IGUAL expresion PTCOMA
+
+    IGUAL  shift, and go to state 191
+
+
+State 145
+
+   40 instrucciones_vector: ID PUNTO RPUSHBACK . PARABRE expresion PARCIERRA PTCOMA
+
+    PARABRE  shift, and go to state 192
+
+
+State 146
+
+   41 instrucciones_vector: ID PUNTO RPUSHFRONT . PARABRE expresion PARCIERRA PTCOMA
+
+    PARABRE  shift, and go to state 193
+
+
+State 147
+
+   42 instrucciones_vector: ID PUNTO RREMOVE . PARABRE expresion PARCIERRA PTCOMA
+
+    PARABRE  shift, and go to state 194
+
+
+State 148
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+   99 asignacion: ID CORABRE expresion . CORCIERRA IGUAL expresion
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+    CORCIERRA         shift, and go to state 195
+
+
+State 149
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+  101 instruccion_if: R_IF PARABRE expresion . PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA list_elseif list_else
+  102               | R_IF PARABRE expresion . PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA list_elseif
+  103               | R_IF PARABRE expresion . PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA list_else
+  104               | R_IF PARABRE expresion . PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    PARCIERRA         shift, and go to state 196
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+
+State 150
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+  124 instruccion_while: RWHILE PARABRE expresion . PARCIERRA LLAVEABRE cuerpo_while LLAVECIERRA
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    PARCIERRA         shift, and go to state 197
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+
+State 151
+
+   98 asignacion: ID . IGUAL expresion
+   99           | ID . CORABRE expresion CORCIERRA IGUAL expresion
+
+    IGUAL    shift, and go to state 89
+    CORABRE  shift, and go to state 93
+
+
+State 152
+
+  142 declaracion_for: declaracion .
+
+    $default  reduce using rule 142 (declaracion_for)
+
+
+State 153
+
+  143 declaracion_for: asignacion .
+
+    $default  reduce using rule 143 (declaracion_for)
+
+
+State 154
+
+  144 declaracion_for: declaracion_sin_valor .
+
+    $default  reduce using rule 144 (declaracion_for)
+
+
+State 155
+
+  141 instruccion_for: RFOR PARABRE declaracion_for . PTCOMA expresion PTCOMA incremento_for PARCIERRA LLAVEABRE cuerpo_for LLAVECIERRA
+
+    PTCOMA  shift, and go to state 198
+
+
+State 156
+
+   46 creation_struct: RSTRUCT ID ID . IGUAL LLAVEABRE lista_expresiones_printf LLAVECIERRA PTCOMA
+   47                | RSTRUCT ID ID . PTCOMA
+
+    IGUAL   shift, and go to state 199
+    PTCOMA  shift, and go to state 200
+
+
+State 157
+
+   43 declaracion_arreglo: RVECTOR MENOR tipo . MAYOR ID PTCOMA
+   44                    | RVECTOR MENOR tipo . MAYOR ID IGUAL CORABRE lista_expresiones_printf CORCIERRA PTCOMA
+   45                    | RVECTOR MENOR tipo . MAYOR ID IGUAL CORABRE CORCIERRA PTCOMA
+
+    MAYOR  shift, and go to state 201
+
+
+State 158
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+   70          | OPRESTA expresion .
+
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+
+    $default  reduce using rule 70 (expresion)
+
+
+State 159
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+   69          | PARABRE expresion . PARCIERRA
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    PARCIERRA         shift, and go to state 202
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+
+State 160
+
+   80 call_expr: ID PARABRE . lista_expresiones_printf PARCIERRA
+   81          | ID PARABRE . PARCIERRA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    PARCIERRA        shift, and go to state 203
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion                 go to state 139
+    call_expr                 go to state 117
+    primitivo                 go to state 118
+    op_vector                 go to state 119
+    llamada_variable          go to state 120
+    lista_expresiones_printf  go to state 204
+
+
+State 161
+
+   68 expresion: ID MASMAS .
+
+    $default  reduce using rule 68 (expresion)
+
+
+State 162
+
+   89 op_vector: ID PUNTO . RGET PARABRE expresion PARCIERRA
+   90          | ID PUNTO . RSIZE PARABRE PARCIERRA
+   92 llamada_variable: ID PUNTO . ID
+
+    ID     shift, and go to state 205
+    RGET   shift, and go to state 206
+    RSIZE  shift, and go to state 207
+
+
+State 163
+
+   88 op_vector: ID CORABRE . expresion CORCIERRA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 208
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 164
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+   66          | NOT expresion .
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+    $default  reduce using rule 66 (expresion)
+
+
+State 165
+
+   67 expresion: MASMAS ID .
+
+    $default  reduce using rule 67 (expresion)
+
+
+State 166
+
+   73 expresion: RIOTA PARABRE . expresion PARCIERRA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 209
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 167
+
+   71 expresion: RATOI PARABRE . expresion PARCIERRA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 210
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 168
+
+   72 expresion: RATOF PARABRE . expresion PARCIERRA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 211
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 169
+
+   76 expresion: RMEAN PARABRE . ID PARCIERRA
+
+    ID  shift, and go to state 212
+
+
+State 170
+
+   77 expresion: RMEDIAN PARABRE . ID PARCIERRA
+
+    ID  shift, and go to state 213
+
+
+State 171
+
+   78 expresion: RMODE PARABRE . ID PARCIERRA
+
+    ID  shift, and go to state 214
+
+
+State 172
+
+   58 expresion: expresion IGUAL . IGUAL expresion
+
+    IGUAL  shift, and go to state 215
+
+
+State 173
+
+   53 expresion: expresion OPSUMA . expresion
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 216
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 174
+
+   54 expresion: expresion OPRESTA . expresion
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 217
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 175
+
+   55 expresion: expresion OPMULTIPLICACION . expresion
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 218
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 176
+
+   56 expresion: expresion OPDIVISION . expresion
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 219
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 177
+
+   57 expresion: expresion OPMODULO . expresion
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 220
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 178
+
+   60 expresion: expresion MAYOR . expresion
+   62          | expresion MAYOR . IGUAL expresion
+
+    IGUAL            shift, and go to state 221
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 222
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 179
+
+   61 expresion: expresion MENOR . expresion
+   63          | expresion MENOR . IGUAL expresion
+
+    IGUAL            shift, and go to state 223
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 224
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 180
+
+   64 expresion: expresion RAND . expresion
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 225
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 181
+
+   65 expresion: expresion ROR . expresion
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 226
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 182
+
+   59 expresion: expresion NOIGUAL . expresion
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 227
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 183
+
+   48 declaracion: tipo ID IGUAL . expresion
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 228
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 184
+
+    4 funcion: RINT ID PARABRE func_list PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA .
+
+    $default  reduce using rule 4 (funcion)
+
+
+State 185
+
+    7 funcion: RVOID ID PARABRE func_list PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA .
+
+    $default  reduce using rule 7 (funcion)
+
+
+State 186
+
+   10 funcion: otro_tipo_func ID PARABRE func_list PARCIERRA LLAVEABRE list_inst_func LLAVECIERRA .
+
+    $default  reduce using rule 10 (funcion)
+
+
+State 187
+
+   93 func_printf: RPRINTF PARABRE lista_expresiones_printf PARCIERRA .
+
+    $default  reduce using rule 93 (func_printf)
+
+
+State 188
+
+   94 lista_expresiones_printf: lista_expresiones_printf COMA . expresion
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 229
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 189
+
+   38 call_instruction: ID PARABRE PARCIERRA PTCOMA .
+
+    $default  reduce using rule 38 (call_instruction)
+
+
+State 190
+
+   37 call_instruction: ID PARABRE lista_expresiones_printf PARCIERRA . PTCOMA
+
+    PTCOMA  shift, and go to state 230
+
+
+State 191
+
+   39 call_instruction: ID PUNTO ID IGUAL . expresion PTCOMA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 231
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 192
+
+   40 instrucciones_vector: ID PUNTO RPUSHBACK PARABRE . expresion PARCIERRA PTCOMA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 232
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 193
+
+   41 instrucciones_vector: ID PUNTO RPUSHFRONT PARABRE . expresion PARCIERRA PTCOMA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 233
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 194
+
+   42 instrucciones_vector: ID PUNTO RREMOVE PARABRE . expresion PARCIERRA PTCOMA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 234
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 195
+
+   99 asignacion: ID CORABRE expresion CORCIERRA . IGUAL expresion
+
+    IGUAL  shift, and go to state 235
+
+
+State 196
+
+  101 instruccion_if: R_IF PARABRE expresion PARCIERRA . LLAVEABRE cuerpo_if LLAVECIERRA list_elseif list_else
+  102               | R_IF PARABRE expresion PARCIERRA . LLAVEABRE cuerpo_if LLAVECIERRA list_elseif
+  103               | R_IF PARABRE expresion PARCIERRA . LLAVEABRE cuerpo_if LLAVECIERRA list_else
+  104               | R_IF PARABRE expresion PARCIERRA . LLAVEABRE cuerpo_if LLAVECIERRA
+
+    LLAVEABRE  shift, and go to state 236
+
+
+State 197
+
+  124 instruccion_while: RWHILE PARABRE expresion PARCIERRA . LLAVEABRE cuerpo_while LLAVECIERRA
+
+    LLAVEABRE  shift, and go to state 237
+
+
+State 198
+
+  141 instruccion_for: RFOR PARABRE declaracion_for PTCOMA . expresion PTCOMA incremento_for PARCIERRA LLAVEABRE cuerpo_for LLAVECIERRA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 238
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 199
+
+   46 creation_struct: RSTRUCT ID ID IGUAL . LLAVEABRE lista_expresiones_printf LLAVECIERRA PTCOMA
+
+    LLAVEABRE  shift, and go to state 239
+
+
+State 200
+
+   47 creation_struct: RSTRUCT ID ID PTCOMA .
+
+    $default  reduce using rule 47 (creation_struct)
+
+
+State 201
+
+   43 declaracion_arreglo: RVECTOR MENOR tipo MAYOR . ID PTCOMA
+   44                    | RVECTOR MENOR tipo MAYOR . ID IGUAL CORABRE lista_expresiones_printf CORCIERRA PTCOMA
+   45                    | RVECTOR MENOR tipo MAYOR . ID IGUAL CORABRE CORCIERRA PTCOMA
+
+    ID  shift, and go to state 240
+
+
+State 202
+
+   69 expresion: PARABRE expresion PARCIERRA .
+
+    $default  reduce using rule 69 (expresion)
+
+
+State 203
+
+   81 call_expr: ID PARABRE PARCIERRA .
+
+    $default  reduce using rule 81 (call_expr)
+
+
+State 204
+
+   80 call_expr: ID PARABRE lista_expresiones_printf . PARCIERRA
+   94 lista_expresiones_printf: lista_expresiones_printf . COMA expresion
+
+    PARCIERRA  shift, and go to state 241
+    COMA       shift, and go to state 188
+
+
+State 205
+
+   92 llamada_variable: ID PUNTO ID .
+
+    $default  reduce using rule 92 (llamada_variable)
+
+
+State 206
+
+   89 op_vector: ID PUNTO RGET . PARABRE expresion PARCIERRA
+
+    PARABRE  shift, and go to state 242
+
+
+State 207
+
+   90 op_vector: ID PUNTO RSIZE . PARABRE PARCIERRA
+
+    PARABRE  shift, and go to state 243
+
+
+State 208
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+   88 op_vector: ID CORABRE expresion . CORCIERRA
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+    CORCIERRA         shift, and go to state 244
+
+
+State 209
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+   73          | RIOTA PARABRE expresion . PARCIERRA
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    PARCIERRA         shift, and go to state 245
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+
+State 210
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+   71          | RATOI PARABRE expresion . PARCIERRA
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    PARCIERRA         shift, and go to state 246
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+
+State 211
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+   72          | RATOF PARABRE expresion . PARCIERRA
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    PARCIERRA         shift, and go to state 247
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+
+State 212
+
+   76 expresion: RMEAN PARABRE ID . PARCIERRA
+
+    PARCIERRA  shift, and go to state 248
+
+
+State 213
+
+   77 expresion: RMEDIAN PARABRE ID . PARCIERRA
+
+    PARCIERRA  shift, and go to state 249
+
+
+State 214
+
+   78 expresion: RMODE PARABRE ID . PARCIERRA
+
+    PARCIERRA  shift, and go to state 250
+
+
+State 215
+
+   58 expresion: expresion IGUAL IGUAL . expresion
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 251
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 216
+
+   53 expresion: expresion . OPSUMA expresion
+   53          | expresion OPSUMA expresion .
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+
+    $default  reduce using rule 53 (expresion)
+
+
+State 217
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   54          | expresion OPRESTA expresion .
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+
+    $default  reduce using rule 54 (expresion)
+
+
+State 218
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   55          | expresion OPMULTIPLICACION expresion .
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+
+    $default  reduce using rule 55 (expresion)
+
+
+State 219
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   56          | expresion OPDIVISION expresion .
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+
+    $default  reduce using rule 56 (expresion)
+
+
+State 220
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   57          | expresion OPMODULO expresion .
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+
+    $default  reduce using rule 57 (expresion)
+
+
+State 221
+
+   62 expresion: expresion MAYOR IGUAL . expresion
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 252
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 222
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   60          | expresion MAYOR expresion .
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+
+    $default  reduce using rule 60 (expresion)
+
+
+State 223
+
+   63 expresion: expresion MENOR IGUAL . expresion
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 253
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 224
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   61          | expresion MENOR expresion .
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+
+    $default  reduce using rule 61 (expresion)
+
+
+State 225
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   64          | expresion RAND expresion .
+   65          | expresion . ROR expresion
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    NOIGUAL           shift, and go to state 182
+
+    $default  reduce using rule 64 (expresion)
+
+
+State 226
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+   65          | expresion ROR expresion .
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    NOIGUAL           shift, and go to state 182
+
+    $default  reduce using rule 65 (expresion)
+
+
+State 227
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   59          | expresion NOIGUAL expresion .
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+
+    $default  reduce using rule 59 (expresion)
+
+
+State 228
+
+   48 declaracion: tipo ID IGUAL expresion .
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+    $default  reduce using rule 48 (declaracion)
+
+
+State 229
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+   94 lista_expresiones_printf: lista_expresiones_printf COMA expresion .
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+    $default  reduce using rule 94 (lista_expresiones_printf)
+
+
+State 230
+
+   37 call_instruction: ID PARABRE lista_expresiones_printf PARCIERRA PTCOMA .
+
+    $default  reduce using rule 37 (call_instruction)
+
+
+State 231
+
+   39 call_instruction: ID PUNTO ID IGUAL expresion . PTCOMA
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+
+    IGUAL             shift, and go to state 172
+    PTCOMA            shift, and go to state 254
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+
+State 232
+
+   40 instrucciones_vector: ID PUNTO RPUSHBACK PARABRE expresion . PARCIERRA PTCOMA
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    PARCIERRA         shift, and go to state 255
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+
+State 233
+
+   41 instrucciones_vector: ID PUNTO RPUSHFRONT PARABRE expresion . PARCIERRA PTCOMA
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    PARCIERRA         shift, and go to state 256
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+
+State 234
+
+   42 instrucciones_vector: ID PUNTO RREMOVE PARABRE expresion . PARCIERRA PTCOMA
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    PARCIERRA         shift, and go to state 257
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+
+State 235
+
+   99 asignacion: ID CORABRE expresion CORCIERRA IGUAL . expresion
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 258
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 236
+
+  101 instruccion_if: R_IF PARABRE expresion PARCIERRA LLAVEABRE . cuerpo_if LLAVECIERRA list_elseif list_else
+  102               | R_IF PARABRE expresion PARCIERRA LLAVEABRE . cuerpo_if LLAVECIERRA list_elseif
+  103               | R_IF PARABRE expresion PARCIERRA LLAVEABRE . cuerpo_if LLAVECIERRA list_else
+  104               | R_IF PARABRE expresion PARCIERRA LLAVEABRE . cuerpo_if LLAVECIERRA
+
+    RINT       shift, and go to state 25
+    RFLOAT     shift, and go to state 26
+    RSTRING    shift, and go to state 27
+    RBOOL      shift, and go to state 28
+    RPRINTF    shift, and go to state 53
+    ID         shift, and go to state 259
+    R_IF       shift, and go to state 55
+    RWHILE     shift, and go to state 56
+    RFOR       shift, and go to state 57
+    RBREAK     shift, and go to state 260
+    MASMAS     shift, and go to state 58
+    RCONTINUE  shift, and go to state 261
+    RSTRUCT    shift, and go to state 59
+    RVECTOR    shift, and go to state 60
+    RRETURN    shift, and go to state 61
+
+    instruccion_return      go to state 262
+    instrucciones_vector    go to state 263
+    declaracion_arreglo     go to state 264
+    creation_struct         go to state 265
+    declaracion             go to state 266
+    tipo                    go to state 70
+    func_printf             go to state 267
+    incremento_instruccion  go to state 268
+    asignacion              go to state 269
+    declaracion_sin_valor   go to state 270
+    instruccion_if          go to state 271
+    cuerpo_if               go to state 272
+    instruccion_if_cuerpo   go to state 273
+    instruccion_while       go to state 274
+    instruccion_for         go to state 275
+
+
+State 237
+
+  124 instruccion_while: RWHILE PARABRE expresion PARCIERRA LLAVEABRE . cuerpo_while LLAVECIERRA
+
+    RINT       shift, and go to state 25
+    RFLOAT     shift, and go to state 26
+    RSTRING    shift, and go to state 27
+    RBOOL      shift, and go to state 28
+    RPRINTF    shift, and go to state 53
+    ID         shift, and go to state 259
+    R_IF       shift, and go to state 55
+    RWHILE     shift, and go to state 56
+    RFOR       shift, and go to state 57
+    RBREAK     shift, and go to state 276
+    MASMAS     shift, and go to state 58
+    RCONTINUE  shift, and go to state 277
+    RSTRUCT    shift, and go to state 59
+    RVECTOR    shift, and go to state 60
+    RRETURN    shift, and go to state 61
+
+    instruccion_return        go to state 278
+    instrucciones_vector      go to state 279
+    declaracion_arreglo       go to state 280
+    creation_struct           go to state 281
+    declaracion               go to state 282
+    tipo                      go to state 70
+    func_printf               go to state 283
+    incremento_instruccion    go to state 284
+    asignacion                go to state 285
+    declaracion_sin_valor     go to state 286
+    instruccion_if            go to state 287
+    instruccion_while         go to state 288
+    cuerpo_while              go to state 289
+    instruccion_while_cuerpo  go to state 290
+    instruccion_for           go to state 291
+
+
+State 238
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+  141 instruccion_for: RFOR PARABRE declaracion_for PTCOMA expresion . PTCOMA incremento_for PARCIERRA LLAVEABRE cuerpo_for LLAVECIERRA
+
+    IGUAL             shift, and go to state 172
+    PTCOMA            shift, and go to state 292
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+
+State 239
+
+   46 creation_struct: RSTRUCT ID ID IGUAL LLAVEABRE . lista_expresiones_printf LLAVECIERRA PTCOMA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion                 go to state 139
+    call_expr                 go to state 117
+    primitivo                 go to state 118
+    op_vector                 go to state 119
+    llamada_variable          go to state 120
+    lista_expresiones_printf  go to state 293
+
+
+State 240
+
+   43 declaracion_arreglo: RVECTOR MENOR tipo MAYOR ID . PTCOMA
+   44                    | RVECTOR MENOR tipo MAYOR ID . IGUAL CORABRE lista_expresiones_printf CORCIERRA PTCOMA
+   45                    | RVECTOR MENOR tipo MAYOR ID . IGUAL CORABRE CORCIERRA PTCOMA
+
+    IGUAL   shift, and go to state 294
+    PTCOMA  shift, and go to state 295
+
+
+State 241
+
+   80 call_expr: ID PARABRE lista_expresiones_printf PARCIERRA .
+
+    $default  reduce using rule 80 (call_expr)
+
+
+State 242
+
+   89 op_vector: ID PUNTO RGET PARABRE . expresion PARCIERRA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 296
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 243
+
+   90 op_vector: ID PUNTO RSIZE PARABRE . PARCIERRA
+
+    PARCIERRA  shift, and go to state 297
+
+
+State 244
+
+   88 op_vector: ID CORABRE expresion CORCIERRA .
+
+    $default  reduce using rule 88 (op_vector)
+
+
+State 245
+
+   73 expresion: RIOTA PARABRE expresion PARCIERRA .
+
+    $default  reduce using rule 73 (expresion)
+
+
+State 246
+
+   71 expresion: RATOI PARABRE expresion PARCIERRA .
+
+    $default  reduce using rule 71 (expresion)
+
+
+State 247
+
+   72 expresion: RATOF PARABRE expresion PARCIERRA .
+
+    $default  reduce using rule 72 (expresion)
+
+
+State 248
+
+   76 expresion: RMEAN PARABRE ID PARCIERRA .
+
+    $default  reduce using rule 76 (expresion)
+
+
+State 249
+
+   77 expresion: RMEDIAN PARABRE ID PARCIERRA .
+
+    $default  reduce using rule 77 (expresion)
+
+
+State 250
+
+   78 expresion: RMODE PARABRE ID PARCIERRA .
+
+    $default  reduce using rule 78 (expresion)
+
+
+State 251
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   58          | expresion IGUAL IGUAL expresion .
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+
+    $default  reduce using rule 58 (expresion)
+
+
+State 252
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   62          | expresion MAYOR IGUAL expresion .
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+
+    $default  reduce using rule 62 (expresion)
+
+
+State 253
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   63          | expresion MENOR IGUAL expresion .
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+
+    $default  reduce using rule 63 (expresion)
+
+
+State 254
+
+   39 call_instruction: ID PUNTO ID IGUAL expresion PTCOMA .
+
+    $default  reduce using rule 39 (call_instruction)
+
+
+State 255
+
+   40 instrucciones_vector: ID PUNTO RPUSHBACK PARABRE expresion PARCIERRA . PTCOMA
+
+    PTCOMA  shift, and go to state 298
+
+
+State 256
+
+   41 instrucciones_vector: ID PUNTO RPUSHFRONT PARABRE expresion PARCIERRA . PTCOMA
+
+    PTCOMA  shift, and go to state 299
+
+
+State 257
+
+   42 instrucciones_vector: ID PUNTO RREMOVE PARABRE expresion PARCIERRA . PTCOMA
+
+    PTCOMA  shift, and go to state 300
+
+
+State 258
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+   99 asignacion: ID CORABRE expresion CORCIERRA IGUAL expresion .
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+    $default  reduce using rule 99 (asignacion)
+
+
+State 259
+
+   40 instrucciones_vector: ID . PUNTO RPUSHBACK PARABRE expresion PARCIERRA PTCOMA
+   41                     | ID . PUNTO RPUSHFRONT PARABRE expresion PARCIERRA PTCOMA
+   42                     | ID . PUNTO RREMOVE PARABRE expresion PARCIERRA PTCOMA
+   96 incremento_instruccion: ID . MASMAS
+   98 asignacion: ID . IGUAL expresion
+   99           | ID . CORABRE expresion CORCIERRA IGUAL expresion
+
+    IGUAL    shift, and go to state 89
+    MASMAS   shift, and go to state 91
+    PUNTO    shift, and go to state 301
+    CORABRE  shift, and go to state 93
+
+
+State 260
+
+  112 instruccion_if_cuerpo: RBREAK . PTCOMA
+
+    PTCOMA  shift, and go to state 302
+
+
+State 261
+
+  113 instruccion_if_cuerpo: RCONTINUE . PTCOMA
+
+    PTCOMA  shift, and go to state 303
+
+
+State 262
+
+  120 instruccion_if_cuerpo: instruccion_return . PTCOMA
+
+    PTCOMA  shift, and go to state 304
+
+
+State 263
+
+  119 instruccion_if_cuerpo: instrucciones_vector .
+
+    $default  reduce using rule 119 (instruccion_if_cuerpo)
+
+
+State 264
+
+  118 instruccion_if_cuerpo: declaracion_arreglo .
+
+    $default  reduce using rule 118 (instruccion_if_cuerpo)
+
+
+State 265
+
+  117 instruccion_if_cuerpo: creation_struct .
+
+    $default  reduce using rule 117 (instruccion_if_cuerpo)
+
+
+State 266
+
+  115 instruccion_if_cuerpo: declaracion . PTCOMA
+
+    PTCOMA  shift, and go to state 305
+
+
+State 267
+
+  107 instruccion_if_cuerpo: func_printf . PTCOMA
+
+    PTCOMA  shift, and go to state 306
+
+
+State 268
+
+  110 instruccion_if_cuerpo: incremento_instruccion . PTCOMA
+
+    PTCOMA  shift, and go to state 307
+
+
+State 269
+
+  111 instruccion_if_cuerpo: asignacion . PTCOMA
+
+    PTCOMA  shift, and go to state 308
+
+
+State 270
+
+  116 instruccion_if_cuerpo: declaracion_sin_valor . PTCOMA
+
+    PTCOMA  shift, and go to state 309
+
+
+State 271
+
+  109 instruccion_if_cuerpo: instruccion_if .
+
+    $default  reduce using rule 109 (instruccion_if_cuerpo)
+
+
+State 272
+
+  101 instruccion_if: R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if . LLAVECIERRA list_elseif list_else
+  102               | R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if . LLAVECIERRA list_elseif
+  103               | R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if . LLAVECIERRA list_else
+  104               | R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if . LLAVECIERRA
+  105 cuerpo_if: cuerpo_if . instruccion_if_cuerpo
+
+    LLAVECIERRA  shift, and go to state 310
+    RINT         shift, and go to state 25
+    RFLOAT       shift, and go to state 26
+    RSTRING      shift, and go to state 27
+    RBOOL        shift, and go to state 28
+    RPRINTF      shift, and go to state 53
+    ID           shift, and go to state 259
+    R_IF         shift, and go to state 55
+    RWHILE       shift, and go to state 56
+    RFOR         shift, and go to state 57
+    RBREAK       shift, and go to state 260
+    MASMAS       shift, and go to state 58
+    RCONTINUE    shift, and go to state 261
+    RSTRUCT      shift, and go to state 59
+    RVECTOR      shift, and go to state 60
+    RRETURN      shift, and go to state 61
+
+    instruccion_return      go to state 262
+    instrucciones_vector    go to state 263
+    declaracion_arreglo     go to state 264
+    creation_struct         go to state 265
+    declaracion             go to state 266
+    tipo                    go to state 70
+    func_printf             go to state 267
+    incremento_instruccion  go to state 268
+    asignacion              go to state 269
+    declaracion_sin_valor   go to state 270
+    instruccion_if          go to state 271
+    instruccion_if_cuerpo   go to state 311
+    instruccion_while       go to state 274
+    instruccion_for         go to state 275
+
+
+State 273
+
+  106 cuerpo_if: instruccion_if_cuerpo .
+
+    $default  reduce using rule 106 (cuerpo_if)
+
+
+State 274
+
+  114 instruccion_if_cuerpo: instruccion_while .
+
+    $default  reduce using rule 114 (instruccion_if_cuerpo)
+
+
+State 275
+
+  108 instruccion_if_cuerpo: instruccion_for .
+
+    $default  reduce using rule 108 (instruccion_if_cuerpo)
+
+
+State 276
+
+  132 instruccion_while_cuerpo: RBREAK . PTCOMA
+
+    PTCOMA  shift, and go to state 312
+
+
+State 277
+
+  133 instruccion_while_cuerpo: RCONTINUE . PTCOMA
+
+    PTCOMA  shift, and go to state 313
+
+
+State 278
+
+  140 instruccion_while_cuerpo: instruccion_return . PTCOMA
+
+    PTCOMA  shift, and go to state 314
+
+
+State 279
+
+  139 instruccion_while_cuerpo: instrucciones_vector .
+
+    $default  reduce using rule 139 (instruccion_while_cuerpo)
+
+
+State 280
+
+  138 instruccion_while_cuerpo: declaracion_arreglo .
+
+    $default  reduce using rule 138 (instruccion_while_cuerpo)
+
+
+State 281
+
+  137 instruccion_while_cuerpo: creation_struct .
+
+    $default  reduce using rule 137 (instruccion_while_cuerpo)
+
+
+State 282
+
+  135 instruccion_while_cuerpo: declaracion . PTCOMA
+
+    PTCOMA  shift, and go to state 315
+
+
+State 283
+
+  127 instruccion_while_cuerpo: func_printf . PTCOMA
+
+    PTCOMA  shift, and go to state 316
+
+
+State 284
+
+  130 instruccion_while_cuerpo: incremento_instruccion . PTCOMA
+
+    PTCOMA  shift, and go to state 317
+
+
+State 285
+
+  131 instruccion_while_cuerpo: asignacion . PTCOMA
+
+    PTCOMA  shift, and go to state 318
+
+
+State 286
+
+  136 instruccion_while_cuerpo: declaracion_sin_valor . PTCOMA
+
+    PTCOMA  shift, and go to state 319
+
+
+State 287
+
+  129 instruccion_while_cuerpo: instruccion_if .
+
+    $default  reduce using rule 129 (instruccion_while_cuerpo)
+
+
+State 288
+
+  134 instruccion_while_cuerpo: instruccion_while .
+
+    $default  reduce using rule 134 (instruccion_while_cuerpo)
+
+
+State 289
+
+  124 instruccion_while: RWHILE PARABRE expresion PARCIERRA LLAVEABRE cuerpo_while . LLAVECIERRA
+  125 cuerpo_while: cuerpo_while . instruccion_while_cuerpo
+
+    LLAVECIERRA  shift, and go to state 320
+    RINT         shift, and go to state 25
+    RFLOAT       shift, and go to state 26
+    RSTRING      shift, and go to state 27
+    RBOOL        shift, and go to state 28
+    RPRINTF      shift, and go to state 53
+    ID           shift, and go to state 259
+    R_IF         shift, and go to state 55
+    RWHILE       shift, and go to state 56
+    RFOR         shift, and go to state 57
+    RBREAK       shift, and go to state 276
+    MASMAS       shift, and go to state 58
+    RCONTINUE    shift, and go to state 277
+    RSTRUCT      shift, and go to state 59
+    RVECTOR      shift, and go to state 60
+    RRETURN      shift, and go to state 61
+
+    instruccion_return        go to state 278
+    instrucciones_vector      go to state 279
+    declaracion_arreglo       go to state 280
+    creation_struct           go to state 281
+    declaracion               go to state 282
+    tipo                      go to state 70
+    func_printf               go to state 283
+    incremento_instruccion    go to state 284
+    asignacion                go to state 285
+    declaracion_sin_valor     go to state 286
+    instruccion_if            go to state 287
+    instruccion_while         go to state 288
+    instruccion_while_cuerpo  go to state 321
+    instruccion_for           go to state 291
+
+
+State 290
+
+  126 cuerpo_while: instruccion_while_cuerpo .
+
+    $default  reduce using rule 126 (cuerpo_while)
+
+
+State 291
+
+  128 instruccion_while_cuerpo: instruccion_for .
+
+    $default  reduce using rule 128 (instruccion_while_cuerpo)
+
+
+State 292
+
+  141 instruccion_for: RFOR PARABRE declaracion_for PTCOMA expresion PTCOMA . incremento_for PARCIERRA LLAVEABRE cuerpo_for LLAVECIERRA
+
+    ID      shift, and go to state 322
+    MASMAS  shift, and go to state 58
+
+    incremento_instruccion  go to state 323
+    asignacion              go to state 324
+    incremento_for          go to state 325
+
+
+State 293
+
+   46 creation_struct: RSTRUCT ID ID IGUAL LLAVEABRE lista_expresiones_printf . LLAVECIERRA PTCOMA
+   94 lista_expresiones_printf: lista_expresiones_printf . COMA expresion
+
+    LLAVECIERRA  shift, and go to state 326
+    COMA         shift, and go to state 188
+
+
+State 294
+
+   44 declaracion_arreglo: RVECTOR MENOR tipo MAYOR ID IGUAL . CORABRE lista_expresiones_printf CORCIERRA PTCOMA
+   45                    | RVECTOR MENOR tipo MAYOR ID IGUAL . CORABRE CORCIERRA PTCOMA
+
+    CORABRE  shift, and go to state 327
+
+
+State 295
+
+   43 declaracion_arreglo: RVECTOR MENOR tipo MAYOR ID PTCOMA .
+
+    $default  reduce using rule 43 (declaracion_arreglo)
+
+
+State 296
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+   89 op_vector: ID PUNTO RGET PARABRE expresion . PARCIERRA
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    PARCIERRA         shift, and go to state 328
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+
+State 297
+
+   90 op_vector: ID PUNTO RSIZE PARABRE PARCIERRA .
+
+    $default  reduce using rule 90 (op_vector)
+
+
+State 298
+
+   40 instrucciones_vector: ID PUNTO RPUSHBACK PARABRE expresion PARCIERRA PTCOMA .
+
+    $default  reduce using rule 40 (instrucciones_vector)
+
+
+State 299
+
+   41 instrucciones_vector: ID PUNTO RPUSHFRONT PARABRE expresion PARCIERRA PTCOMA .
+
+    $default  reduce using rule 41 (instrucciones_vector)
+
+
+State 300
+
+   42 instrucciones_vector: ID PUNTO RREMOVE PARABRE expresion PARCIERRA PTCOMA .
+
+    $default  reduce using rule 42 (instrucciones_vector)
+
+
+State 301
+
+   40 instrucciones_vector: ID PUNTO . RPUSHBACK PARABRE expresion PARCIERRA PTCOMA
+   41                     | ID PUNTO . RPUSHFRONT PARABRE expresion PARCIERRA PTCOMA
+   42                     | ID PUNTO . RREMOVE PARABRE expresion PARCIERRA PTCOMA
+
+    RPUSHBACK   shift, and go to state 145
+    RPUSHFRONT  shift, and go to state 146
+    RREMOVE     shift, and go to state 147
+
+
+State 302
+
+  112 instruccion_if_cuerpo: RBREAK PTCOMA .
+
+    $default  reduce using rule 112 (instruccion_if_cuerpo)
+
+
+State 303
+
+  113 instruccion_if_cuerpo: RCONTINUE PTCOMA .
+
+    $default  reduce using rule 113 (instruccion_if_cuerpo)
+
+
+State 304
+
+  120 instruccion_if_cuerpo: instruccion_return PTCOMA .
+
+    $default  reduce using rule 120 (instruccion_if_cuerpo)
+
+
+State 305
+
+  115 instruccion_if_cuerpo: declaracion PTCOMA .
+
+    $default  reduce using rule 115 (instruccion_if_cuerpo)
+
+
+State 306
+
+  107 instruccion_if_cuerpo: func_printf PTCOMA .
+
+    $default  reduce using rule 107 (instruccion_if_cuerpo)
+
+
+State 307
+
+  110 instruccion_if_cuerpo: incremento_instruccion PTCOMA .
+
+    $default  reduce using rule 110 (instruccion_if_cuerpo)
+
+
+State 308
+
+  111 instruccion_if_cuerpo: asignacion PTCOMA .
+
+    $default  reduce using rule 111 (instruccion_if_cuerpo)
+
+
+State 309
+
+  116 instruccion_if_cuerpo: declaracion_sin_valor PTCOMA .
+
+    $default  reduce using rule 116 (instruccion_if_cuerpo)
+
+
+State 310
+
+  101 instruccion_if: R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA . list_elseif list_else
+  102               | R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA . list_elseif
+  103               | R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA . list_else
+  104               | R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA .
+
+    R_ELSE  shift, and go to state 329
+
+    $default  reduce using rule 104 (instruccion_if)
+
+    list_elseif  go to state 330
+    list_else    go to state 331
+
+
+State 311
+
+  105 cuerpo_if: cuerpo_if instruccion_if_cuerpo .
+
+    $default  reduce using rule 105 (cuerpo_if)
+
+
+State 312
+
+  132 instruccion_while_cuerpo: RBREAK PTCOMA .
+
+    $default  reduce using rule 132 (instruccion_while_cuerpo)
+
+
+State 313
+
+  133 instruccion_while_cuerpo: RCONTINUE PTCOMA .
+
+    $default  reduce using rule 133 (instruccion_while_cuerpo)
+
+
+State 314
+
+  140 instruccion_while_cuerpo: instruccion_return PTCOMA .
+
+    $default  reduce using rule 140 (instruccion_while_cuerpo)
+
+
+State 315
+
+  135 instruccion_while_cuerpo: declaracion PTCOMA .
+
+    $default  reduce using rule 135 (instruccion_while_cuerpo)
+
+
+State 316
+
+  127 instruccion_while_cuerpo: func_printf PTCOMA .
+
+    $default  reduce using rule 127 (instruccion_while_cuerpo)
+
+
+State 317
+
+  130 instruccion_while_cuerpo: incremento_instruccion PTCOMA .
+
+    $default  reduce using rule 130 (instruccion_while_cuerpo)
+
+
+State 318
+
+  131 instruccion_while_cuerpo: asignacion PTCOMA .
+
+    $default  reduce using rule 131 (instruccion_while_cuerpo)
+
+
+State 319
+
+  136 instruccion_while_cuerpo: declaracion_sin_valor PTCOMA .
+
+    $default  reduce using rule 136 (instruccion_while_cuerpo)
+
+
+State 320
+
+  124 instruccion_while: RWHILE PARABRE expresion PARCIERRA LLAVEABRE cuerpo_while LLAVECIERRA .
+
+    $default  reduce using rule 124 (instruccion_while)
+
+
+State 321
+
+  125 cuerpo_while: cuerpo_while instruccion_while_cuerpo .
+
+    $default  reduce using rule 125 (cuerpo_while)
+
+
+State 322
+
+   96 incremento_instruccion: ID . MASMAS
+   98 asignacion: ID . IGUAL expresion
+   99           | ID . CORABRE expresion CORCIERRA IGUAL expresion
+
+    IGUAL    shift, and go to state 89
+    MASMAS   shift, and go to state 91
+    CORABRE  shift, and go to state 93
+
+
+State 323
+
+  146 incremento_for: incremento_instruccion .
+
+    $default  reduce using rule 146 (incremento_for)
+
+
+State 324
+
+  145 incremento_for: asignacion .
+
+    $default  reduce using rule 145 (incremento_for)
+
+
+State 325
+
+  141 instruccion_for: RFOR PARABRE declaracion_for PTCOMA expresion PTCOMA incremento_for . PARCIERRA LLAVEABRE cuerpo_for LLAVECIERRA
+
+    PARCIERRA  shift, and go to state 332
+
+
+State 326
+
+   46 creation_struct: RSTRUCT ID ID IGUAL LLAVEABRE lista_expresiones_printf LLAVECIERRA . PTCOMA
+
+    PTCOMA  shift, and go to state 333
+
+
+State 327
+
+   44 declaracion_arreglo: RVECTOR MENOR tipo MAYOR ID IGUAL CORABRE . lista_expresiones_printf CORCIERRA PTCOMA
+   45                    | RVECTOR MENOR tipo MAYOR ID IGUAL CORABRE . CORCIERRA PTCOMA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    CORCIERRA        shift, and go to state 334
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion                 go to state 139
+    call_expr                 go to state 117
+    primitivo                 go to state 118
+    op_vector                 go to state 119
+    llamada_variable          go to state 120
+    lista_expresiones_printf  go to state 335
+
+
+State 328
+
+   89 op_vector: ID PUNTO RGET PARABRE expresion PARCIERRA .
+
+    $default  reduce using rule 89 (op_vector)
+
+
+State 329
+
+  122 list_elseif: R_ELSE . R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA
+  123 list_else: R_ELSE . LLAVEABRE cuerpo_if LLAVECIERRA
+
+    LLAVEABRE  shift, and go to state 336
+    R_IF       shift, and go to state 337
+
+
+State 330
+
+  101 instruccion_if: R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA list_elseif . list_else
+  102               | R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA list_elseif .
+  121 list_elseif: list_elseif . R_ELSE R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA
+
+    R_ELSE  shift, and go to state 338
+
+    $default  reduce using rule 102 (instruccion_if)
+
+    list_else  go to state 339
+
+
+State 331
+
+  103 instruccion_if: R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA list_else .
+
+    $default  reduce using rule 103 (instruccion_if)
+
+
+State 332
+
+  141 instruccion_for: RFOR PARABRE declaracion_for PTCOMA expresion PTCOMA incremento_for PARCIERRA . LLAVEABRE cuerpo_for LLAVECIERRA
+
+    LLAVEABRE  shift, and go to state 340
+
+
+State 333
+
+   46 creation_struct: RSTRUCT ID ID IGUAL LLAVEABRE lista_expresiones_printf LLAVECIERRA PTCOMA .
+
+    $default  reduce using rule 46 (creation_struct)
+
+
+State 334
+
+   45 declaracion_arreglo: RVECTOR MENOR tipo MAYOR ID IGUAL CORABRE CORCIERRA . PTCOMA
+
+    PTCOMA  shift, and go to state 341
+
+
+State 335
+
+   44 declaracion_arreglo: RVECTOR MENOR tipo MAYOR ID IGUAL CORABRE lista_expresiones_printf . CORCIERRA PTCOMA
+   94 lista_expresiones_printf: lista_expresiones_printf . COMA expresion
+
+    COMA       shift, and go to state 188
+    CORCIERRA  shift, and go to state 342
+
+
+State 336
+
+  123 list_else: R_ELSE LLAVEABRE . cuerpo_if LLAVECIERRA
+
+    RINT       shift, and go to state 25
+    RFLOAT     shift, and go to state 26
+    RSTRING    shift, and go to state 27
+    RBOOL      shift, and go to state 28
+    RPRINTF    shift, and go to state 53
+    ID         shift, and go to state 259
+    R_IF       shift, and go to state 55
+    RWHILE     shift, and go to state 56
+    RFOR       shift, and go to state 57
+    RBREAK     shift, and go to state 260
+    MASMAS     shift, and go to state 58
+    RCONTINUE  shift, and go to state 261
+    RSTRUCT    shift, and go to state 59
+    RVECTOR    shift, and go to state 60
+    RRETURN    shift, and go to state 61
+
+    instruccion_return      go to state 262
+    instrucciones_vector    go to state 263
+    declaracion_arreglo     go to state 264
+    creation_struct         go to state 265
+    declaracion             go to state 266
+    tipo                    go to state 70
+    func_printf             go to state 267
+    incremento_instruccion  go to state 268
+    asignacion              go to state 269
+    declaracion_sin_valor   go to state 270
+    instruccion_if          go to state 271
+    cuerpo_if               go to state 343
+    instruccion_if_cuerpo   go to state 273
+    instruccion_while       go to state 274
+    instruccion_for         go to state 275
+
+
+State 337
+
+  122 list_elseif: R_ELSE R_IF . PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA
+
+    PARABRE  shift, and go to state 344
+
+
+State 338
+
+  121 list_elseif: list_elseif R_ELSE . R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA
+  123 list_else: R_ELSE . LLAVEABRE cuerpo_if LLAVECIERRA
+
+    LLAVEABRE  shift, and go to state 336
+    R_IF       shift, and go to state 345
+
+
+State 339
+
+  101 instruccion_if: R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA list_elseif list_else .
+
+    $default  reduce using rule 101 (instruccion_if)
+
+
+State 340
+
+  141 instruccion_for: RFOR PARABRE declaracion_for PTCOMA expresion PTCOMA incremento_for PARCIERRA LLAVEABRE . cuerpo_for LLAVECIERRA
+
+    RINT       shift, and go to state 25
+    RFLOAT     shift, and go to state 26
+    RSTRING    shift, and go to state 27
+    RBOOL      shift, and go to state 28
+    RPRINTF    shift, and go to state 53
+    ID         shift, and go to state 259
+    R_IF       shift, and go to state 55
+    RWHILE     shift, and go to state 56
+    RFOR       shift, and go to state 57
+    RBREAK     shift, and go to state 346
+    MASMAS     shift, and go to state 58
+    RCONTINUE  shift, and go to state 347
+    RSTRUCT    shift, and go to state 59
+    RVECTOR    shift, and go to state 60
+    RRETURN    shift, and go to state 61
+
+    instruccion_return      go to state 348
+    instrucciones_vector    go to state 349
+    declaracion_arreglo     go to state 350
+    creation_struct         go to state 351
+    declaracion             go to state 352
+    tipo                    go to state 70
+    func_printf             go to state 353
+    incremento_instruccion  go to state 354
+    asignacion              go to state 355
+    declaracion_sin_valor   go to state 356
+    instruccion_if          go to state 357
+    instruccion_while       go to state 358
+    instruccion_for         go to state 359
+    cuerpo_for              go to state 360
+    instruccion_for_cuerpo  go to state 361
+
+
+State 341
+
+   45 declaracion_arreglo: RVECTOR MENOR tipo MAYOR ID IGUAL CORABRE CORCIERRA PTCOMA .
+
+    $default  reduce using rule 45 (declaracion_arreglo)
+
+
+State 342
+
+   44 declaracion_arreglo: RVECTOR MENOR tipo MAYOR ID IGUAL CORABRE lista_expresiones_printf CORCIERRA . PTCOMA
+
+    PTCOMA  shift, and go to state 362
+
+
+State 343
+
+  105 cuerpo_if: cuerpo_if . instruccion_if_cuerpo
+  123 list_else: R_ELSE LLAVEABRE cuerpo_if . LLAVECIERRA
+
+    LLAVECIERRA  shift, and go to state 363
+    RINT         shift, and go to state 25
+    RFLOAT       shift, and go to state 26
+    RSTRING      shift, and go to state 27
+    RBOOL        shift, and go to state 28
+    RPRINTF      shift, and go to state 53
+    ID           shift, and go to state 259
+    R_IF         shift, and go to state 55
+    RWHILE       shift, and go to state 56
+    RFOR         shift, and go to state 57
+    RBREAK       shift, and go to state 260
+    MASMAS       shift, and go to state 58
+    RCONTINUE    shift, and go to state 261
+    RSTRUCT      shift, and go to state 59
+    RVECTOR      shift, and go to state 60
+    RRETURN      shift, and go to state 61
+
+    instruccion_return      go to state 262
+    instrucciones_vector    go to state 263
+    declaracion_arreglo     go to state 264
+    creation_struct         go to state 265
+    declaracion             go to state 266
+    tipo                    go to state 70
+    func_printf             go to state 267
+    incremento_instruccion  go to state 268
+    asignacion              go to state 269
+    declaracion_sin_valor   go to state 270
+    instruccion_if          go to state 271
+    instruccion_if_cuerpo   go to state 311
+    instruccion_while       go to state 274
+    instruccion_for         go to state 275
+
+
+State 344
+
+  122 list_elseif: R_ELSE R_IF PARABRE . expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 364
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 345
+
+  121 list_elseif: list_elseif R_ELSE R_IF . PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA
+
+    PARABRE  shift, and go to state 365
+
+
+State 346
+
+  154 instruccion_for_cuerpo: RBREAK . PTCOMA
+
+    PTCOMA  shift, and go to state 366
+
+
+State 347
+
+  155 instruccion_for_cuerpo: RCONTINUE . PTCOMA
+
+    PTCOMA  shift, and go to state 367
+
+
+State 348
+
+  162 instruccion_for_cuerpo: instruccion_return . PTCOMA
+
+    PTCOMA  shift, and go to state 368
+
+
+State 349
+
+  161 instruccion_for_cuerpo: instrucciones_vector .
+
+    $default  reduce using rule 161 (instruccion_for_cuerpo)
+
+
+State 350
+
+  160 instruccion_for_cuerpo: declaracion_arreglo .
+
+    $default  reduce using rule 160 (instruccion_for_cuerpo)
+
+
+State 351
+
+  159 instruccion_for_cuerpo: creation_struct .
+
+    $default  reduce using rule 159 (instruccion_for_cuerpo)
+
+
+State 352
+
+  157 instruccion_for_cuerpo: declaracion . PTCOMA
+
+    PTCOMA  shift, and go to state 369
+
+
+State 353
+
+  149 instruccion_for_cuerpo: func_printf . PTCOMA
+
+    PTCOMA  shift, and go to state 370
+
+
+State 354
+
+  152 instruccion_for_cuerpo: incremento_instruccion . PTCOMA
+
+    PTCOMA  shift, and go to state 371
+
+
+State 355
+
+  153 instruccion_for_cuerpo: asignacion . PTCOMA
+
+    PTCOMA  shift, and go to state 372
+
+
+State 356
+
+  158 instruccion_for_cuerpo: declaracion_sin_valor . PTCOMA
+
+    PTCOMA  shift, and go to state 373
+
+
+State 357
+
+  151 instruccion_for_cuerpo: instruccion_if .
+
+    $default  reduce using rule 151 (instruccion_for_cuerpo)
+
+
+State 358
+
+  156 instruccion_for_cuerpo: instruccion_while .
+
+    $default  reduce using rule 156 (instruccion_for_cuerpo)
+
+
+State 359
+
+  150 instruccion_for_cuerpo: instruccion_for .
+
+    $default  reduce using rule 150 (instruccion_for_cuerpo)
+
+
+State 360
+
+  141 instruccion_for: RFOR PARABRE declaracion_for PTCOMA expresion PTCOMA incremento_for PARCIERRA LLAVEABRE cuerpo_for . LLAVECIERRA
+  147 cuerpo_for: cuerpo_for . instruccion_for_cuerpo
+
+    LLAVECIERRA  shift, and go to state 374
+    RINT         shift, and go to state 25
+    RFLOAT       shift, and go to state 26
+    RSTRING      shift, and go to state 27
+    RBOOL        shift, and go to state 28
+    RPRINTF      shift, and go to state 53
+    ID           shift, and go to state 259
+    R_IF         shift, and go to state 55
+    RWHILE       shift, and go to state 56
+    RFOR         shift, and go to state 57
+    RBREAK       shift, and go to state 346
+    MASMAS       shift, and go to state 58
+    RCONTINUE    shift, and go to state 347
+    RSTRUCT      shift, and go to state 59
+    RVECTOR      shift, and go to state 60
+    RRETURN      shift, and go to state 61
+
+    instruccion_return      go to state 348
+    instrucciones_vector    go to state 349
+    declaracion_arreglo     go to state 350
+    creation_struct         go to state 351
+    declaracion             go to state 352
+    tipo                    go to state 70
+    func_printf             go to state 353
+    incremento_instruccion  go to state 354
+    asignacion              go to state 355
+    declaracion_sin_valor   go to state 356
+    instruccion_if          go to state 357
+    instruccion_while       go to state 358
+    instruccion_for         go to state 359
+    instruccion_for_cuerpo  go to state 375
+
+
+State 361
+
+  148 cuerpo_for: instruccion_for_cuerpo .
+
+    $default  reduce using rule 148 (cuerpo_for)
+
+
+State 362
+
+   44 declaracion_arreglo: RVECTOR MENOR tipo MAYOR ID IGUAL CORABRE lista_expresiones_printf CORCIERRA PTCOMA .
+
+    $default  reduce using rule 44 (declaracion_arreglo)
+
+
+State 363
+
+  123 list_else: R_ELSE LLAVEABRE cuerpo_if LLAVECIERRA .
+
+    $default  reduce using rule 123 (list_else)
+
+
+State 364
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+  122 list_elseif: R_ELSE R_IF PARABRE expresion . PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    PARCIERRA         shift, and go to state 376
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+
+State 365
+
+  121 list_elseif: list_elseif R_ELSE R_IF PARABRE . expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA
+
+    OPRESTA          shift, and go to state 100
+    PARABRE          shift, and go to state 101
+    TIPO_INTEGER     shift, and go to state 102
+    TIPO_FLOAT       shift, and go to state 103
+    TIPO_STRING      shift, and go to state 104
+    TIPO_BOOL_TRUE   shift, and go to state 105
+    TIPO_BOOL_FALSE  shift, and go to state 106
+    ID               shift, and go to state 107
+    NOT              shift, and go to state 108
+    MASMAS           shift, and go to state 109
+    RIOTA            shift, and go to state 110
+    RATOI            shift, and go to state 111
+    RATOF            shift, and go to state 112
+    RMEAN            shift, and go to state 113
+    RMEDIAN          shift, and go to state 114
+    RMODE            shift, and go to state 115
+
+    expresion         go to state 377
+    call_expr         go to state 117
+    primitivo         go to state 118
+    op_vector         go to state 119
+    llamada_variable  go to state 120
+
+
+State 366
+
+  154 instruccion_for_cuerpo: RBREAK PTCOMA .
+
+    $default  reduce using rule 154 (instruccion_for_cuerpo)
+
+
+State 367
+
+  155 instruccion_for_cuerpo: RCONTINUE PTCOMA .
+
+    $default  reduce using rule 155 (instruccion_for_cuerpo)
+
+
+State 368
+
+  162 instruccion_for_cuerpo: instruccion_return PTCOMA .
+
+    $default  reduce using rule 162 (instruccion_for_cuerpo)
+
+
+State 369
+
+  157 instruccion_for_cuerpo: declaracion PTCOMA .
+
+    $default  reduce using rule 157 (instruccion_for_cuerpo)
+
+
+State 370
+
+  149 instruccion_for_cuerpo: func_printf PTCOMA .
+
+    $default  reduce using rule 149 (instruccion_for_cuerpo)
+
+
+State 371
+
+  152 instruccion_for_cuerpo: incremento_instruccion PTCOMA .
+
+    $default  reduce using rule 152 (instruccion_for_cuerpo)
+
+
+State 372
+
+  153 instruccion_for_cuerpo: asignacion PTCOMA .
+
+    $default  reduce using rule 153 (instruccion_for_cuerpo)
+
+
+State 373
+
+  158 instruccion_for_cuerpo: declaracion_sin_valor PTCOMA .
+
+    $default  reduce using rule 158 (instruccion_for_cuerpo)
+
+
+State 374
+
+  141 instruccion_for: RFOR PARABRE declaracion_for PTCOMA expresion PTCOMA incremento_for PARCIERRA LLAVEABRE cuerpo_for LLAVECIERRA .
+
+    $default  reduce using rule 141 (instruccion_for)
+
+
+State 375
+
+  147 cuerpo_for: cuerpo_for instruccion_for_cuerpo .
+
+    $default  reduce using rule 147 (cuerpo_for)
+
+
+State 376
+
+  122 list_elseif: R_ELSE R_IF PARABRE expresion PARCIERRA . LLAVEABRE cuerpo_if LLAVECIERRA
+
+    LLAVEABRE  shift, and go to state 378
+
+
+State 377
+
+   53 expresion: expresion . OPSUMA expresion
+   54          | expresion . OPRESTA expresion
+   55          | expresion . OPMULTIPLICACION expresion
+   56          | expresion . OPDIVISION expresion
+   57          | expresion . OPMODULO expresion
+   58          | expresion . IGUAL IGUAL expresion
+   59          | expresion . NOIGUAL expresion
+   60          | expresion . MAYOR expresion
+   61          | expresion . MENOR expresion
+   62          | expresion . MAYOR IGUAL expresion
+   63          | expresion . MENOR IGUAL expresion
+   64          | expresion . RAND expresion
+   65          | expresion . ROR expresion
+  121 list_elseif: list_elseif R_ELSE R_IF PARABRE expresion . PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA
+
+    IGUAL             shift, and go to state 172
+    OPSUMA            shift, and go to state 173
+    OPRESTA           shift, and go to state 174
+    OPMULTIPLICACION  shift, and go to state 175
+    OPDIVISION        shift, and go to state 176
+    OPMODULO          shift, and go to state 177
+    PARCIERRA         shift, and go to state 379
+    MAYOR             shift, and go to state 178
+    MENOR             shift, and go to state 179
+    RAND              shift, and go to state 180
+    ROR               shift, and go to state 181
+    NOIGUAL           shift, and go to state 182
+
+
+State 378
+
+  122 list_elseif: R_ELSE R_IF PARABRE expresion PARCIERRA LLAVEABRE . cuerpo_if LLAVECIERRA
+
+    RINT       shift, and go to state 25
+    RFLOAT     shift, and go to state 26
+    RSTRING    shift, and go to state 27
+    RBOOL      shift, and go to state 28
+    RPRINTF    shift, and go to state 53
+    ID         shift, and go to state 259
+    R_IF       shift, and go to state 55
+    RWHILE     shift, and go to state 56
+    RFOR       shift, and go to state 57
+    RBREAK     shift, and go to state 260
+    MASMAS     shift, and go to state 58
+    RCONTINUE  shift, and go to state 261
+    RSTRUCT    shift, and go to state 59
+    RVECTOR    shift, and go to state 60
+    RRETURN    shift, and go to state 61
+
+    instruccion_return      go to state 262
+    instrucciones_vector    go to state 263
+    declaracion_arreglo     go to state 264
+    creation_struct         go to state 265
+    declaracion             go to state 266
+    tipo                    go to state 70
+    func_printf             go to state 267
+    incremento_instruccion  go to state 268
+    asignacion              go to state 269
+    declaracion_sin_valor   go to state 270
+    instruccion_if          go to state 271
+    cuerpo_if               go to state 380
+    instruccion_if_cuerpo   go to state 273
+    instruccion_while       go to state 274
+    instruccion_for         go to state 275
+
+
+State 379
+
+  121 list_elseif: list_elseif R_ELSE R_IF PARABRE expresion PARCIERRA . LLAVEABRE cuerpo_if LLAVECIERRA
+
+    LLAVEABRE  shift, and go to state 381
+
+
+State 380
+
+  105 cuerpo_if: cuerpo_if . instruccion_if_cuerpo
+  122 list_elseif: R_ELSE R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if . LLAVECIERRA
+
+    LLAVECIERRA  shift, and go to state 382
+    RINT         shift, and go to state 25
+    RFLOAT       shift, and go to state 26
+    RSTRING      shift, and go to state 27
+    RBOOL        shift, and go to state 28
+    RPRINTF      shift, and go to state 53
+    ID           shift, and go to state 259
+    R_IF         shift, and go to state 55
+    RWHILE       shift, and go to state 56
+    RFOR         shift, and go to state 57
+    RBREAK       shift, and go to state 260
+    MASMAS       shift, and go to state 58
+    RCONTINUE    shift, and go to state 261
+    RSTRUCT      shift, and go to state 59
+    RVECTOR      shift, and go to state 60
+    RRETURN      shift, and go to state 61
+
+    instruccion_return      go to state 262
+    instrucciones_vector    go to state 263
+    declaracion_arreglo     go to state 264
+    creation_struct         go to state 265
+    declaracion             go to state 266
+    tipo                    go to state 70
+    func_printf             go to state 267
+    incremento_instruccion  go to state 268
+    asignacion              go to state 269
+    declaracion_sin_valor   go to state 270
+    instruccion_if          go to state 271
+    instruccion_if_cuerpo   go to state 311
+    instruccion_while       go to state 274
+    instruccion_for         go to state 275
+
+
+State 381
+
+  121 list_elseif: list_elseif R_ELSE R_IF PARABRE expresion PARCIERRA LLAVEABRE . cuerpo_if LLAVECIERRA
+
+    RINT       shift, and go to state 25
+    RFLOAT     shift, and go to state 26
+    RSTRING    shift, and go to state 27
+    RBOOL      shift, and go to state 28
+    RPRINTF    shift, and go to state 53
+    ID         shift, and go to state 259
+    R_IF       shift, and go to state 55
+    RWHILE     shift, and go to state 56
+    RFOR       shift, and go to state 57
+    RBREAK     shift, and go to state 260
+    MASMAS     shift, and go to state 58
+    RCONTINUE  shift, and go to state 261
+    RSTRUCT    shift, and go to state 59
+    RVECTOR    shift, and go to state 60
+    RRETURN    shift, and go to state 61
+
+    instruccion_return      go to state 262
+    instrucciones_vector    go to state 263
+    declaracion_arreglo     go to state 264
+    creation_struct         go to state 265
+    declaracion             go to state 266
+    tipo                    go to state 70
+    func_printf             go to state 267
+    incremento_instruccion  go to state 268
+    asignacion              go to state 269
+    declaracion_sin_valor   go to state 270
+    instruccion_if          go to state 271
+    cuerpo_if               go to state 383
+    instruccion_if_cuerpo   go to state 273
+    instruccion_while       go to state 274
+    instruccion_for         go to state 275
+
+
+State 382
+
+  122 list_elseif: R_ELSE R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA .
+
+    $default  reduce using rule 122 (list_elseif)
+
+
+State 383
+
+  105 cuerpo_if: cuerpo_if . instruccion_if_cuerpo
+  121 list_elseif: list_elseif R_ELSE R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if . LLAVECIERRA
+
+    LLAVECIERRA  shift, and go to state 384
+    RINT         shift, and go to state 25
+    RFLOAT       shift, and go to state 26
+    RSTRING      shift, and go to state 27
+    RBOOL        shift, and go to state 28
+    RPRINTF      shift, and go to state 53
+    ID           shift, and go to state 259
+    R_IF         shift, and go to state 55
+    RWHILE       shift, and go to state 56
+    RFOR         shift, and go to state 57
+    RBREAK       shift, and go to state 260
+    MASMAS       shift, and go to state 58
+    RCONTINUE    shift, and go to state 261
+    RSTRUCT      shift, and go to state 59
+    RVECTOR      shift, and go to state 60
+    RRETURN      shift, and go to state 61
+
+    instruccion_return      go to state 262
+    instrucciones_vector    go to state 263
+    declaracion_arreglo     go to state 264
+    creation_struct         go to state 265
+    declaracion             go to state 266
+    tipo                    go to state 70
+    func_printf             go to state 267
+    incremento_instruccion  go to state 268
+    asignacion              go to state 269
+    declaracion_sin_valor   go to state 270
+    instruccion_if          go to state 271
+    instruccion_if_cuerpo   go to state 311
+    instruccion_while       go to state 274
+    instruccion_for         go to state 275
+
+
+State 384
+
+  121 list_elseif: list_elseif R_ELSE R_IF PARABRE expresion PARCIERRA LLAVEABRE cuerpo_if LLAVECIERRA .
+
+    $default  reduce using rule 121 (list_elseif)
