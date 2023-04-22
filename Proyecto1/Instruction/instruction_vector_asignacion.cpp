@@ -9,6 +9,10 @@ instruction_vector_asignacion::instruction_vector_asignacion(int line, int col, 
     this->exp = exp;
 }
 
+void instruction_vector_asignacion::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void instruction_vector_asignacion::ejecutar(environment *env, asttree *tree){
     symbol sym (line,Col,"",NULO,nullptr);
     map<TipoDato, QVector<symbol>> sym_vector = env->GetArray(id,env,tree);

@@ -10,6 +10,11 @@ incremento_expression::incremento_expression(int line, int col, std::string nomb
 
 }
 
+value incremento_expression::traducir(environment *env, asttree *tree, generator_code *gen){
+    value val("", false, NULO);
+    return val;
+}
+
 symbol incremento_expression::ejecutar(environment *env, asttree *tree){
     if(this->tipoIncr == 1){
        env->IncrementarVariable(this->nombre, tree);

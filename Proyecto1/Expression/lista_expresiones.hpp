@@ -12,6 +12,7 @@ public:
     symbol ejecutar(environment *env, asttree *tree) override;
     lista_expresiones();
     void newExpr(expression *inst);
+    value traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // LISTA_EXPRESIONES_HPP

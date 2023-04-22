@@ -8,6 +8,10 @@ instruction_push_front::instruction_push_front(int line, int col, std::string id
     this->exp = exp;
 }
 
+void instruction_push_front::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void instruction_push_front::ejecutar(environment *env, asttree *tree ){
     symbol sym (Line,Col,"",NULO,nullptr);
     symbol expres = exp->ejecutar(env,tree);

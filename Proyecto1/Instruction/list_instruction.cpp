@@ -7,7 +7,9 @@ list_instruction::list_instruction()
     this->cadenaPrint = "";
 }
 
+void list_instruction::traducir(environment *env, asttree *tree, generator_code *gen){
 
+}
 
 void list_instruction::ejecutar(environment *env, asttree *tree)
 {

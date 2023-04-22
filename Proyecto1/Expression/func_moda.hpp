@@ -11,6 +11,7 @@ public:
     func_moda(int line, int col, std::string id_vector);
     symbol ejecutar(environment *env, asttree *tree) override;
     int contarRepitencia(int numeros[], int dimension, int numero);
+    value traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // FUNC_MODA_HPP

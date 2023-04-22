@@ -11,6 +11,10 @@ function::function(int line, int col, TipoDato tipo, std::string id, map_struct_
     this->tipoInstruccion = 100;
 }
 
+void function::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void function::ejecutar(environment *env, asttree *tree)
 {
     func_symbol funcSym = func_symbol(Line, Col, NULO, "", nullptr, nullptr);

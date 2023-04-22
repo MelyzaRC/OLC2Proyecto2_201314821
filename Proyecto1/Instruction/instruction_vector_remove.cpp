@@ -8,6 +8,10 @@ instruction_vector_remove::instruction_vector_remove(int line, int col, std::str
     Index = index;
 }
 
+void instruction_vector_remove::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void instruction_vector_remove::ejecutar(environment *env, asttree *tree ){
     symbol sym (Line,Col,"",NULO,nullptr);
     symbol i = this->Index->ejecutar(env,tree);

@@ -15,6 +15,7 @@ public:
     operation(int line, int col, expression *op_izq, expression *op_der, std::string operador);
     symbol ejecutar(environment *env, asttree *tree) override;
     std::string obtenerTipo(int _tipo);
+    value traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // OPERATION_HPP

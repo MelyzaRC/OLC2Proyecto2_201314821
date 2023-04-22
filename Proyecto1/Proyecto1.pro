@@ -14,7 +14,9 @@ SOURCES += \
     AST/node.cpp \
     Environment/environment.cpp \
     Environment/func_symbol.cpp \
+    Environment/generator_code.cpp \
     Environment/symbol.cpp \
+    Environment/value.cpp \
     Error/error.cpp \
     Error/error_analisis.cpp \
     Expression/call_exp.cpp \
@@ -70,8 +72,10 @@ HEADERS += \
     AST/node.hpp \
     Environment/environment.hpp \
     Environment/func_symbol.hpp \
+    Environment/generator_code.hpp \
     Environment/symbol.hpp \
     Environment/type.hpp \
+    Environment/value.hpp \
     Error/error.hpp \
     Error/error_analisis.hpp \
     Error/type_error.hpp \

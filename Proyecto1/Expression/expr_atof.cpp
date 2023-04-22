@@ -7,6 +7,10 @@ expr_atof::expr_atof(int line, int col, expression *a)
     contenido = a;
 }
 
+value expr_atof::traducir(environment *env, asttree *tree, generator_code *gen){
+    value val("", false, NULO);
+    return val;
+}
 
 symbol expr_atof::ejecutar(environment *env, asttree *tree){
    symbol sym = contenido->ejecutar(env, tree);

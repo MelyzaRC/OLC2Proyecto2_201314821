@@ -13,6 +13,7 @@ public:
     lista_expresiones *contenido;
     func_printf(int line, int col, lista_expresiones *val);
     void ejecutar(environment *env, asttree *tree) override;
+    void traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // FUNC_PRINTF_HPP

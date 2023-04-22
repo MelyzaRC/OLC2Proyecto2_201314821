@@ -9,6 +9,11 @@ func_median::func_median(int line, int col, std::string id_vector)
     this->id = id_vector;
 }
 
+value func_median::traducir(environment *env, asttree *tree, generator_code *gen){
+    value val("", false, NULO);
+    return val;
+}
+
 int func_median::compare(const void* a, const void* b)
 {
     const int* x = (int*) a;

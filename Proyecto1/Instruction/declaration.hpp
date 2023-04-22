@@ -16,6 +16,7 @@ public:
     void ejecutar(environment *env, asttree *tree) override;
     declaration(int line, int col, std::string nombre, expression *val, int tipo);
     declaration();
+    void traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // DECLARATION_HPP

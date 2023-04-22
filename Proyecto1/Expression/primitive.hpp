@@ -13,10 +13,9 @@ public:
     int NumVal;
     float FloatVal;
     bool BoolVal;
-
-
     primitive(int a,int b,TipoDato c,std::string strVal, int numVal, float floatVal, bool boolVal);
     symbol ejecutar(environment *env, asttree *tree) override;
+    value traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // PRIMITIVE_HPP

@@ -12,6 +12,7 @@ public:
     void ejecutar(environment *env, asttree *tree) override;
     void ejecutar2(environment *env, asttree *tree);
     void newInst(instruction *inst);
+    void traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // LIST_INSTRUCTION_HPP

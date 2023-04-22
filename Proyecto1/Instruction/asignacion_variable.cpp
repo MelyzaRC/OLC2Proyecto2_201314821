@@ -15,6 +15,10 @@ asignacion_variable::asignacion_variable(int line, int col, std::string name, ex
     this->cadenaPrint = "";
 }
 
+void asignacion_variable::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void asignacion_variable::ejecutar(environment *env, asttree *tree){
     int res = asignar(env, tree);
 }

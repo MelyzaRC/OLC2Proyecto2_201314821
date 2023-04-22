@@ -11,6 +11,7 @@ public:
     expression *Exp;
     instruction_return(int, int, expression*);
     void ejecutar(environment *env, asttree *tree) override;
+    void traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // INSTRUCTION_RETURN_HPP

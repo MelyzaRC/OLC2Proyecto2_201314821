@@ -12,6 +12,7 @@ public:
     expression *Index;
     instruction_vector_remove(int,int, std::string id, expression*);
     void ejecutar(environment *env, asttree *tree) override;
+    void traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // INSTRUCTION_VECTOR_REMOVE_HPP

@@ -11,6 +11,10 @@ instruction_while::instruction_while(int line, int col, expression* ex, list_ins
     this->tipoInstruccion = 9;
 }
 
+void instruction_while::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void instruction_while::ejecutar(environment *env, asttree *tree){
     std::string* cadenaValor = new std::string;
     symbol condicionResultado = this->condicion->ejecutar(env, tree);

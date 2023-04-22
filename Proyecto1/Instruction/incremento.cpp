@@ -10,6 +10,10 @@ incremento::incremento(int line, int col, std::string nombre)
     this->tipoInstruccion = 6;
 }
 
+void incremento::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void incremento::ejecutar(environment *env, asttree *tree){
     int tmp = incrementar(env, tree);
     this->cadenaPrint = "";

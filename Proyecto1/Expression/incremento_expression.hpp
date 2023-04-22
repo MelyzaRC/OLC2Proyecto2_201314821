@@ -13,6 +13,7 @@ public:
     std::string operador;
     incremento_expression(int line, int col, std::string nombre, int tipo, std::string operador);
     symbol ejecutar(environment *env, asttree *tree) override;
+    value traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // INCREMENTO_EXPRESSION_HPP

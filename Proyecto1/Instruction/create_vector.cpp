@@ -13,6 +13,10 @@ create_vector::create_vector(int line,int col,TipoDato tipo,std::string id, list
 
 }
 
+void create_vector::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void create_vector::ejecutar(environment *env, asttree *tree)
 {
     //ES UN VECTOR VACIO

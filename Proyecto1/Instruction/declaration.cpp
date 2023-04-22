@@ -6,6 +6,10 @@ declaration::declaration(){
     this->tipo = 3;
 }
 
+void declaration::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 declaration::declaration(int line, int col, std::string nombre, expression *val, int tipo)
 {
     this->Line = line;

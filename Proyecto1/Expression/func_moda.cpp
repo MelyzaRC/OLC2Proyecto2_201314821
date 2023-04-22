@@ -7,6 +7,11 @@ func_moda::func_moda(int line, int col, std::string id_vector)
     this->id = id_vector;
 }
 
+value func_moda::traducir(environment *env, asttree *tree, generator_code *gen){
+    value val("", false, NULO);
+    return val;
+}
+
 int func_moda::contarRepitencia(int numeros[], int dimension, int numero){
     int x = 0;
     for(int i = 0; i < dimension; i++ ){

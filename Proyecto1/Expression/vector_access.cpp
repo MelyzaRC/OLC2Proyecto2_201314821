@@ -9,6 +9,11 @@ vector_access::vector_access(int line, int col, std::string id1, expression *ind
     Index = index;
 }
 
+value vector_access::traducir(environment *env, asttree *tree, generator_code *gen){
+    value val("", false, NULO);
+    return val;
+}
+
 symbol vector_access::ejecutar(environment *env, asttree *tree)
 {
     symbol sym (Line,Col,"",NULO,nullptr);

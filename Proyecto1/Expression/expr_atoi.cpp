@@ -8,6 +8,11 @@ expr_atoi::expr_atoi(int line, int col, expression *a)
     contenido = a;
 }
 
+value expr_atoi::traducir(environment *env, asttree *tree, generator_code *gen){
+    value val("", false, NULO);
+    return val;
+}
+
 symbol expr_atoi::ejecutar(environment *env, asttree *tree){
    symbol sym = contenido->ejecutar(env, tree);
    symbol symReturn = *new symbol(0,0,"",NULO, nullptr);

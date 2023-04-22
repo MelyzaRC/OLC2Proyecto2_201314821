@@ -10,6 +10,11 @@ call_exp::call_exp(int line, int col, std::string id, lista_expresiones *explist
     ExpList = explist;
 }
 
+value call_exp::traducir(environment *env, asttree *tree, generator_code *gen){
+    value val("", false, NULO);
+    return val;
+}
+
 symbol call_exp::ejecutar(environment *env, asttree *tree)
 {
     symbol sym = symbol(0,0,"",NULO, nullptr);

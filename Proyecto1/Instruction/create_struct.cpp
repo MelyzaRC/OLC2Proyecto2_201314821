@@ -9,6 +9,10 @@ create_struct::create_struct(int line,int col, std::string idstruct, std::string
     ExpList = explist;
 }
 
+void create_struct::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void create_struct::ejecutar(environment *env, asttree *tree)
 {
     //buscar el struct en tabla de structs

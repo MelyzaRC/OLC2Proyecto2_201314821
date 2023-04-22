@@ -13,6 +13,11 @@ operation::operation(int line, int col, expression *op_izq, expression *op_der, 
     this->tipo = 4;
 }
 
+value operation::traducir(environment *env, asttree *tree, generator_code *gen){
+    value val("", false, NULO);
+    return val;
+}
+
 symbol operation::ejecutar(environment *env, asttree *tree)
 {
     symbol sym(this->Line,this->Col,"",NULO, nullptr);

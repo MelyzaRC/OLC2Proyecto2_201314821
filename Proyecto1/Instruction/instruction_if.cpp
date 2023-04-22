@@ -13,6 +13,10 @@ instruction_if::instruction_if(int line, int col, expression *condition, instruc
     ElseBlock = elseblock;
 }
 
+void instruction_if::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void instruction_if::ejecutar(environment *env, asttree *tree){
     std::string *cadena_valor;
     symbol sym = Condition->ejecutar(env, tree);

@@ -8,6 +8,11 @@ struct_access::struct_access(int line,int col, expression* structexp, std::strin
     Id = id;
 }
 
+value struct_access::traducir(environment *env, asttree *tree, generator_code *gen){
+    value val("", false, NULO);
+    return val;
+}
+
 symbol struct_access::ejecutar(environment *env, asttree *tree)
 {
     symbol sym (0,0,"",NULO,nullptr);

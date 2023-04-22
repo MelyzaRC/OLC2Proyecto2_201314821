@@ -8,6 +8,11 @@ negacion_unaria::negacion_unaria(int line, int col, expression *exp)
     this->tipo = 3;
 }
 
+value negacion_unaria::traducir(environment *env, asttree *tree, generator_code *gen){
+    value val("", false, NULO);
+    return val;
+}
+
 
 symbol negacion_unaria::ejecutar(environment *env, asttree *tree){
 

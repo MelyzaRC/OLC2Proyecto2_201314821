@@ -15,6 +15,10 @@ primitive::primitive(int a,int b,TipoDato c,std::string strVal, int numVal, floa
     this->tipo = 5;
 }
 
+value primitive::traducir(environment *env, asttree *tree, generator_code *gen){
+    value val("", false, NULO);
+    return val;
+}
 
 symbol primitive::ejecutar(environment *env, asttree* tree)
 {

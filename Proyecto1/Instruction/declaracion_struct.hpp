@@ -13,6 +13,7 @@ public:
 
     declaracion_struct(int,int, map_struct_dec*, std::string);
     void ejecutar(environment *env, asttree *tree) override;
+    void traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // DECLARACION_STRUCT_HPP

@@ -16,6 +16,7 @@ public:
 
     function(int,int, TipoDato, std::string, map_struct_dec*, list_instruction*);
     void ejecutar(environment *env, asttree *tree) override;
+    void traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // FUNCTION_HPP

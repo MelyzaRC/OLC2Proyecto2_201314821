@@ -8,6 +8,10 @@ instruction_push_back::instruction_push_back(int line, int col, std::string id, 
     this->exp = exp;
 }
 
+void instruction_push_back::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void instruction_push_back::ejecutar(environment *env, asttree *tree ){
     symbol expres = exp->ejecutar(env,tree);
     map<TipoDato, QVector<symbol>> sym_vector = env->GetArray(id,env,tree);

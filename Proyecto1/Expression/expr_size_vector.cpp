@@ -7,6 +7,11 @@ expr_size_vector::expr_size_vector(int line, int col, std::string id)
     this->id = id;
 }
 
+value expr_size_vector::traducir(environment *env, asttree *tree, generator_code *gen){
+    value val("", false, NULO);
+    return val;
+}
+
 symbol expr_size_vector::ejecutar(environment *env, asttree *tree){
     symbol sym (Line,Col,"",NULO,nullptr);
     map<TipoDato, QVector<symbol>> sym_vector = env->GetArray(id,env,tree);

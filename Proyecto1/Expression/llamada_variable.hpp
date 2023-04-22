@@ -13,6 +13,7 @@ public:
     llamada_variable(int line, int col, std::string name);
     symbol buscar(environment *env, asttree *tree);
     symbol ejecutar(environment *env, asttree *tree) override;
+    value traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // LLAMADA_VARIABLE_HPP

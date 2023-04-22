@@ -7,6 +7,11 @@ expr_iota::expr_iota(int line, int col, expression *a)
     contenido = a;
 }
 
+value expr_iota::traducir(environment *env, asttree *tree, generator_code *gen){
+    value val("", false, NULO);
+    return val;
+}
+
 symbol expr_iota::ejecutar(environment *env, asttree *tree){
     symbol sym = contenido->ejecutar(env,tree);
     symbol symReturn = *new symbol(Line, Col, "", NULO, nullptr);

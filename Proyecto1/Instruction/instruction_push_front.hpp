@@ -12,6 +12,7 @@ public:
     expression *exp;
     instruction_push_front(int line, int col, std::string id, expression *exp);
     void ejecutar(environment *env, asttree *tree) override;
+    void traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // INSTRUCTION_PUSH_FRONT_HPP

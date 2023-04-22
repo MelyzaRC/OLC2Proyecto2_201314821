@@ -7,6 +7,11 @@ func_mean::func_mean(int line, int col, std::string id_vector)
     this->id = id_vector;
 }
 
+value func_mean::traducir(environment *env, asttree *tree, generator_code *gen){
+    value val("", false, NULO);
+    return val;
+}
+
 symbol func_mean::ejecutar(environment *env, asttree *tree){
 
     symbol symReturn(Line, Col, "", NULO, nullptr);

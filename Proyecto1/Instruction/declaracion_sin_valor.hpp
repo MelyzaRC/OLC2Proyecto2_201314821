@@ -15,6 +15,7 @@ public:
     void ejecutar(environment *env, asttree *tree) override;
     declaracion_sin_valor(int line, int col, std::string nombre, int tipo);
     declaracion_sin_valor();
+    void traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // DECLARACION_SIN_VALOR_HPP

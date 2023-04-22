@@ -14,6 +14,7 @@ public:
     lista_expresiones *lista;
     create_vector(int line,int col,TipoDato tipo,std::string id, lista_expresiones *lista);
     void ejecutar(environment *env, asttree *tree) override;
+    void traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // CREATE_VECTOR_HPP

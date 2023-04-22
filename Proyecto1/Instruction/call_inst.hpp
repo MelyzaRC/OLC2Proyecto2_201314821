@@ -13,6 +13,7 @@ public:
 
         call_inst(int, int, std::string, lista_expresiones*);
         void ejecutar(environment *env, asttree *tree) override;
+        void traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // CALL_INST_HPP

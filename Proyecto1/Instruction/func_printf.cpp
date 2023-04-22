@@ -11,6 +11,10 @@ func_printf::func_printf(int line, int col, lista_expresiones *val)
     this->tipoInstruccion = 5;
 }
 
+void func_printf::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void func_printf::ejecutar(environment *env, asttree *tree){
     //RECORRER LA LISTA QUE SE ENCUENTRA EN CONTENIDO
     QVector<expression*> lista = QVector<expression*>();

@@ -15,6 +15,7 @@ public:
     asignacion_variable(int line, int col, std::string name, expression *val);
     void ejecutar(environment *env, asttree *tree) override;
     int asignar(environment *env, asttree *tree);
+    void traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // ASIGNACION_VARIABLE_HPP

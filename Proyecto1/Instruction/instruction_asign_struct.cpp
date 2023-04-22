@@ -10,6 +10,10 @@ instruction_asign_struct::instruction_asign_struct(int line, int col, std::strin
     this->tipoInstruccion = 100;
 }
 
+void instruction_asign_struct::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void instruction_asign_struct::ejecutar(environment *env, asttree *tree){
     symbol sym = env->GetVariable(this->idStruct,env,tree);
     if(sym.Tipo == STRUCT){

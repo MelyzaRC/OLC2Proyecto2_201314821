@@ -8,6 +8,10 @@ declaracion_struct::declaracion_struct(int line, int col, map_struct_dec *array,
     Id = id;
 }
 
+void declaracion_struct::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void declaracion_struct::ejecutar(environment *env, asttree *tree)
 {
 //    map<std::string, TipoDato>::iterator i;

@@ -15,6 +15,10 @@ instruction_for::instruction_for(int line, int col, instruction* inst_iterador, 
     this->ListInst = lista;
 }
 
+void instruction_for::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void instruction_for::ejecutar(environment *env, asttree *tree){
     environment *ForEnv = new environment(env, "FOR");
     this->variable_iterador->ejecutar(ForEnv, tree);

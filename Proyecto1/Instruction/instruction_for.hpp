@@ -20,6 +20,7 @@ public:
     void ejecutar(environment *env, asttree *ast) override;
     bool validarIterador(environment *env, asttree *ast);
     std::string ejecutarFor(environment *env, asttree *ast);
+    void traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // INSTRUCTION_FOR_HPP

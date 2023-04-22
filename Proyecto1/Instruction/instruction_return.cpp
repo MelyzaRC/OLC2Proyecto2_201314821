@@ -7,6 +7,10 @@ instruction_return::instruction_return(int line, int col, expression *exp)
     Exp = exp;
 }
 
+void instruction_return::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void instruction_return::ejecutar(environment *env, asttree *tree)
 {
     if(Exp != nullptr)

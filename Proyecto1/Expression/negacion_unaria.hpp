@@ -10,6 +10,7 @@ public:
     expression *valor;
     negacion_unaria(int line, int col, expression *exp);
     symbol ejecutar(environment *env, asttree *tree) override;
+    value traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // NEGACION_UNARIA_HPP

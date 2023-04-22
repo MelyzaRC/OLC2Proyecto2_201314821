@@ -10,6 +10,10 @@ call_inst::call_inst(int line, int col, std::string id, lista_expresiones *expli
     ExpList = explist;
 }
 
+void call_inst::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void call_inst::ejecutar(environment *env, asttree *tree)
 {
     environment *FuncEnv = new environment(env, Id);

@@ -10,6 +10,7 @@ public:
     expression *contenido;
     expr_atoi(int line, int col, expression *a);
     symbol ejecutar(environment *env, asttree *tree) override;
+    value traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // EXPR_ATOI_HPP

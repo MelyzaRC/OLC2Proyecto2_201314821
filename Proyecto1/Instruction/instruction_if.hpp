@@ -20,6 +20,7 @@ public:
 
     instruction_if(int line, int col, expression *condition, instruction *block, instruction *elseifblock, instruction *elseblock);
     void ejecutar(environment *env, asttree *tree) override;
+    void traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // INSTRUCTION_IF_HPP

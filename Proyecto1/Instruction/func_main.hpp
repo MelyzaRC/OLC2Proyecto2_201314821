@@ -12,6 +12,7 @@ public:
     list_instruction* ListInst;
     func_main(int line, int col, int tipo, list_instruction* list);
     void ejecutar(environment *env, asttree *tree) override;
+    void traducir(environment *env, asttree *tree, generator_code *gen) override;
 };
 
 #endif // FUNC_MAIN_HPP

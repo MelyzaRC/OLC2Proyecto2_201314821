@@ -11,6 +11,10 @@ declaracion_sin_valor::declaracion_sin_valor(int line, int col, std::string nomb
     this->tipoInstruccion = 2;
 }
 
+void declaracion_sin_valor::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void declaracion_sin_valor::ejecutar(environment *env, asttree *tree){
     //aqui me falta verificar que las variables no se repitan
     //verificar que no sea una reservada

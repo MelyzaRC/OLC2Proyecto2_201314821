@@ -8,6 +8,10 @@ func_main::func_main(int line, int col, int tipo, list_instruction* list)
     this->tipoInstruccion = 4;
 }
 
+void func_main::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void func_main::ejecutar(environment *env, asttree *tree){
     /*for(int i = 0; i < this->ListInst->ListInst.size(); i++){
         this->ListInst->ListInst.value(i)->ejecutar(env, tree);

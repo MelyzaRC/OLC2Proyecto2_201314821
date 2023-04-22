@@ -10,6 +10,7 @@
 #include <QTextStream>
 #include <fstream>
 #include <QDesktopServices>
+#include "Environment/generator_code.hpp"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -37,6 +38,8 @@ void MainWindow::on_pushButton_clicked()
     OCL2Proyecto1::ParserCtx analizador;
     analizador.Analizar(ui->plainTextEdit->toPlainText().toStdString());
 
+
+
     if(analizador.erroresEncontrados == true){
         QMessageBox *msg = new QMessageBox();
         msg->setText("Análisis terminado con errores\nNo se ejecutará ninguna acción");
@@ -48,7 +51,7 @@ void MainWindow::on_pushButton_clicked()
         ui->textEdit_5->setText("");
         presentarErrores(analizador.lista_errores, Root);
     }else{
-       if(analizador.Functions != nullptr)
+       /*if(analizador.Functions != nullptr)
        {
            //std::cout<<analizador.Functions->ListInst.size()<<std::endl;
           analizador.Functions->ejecutar2(GlobalEnv, Root);
@@ -62,7 +65,11 @@ void MainWindow::on_pushButton_clicked()
         if(Root->erroresSemanticos>0){
             presentarErrores(*new QVector<error_analisis*> , Root);
         }
-        this->presentarTablaSimbolos(Root);
+        this->presentarTablaSimbolos(Root);*/
+        generator_code *GeneratorC3D = new generator_code();
+        GeneratorC3D->MainCode = true;
+        GeneratorC3D->GenerateFinalCode();
+        ui->textEdit->setText(QString::fromStdString(GeneratorC3D->FinalCode));
     }
 }
 

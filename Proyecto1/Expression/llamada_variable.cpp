@@ -8,6 +8,11 @@ llamada_variable::llamada_variable(int line, int col, std::string name)
     this->tipo = 2;
 }
 
+value llamada_variable::traducir(environment *env, asttree *tree, generator_code *gen){
+    value val("", false, NULO);
+    return val;
+}
+
 symbol llamada_variable::ejecutar(environment *env, asttree *tree){
     //BUSCAR EN EL ENTORNO
     return buscar(env, tree);

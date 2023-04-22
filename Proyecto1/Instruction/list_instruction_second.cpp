@@ -7,6 +7,10 @@ list_instruction_second::list_instruction_second()
     this->cadenaPrint = "";
 }
 
+void list_instruction_second::traducir(environment *env, asttree *tree, generator_code *gen){
+
+}
+
 void list_instruction_second::ejecutar(environment *env, asttree *tree)
 {
     std::string* cadenaValor = new std::string;
