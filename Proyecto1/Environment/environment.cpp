@@ -334,3 +334,17 @@ std::string environment::obtenerTipo(int _tipo){
         return "";
     }
 }
+
+std::string environment::obtenerTipoTraduccion(int _tipo){
+    switch(_tipo){
+        case 0:{ return "int";      } break;
+        case 1:{ return "float";    } break;
+        case 2:{ return "string";   } break;
+        case 3:{ return "bool";     } break;
+        case 4:{ return "nulo";     } break;
+        case 5:{ return "void";     } break;
+        case 6:{ return "struct";   } break;
+    default:
+        return "";
+    }
+}

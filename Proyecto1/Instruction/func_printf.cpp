@@ -12,7 +12,6 @@ func_printf::func_printf(int line, int col, lista_expresiones *val)
 }
 
 void func_printf::traducir(environment *env, asttree *tree, generator_code *gen){
-
 }
 
 void func_printf::ejecutar(environment *env, asttree *tree){

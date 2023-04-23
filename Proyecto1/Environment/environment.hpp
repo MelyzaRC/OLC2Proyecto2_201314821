@@ -36,6 +36,7 @@ public:
     void SaveFunc(func_symbol sym, std::string id, asttree *tree);
 
     std::string obtenerTipo(int _tipo);
+    std::string obtenerTipoTraduccion(int _tipo);
     std::string graficar();
 };
 

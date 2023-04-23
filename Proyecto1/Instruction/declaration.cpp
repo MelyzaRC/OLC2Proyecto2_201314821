@@ -6,9 +6,7 @@ declaration::declaration(){
     this->tipo = 3;
 }
 
-void declaration::traducir(environment *env, asttree *tree, generator_code *gen){
 
-}
 
 declaration::declaration(int line, int col, std::string nombre, expression *val, int tipo)
 {
@@ -18,6 +16,18 @@ declaration::declaration(int line, int col, std::string nombre, expression *val,
     this->Valor = val;
     this->tipo = tipo;
     this->tipoInstruccion = 3;
+}
+
+void declaration::traducir(environment *env, asttree *tree, generator_code *gen){
+    std::cout<<"Traduciendo declaracion"<<std::endl;
+    std::string tmpTraduccion = env->obtenerTipoTraduccion(this->tipo);
+    tmpTraduccion += " ";
+    tmpTraduccion += this->nombre;
+    tmpTraduccion += " = ";
+    value v = this->Valor->traducir(env, tree, gen);
+    tmpTraduccion += v.Value;
+    tmpTraduccion += ";\n";
+    gen->Code.append(tmpTraduccion);
 }
 
 //METODO EJECUTAR DE LA DECLARACION

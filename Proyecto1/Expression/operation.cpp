@@ -15,7 +15,79 @@ operation::operation(int line, int col, expression *op_izq, expression *op_der, 
 
 value operation::traducir(environment *env, asttree *tree, generator_code *gen){
     value val("", false, NULO);
+    //matriz dominante: esta matriz retorna el tipo dominante entre dos operandos
+    //cualquier interaccion con nulo retorna nulo
+    TipoDato MatrizSuma[5][5] =     {
+                                        {INTEGER,   FLOAT,  STRING, INTEGER,    NULO},
+                                        {FLOAT,     FLOAT,  STRING,  FLOAT,     NULO},
+                                        {STRING,    STRING, STRING, STRING,     NULO},
+                                        {INTEGER,   FLOAT,  STRING, INTEGER,    NULO},
+                                        {NULO,      NULO,   NULO,   NULO,       NULO}
+                                    }
+                                    ;
+    TipoDato MatrizResta[5][5] =    {
+                                        {INTEGER,   FLOAT,  NULO,   INTEGER,    NULO},
+                                        {FLOAT,     FLOAT,  NULO,   FLOAT,      NULO},
+                                        {NULO,      NULO,   NULO,   NULO,       NULO},
+                                        {INTEGER,   FLOAT,  NULO,   INTEGER,    NULO},
+                                        {NULO,      NULO,   NULO,   NULO,       NULO}
+
+                                    }
+                                    ;
+    TipoDato MatrizMultiplicacion[5][5] =   {
+                                                {INTEGER,   FLOAT,  NULO,   INTEGER,    NULO},
+                                                {FLOAT,     FLOAT,  NULO,   FLOAT,      NULO},
+                                                {NULO,      NULO,   NULO,   NULO,       NULO},
+                                                {INTEGER,   FLOAT,  NULO,   INTEGER,    NULO},
+                                                {NULO,      NULO,   NULO,   NULO,       NULO}
+                                            }
+                                            ;
+    TipoDato MatrizDivision[5][5] =     {
+                                            {INTEGER,   FLOAT,  NULO,   INTEGER,    NULO},
+                                            {FLOAT,     FLOAT,  NULO,   FLOAT,      NULO},
+                                            {NULO,      NULO,   NULO,   NULO,       NULO},
+                                            {INTEGER,   FLOAT,  NULO,   INTEGER,    NULO},
+                                            {NULO,      NULO,   NULO,   NULO,       NULO}
+                                        }
+                                        ;
+    TipoDato MatrizModulo[5][5] =       {
+                                            {INTEGER,   NULO,   NULO,   FLOAT,      NULO},
+                                            {NULO,      NULO,   NULO,   NULO,       NULO},
+                                            {NULO,      NULO,   NULO,   NULO,       NULO},
+                                            {INTEGER,   NULO,   NULO,   INTEGER,    NULO},
+                                            {NULO,      NULO,   NULO,   NULO,       NULO}
+                                        }
+                                        ;
+    TipoDato MatrizComparacion[5][5] =  {
+                                            {BOOL,  BOOL,   NULO,   BOOL,   NULO},
+                                            {BOOL,  BOOL,   NULO,   BOOL,   NULO},
+                                            {NULO,  NULO,   BOOL,   NULO,   NULO},
+                                            {BOOL,  BOOL,   NULO,   BOOL,   NULO},
+                                            {NULO,  NULO,   NULO,   NULO,   NULO}
+                                        }
+                                        ;
+
+    std::string tmpTraduccion = "";
+    std::string newTemp = gen->newTemp();
+
+    //EVALUANDO LA SUMA
+    if(Operator == "+")
+    {
+        value op1 = Op_izq->traducir(env, tree, gen);
+        value op2 = Op_der->traducir(env, tree, gen);
+        TipoDato DominanteDato = MatrizSuma[op1.TipoExpresion][op2.TipoExpresion];
+        if(DominanteDato == INTEGER){
+            gen->MainCode = true;
+            gen->AddExpression(newTemp,op1.Value,op2.Value,"+");
+            val = value(newTemp, true, DominanteDato);
+            return val;
+        }
+
+    }
+
+    val= *new value(tmpTraduccion, false, INTEGER);
     return val;
+
 }
 
 symbol operation::ejecutar(environment *env, asttree *tree)

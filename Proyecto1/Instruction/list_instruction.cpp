@@ -8,7 +8,10 @@ list_instruction::list_instruction()
 }
 
 void list_instruction::traducir(environment *env, asttree *tree, generator_code *gen){
-
+    std::cout<<"Traduciendo lista"<<std::endl;
+    for(int i = 0; i < this->ListInst.size(); i++){
+        this->ListInst.value(i)->traducir(env, tree, gen);
+    }
 }
 
 void list_instruction::ejecutar(environment *env, asttree *tree)

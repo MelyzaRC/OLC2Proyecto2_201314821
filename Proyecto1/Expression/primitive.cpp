@@ -17,6 +17,32 @@ primitive::primitive(int a,int b,TipoDato c,std::string strVal, int numVal, floa
 
 value primitive::traducir(environment *env, asttree *tree, generator_code *gen){
     value val("", false, NULO);
+
+    switch (this->Tipo) {
+        case INTEGER:{
+            val = *new value(std::to_string(NumVal), false, INTEGER);
+            }
+        break;
+        case FLOAT:{
+            float numF = FloatVal;
+            float* floatv = new float;
+            *floatv = numF;
+            val = *new value(std::to_string(FloatVal), false, FLOAT);
+            }
+        break;
+        case STRING:
+            {
+                val = *new value(StrVal, false, STRING);
+            }
+            break;
+        case BOOL:
+            {
+                if(BoolVal){ val = *new value("true", false, BOOL);   }
+                else { val = *new value("false", false, BOOL);   }
+            }
+            break;
+    }
+
     return val;
 }
 

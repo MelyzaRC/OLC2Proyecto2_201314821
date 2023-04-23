@@ -67,6 +67,7 @@ void MainWindow::on_pushButton_clicked()
         }
         this->presentarTablaSimbolos(Root);*/
         generator_code *GeneratorC3D = new generator_code();
+        analizador.Main->traducir(GlobalEnv, Root, GeneratorC3D);
         GeneratorC3D->MainCode = true;
         GeneratorC3D->GenerateFinalCode();
         ui->textEdit->setText(QString::fromStdString(GeneratorC3D->FinalCode));

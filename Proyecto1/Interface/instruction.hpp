@@ -11,7 +11,6 @@ class instruction
 public:
     int tipoInstruccion;
     std::string cadenaPrint;
-    node *node;
     std::string contenidoDot;
     int referencia;
     virtual void ejecutar(environment *env, asttree *tree) = 0;

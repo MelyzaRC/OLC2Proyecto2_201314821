@@ -186,25 +186,27 @@ void generator_code::GenerateFinalCode()
     FinalCode += "float P;\n";
     FinalCode += "float H;\n";
     //agregando temporales
-   /* std::string tmpDec = "float "+TempList[0];
+    std::string tmpDec = "float "+TempList[0];
     for(int i=1; i< TempList.size(); i++){
         tmpDec += ", "+TempList[i];
     }
     tmpDec += ";\n\n";
     FinalCode += tmpDec;
     //agregando funciones
-    for(int i=0; i<FuncCode.size(); i++){
-        FinalCode += FuncCode[i];
+
+   for(int i=0; i<FuncCode.size(); i++){
+       FinalCode += "\t";
+       FinalCode += FuncCode[i];
     }
     //agregando funciones nativas
-    for(int i=0; i<Natives.size(); i++){
+    /*for(int i=0; i<Natives.size(); i++){
         FinalCode += Natives[i];
     }*/
     //agregando main()
     FinalCode += "int main()\n{\n";
-   /* for(int i=0; i<Code.size(); i++){
+    for(int i=0; i<Code.size(); i++){
         FinalCode += "\t";
         FinalCode += Code[i];
-    }*/
+    }
     FinalCode += "\treturn 0;\n}";
 }
