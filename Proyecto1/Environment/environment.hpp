@@ -9,6 +9,7 @@ using std::map;
 class environment
 {
 public:
+    int Size;
     environment *Padre;
     map<std::string, symbol> Tabla;
     std::string Id;
@@ -19,6 +20,7 @@ public:
     environment(environment *pad, std::string id);
     //VARIABLES
     void SaveVariable(symbol sym, std::string id, asttree *tree);
+    symbol SaveVariable2(std::string id, TipoDato tipo, asttree *tree);
     void ModificarVariable(symbol sym, std::string id);
     symbol GetVariable(std::string id,environment *env, asttree *tree);
     //INCREMENTOS

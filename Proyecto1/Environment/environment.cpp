@@ -5,6 +5,7 @@ environment::environment(environment *padre, std::string id)
 {
     Padre = padre;
     Id = id;
+    this->Size=0;
 }
 
 void environment::SaveStruct(map<std::string, TipoDato> tabla, std::string id, asttree *tree)
@@ -89,22 +90,37 @@ void environment::SaveVariable(symbol sym, std::string id, asttree *tree)
         this->Tabla[id] = sym;
     }else{
         auto iter = Tabla.begin();
-           /* while (iter != Tabla.end()) {
-                std::cout << "[" << iter->first << "]\n";
-                ++iter;
-            }*/
+
 
         if(Tabla[id].Tipo == sym.Tipo){
-            //aqui solo se sustituye el valor
             Tabla[id] = sym;
         }else{
-            //se reporta un error
             std::string contenido_error = "Ya existe la variable ";
             contenido_error += id;
             tree->errores.append(*new error_analisis(0, 0, 3, contenido_error));
             tree->IncrementaErroresSemanticos();
         }
 
+    }
+}
+
+symbol environment::SaveVariable2(std::string id, TipoDato tipo, asttree *tree)
+{
+    if (Tabla.find(id) == Tabla.end())
+    {
+        int* i = new int;
+        *i = Size;
+        symbol sym = *new symbol (0, 0, id, tipo, *i);
+        Tabla[id] = sym;
+        this->Size++;
+        std::cout<<Size<<std::endl;
+        return sym;
+    }
+    else
+    {
+        //se reporta un error
+        tree->ErrorOut += "Ya existe la variable "+id;
+        return Tabla[id];
     }
 }
 

@@ -12,8 +12,10 @@ public:
     std::string Id;
     TipoDato Tipo;
     void *valor;
+    int Posicion;
 
     symbol(int line, int col, std::string id, TipoDato tipo, void *val);
+    symbol(int line, int col, std::string id, TipoDato tipo, int posicion);
     symbol();
 };
 

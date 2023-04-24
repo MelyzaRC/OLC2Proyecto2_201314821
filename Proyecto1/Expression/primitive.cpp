@@ -17,7 +17,6 @@ primitive::primitive(int a,int b,TipoDato c,std::string strVal, int numVal, floa
 
 value primitive::traducir(environment *env, asttree *tree, generator_code *gen){
     value val("", false, NULO);
-
     switch (this->Tipo) {
         case INTEGER:{
             val = *new value(std::to_string(NumVal), false, INTEGER);
@@ -32,13 +31,42 @@ value primitive::traducir(environment *env, asttree *tree, generator_code *gen){
         break;
         case STRING:
             {
-                val = *new value(StrVal, false, STRING);
+              //nuevo temporal
+              std::string newTemp = gen->newTemp();
+              //igualar a Heap Pointer
+              gen->AddAssign(newTemp, "H");
+              //recorrer cadena
+              for (int i = 0; i < StrVal.length(); i++) {
+                  //se agrega ascii a heap
+                  gen->AddSetHeap("(int)H", std::to_string(int(StrVal[i])));
+                  //suma heap pointer
+                  gen->AddExpression("H", "H", "1", "+");
+              }
+              //caracteres de escape
+              gen->AddSetHeap("(int)H", "-1");
+              gen->AddExpression("H", "H", "1", "+");
+              gen->AddBr();
+              val = value(newTemp,true,STRING);
             }
             break;
         case BOOL:
             {
-                if(BoolVal){ val = *new value("true", false, BOOL);   }
-                else { val = *new value("false", false, BOOL);   }
+                //if cond goto LT;
+                //goto LF;
+               std::string trueLabel = gen->newLabel();
+               std::string falseLabel = gen->newLabel();
+               if(BoolVal)
+               {
+                   gen->AddGoto(trueLabel);
+                   val = value("true",true,BOOL);
+               }
+               else
+               {
+                   gen->AddGoto(falseLabel);
+                   val = value("false",true,BOOL);
+               }
+               val.TrueLvl.append(trueLabel);
+               val.FalseLvl.append(falseLabel);
             }
             break;
     }

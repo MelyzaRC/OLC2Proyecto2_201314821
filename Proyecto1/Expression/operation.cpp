@@ -77,10 +77,15 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
         value op2 = Op_der->traducir(env, tree, gen);
         TipoDato DominanteDato = MatrizSuma[op1.TipoExpresion][op2.TipoExpresion];
         if(DominanteDato == INTEGER){
-            gen->MainCode = true;
             gen->AddExpression(newTemp,op1.Value,op2.Value,"+");
             val = value(newTemp, true, DominanteDato);
             return val;
+        }else if(DominanteDato == FLOAT){
+
+        }else if(DominanteDato == BOOL){
+
+        }else if(DominanteDato == STRING){
+
         }
 
     }

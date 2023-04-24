@@ -68,6 +68,9 @@ void MainWindow::on_pushButton_clicked()
         this->presentarTablaSimbolos(Root);*/
         generator_code *GeneratorC3D = new generator_code();
         analizador.Main->traducir(GlobalEnv, Root, GeneratorC3D);
+        if(Root->erroresSemanticos>0){
+            presentarErrores(*new QVector<error_analisis*> , Root);
+        }
         GeneratorC3D->MainCode = true;
         GeneratorC3D->GenerateFinalCode();
         ui->textEdit->setText(QString::fromStdString(GeneratorC3D->FinalCode));
@@ -91,10 +94,10 @@ void MainWindow::presentarErrores(QVector<error_analisis*> lista, asttree *tree)
     htmlCadena += "</br><table>";
     htmlCadena += "<tr><td colspan=\"4\" bgcolor=\"#4942B4\"><center><font color=\"#FFFFFF\"><h2 margin=\"25\">Errores léxicos</h2></font></center></td></tr>";
     htmlCadena += "<tr>";
-    htmlCadena += "<td width=\"100\" bgcolor=\"#BCB8F4\"><center><b>Línea</b></center></td>";
-    htmlCadena += "<td width=\"100\" bgcolor=\"#BCB8F4\"><center><b>Columna</b></center></td>";
-    htmlCadena += "<td width=\"100\" bgcolor=\"#BCB8F4\"><center><b>Tipo</b></center></td>";
-    htmlCadena += "<td width=\"500\" bgcolor=\"#BCB8F4\"><center><b>Descripción</b></center></td>";
+    htmlCadena += "<td width=\"75\" bgcolor=\"#BCB8F4\"><center><b>Línea</b></center></td>";
+    htmlCadena += "<td width=\"75\" bgcolor=\"#BCB8F4\"><center><b>Columna</b></center></td>";
+    htmlCadena += "<td width=\"75\" bgcolor=\"#BCB8F4\"><center><b>Tipo</b></center></td>";
+    htmlCadena += "<td width=\"250\" bgcolor=\"#BCB8F4\"><center><b>Descripción</b></center></td>";
     htmlCadena += "</tr>";
     if(lista.size()>0){
         for(int i = 0; i<lista.size(); i++){
@@ -108,10 +111,10 @@ void MainWindow::presentarErrores(QVector<error_analisis*> lista, asttree *tree)
     htmlCadena += "</br><table>";
     htmlCadena += "<tr><td colspan=\"4\" bgcolor=\"#7C42B4\"><center><font color=\"#FFFFFF\"><h2 margin=\"25\">Errores sintácticos</h2></font></center></td></tr>";
     htmlCadena += "<tr>";
-    htmlCadena += "<td width=\"100\" bgcolor=\"#C18BF4\"><center><b>Línea</b></center></td>";
-    htmlCadena += "<td width=\"100\" bgcolor=\"#C18BF4\"><center><b>Columna</b></center></td>";
-    htmlCadena += "<td width=\"100\" bgcolor=\"#C18BF4\"><center><b>Tipo</b></center></td>";
-    htmlCadena += "<td width=\"500\" bgcolor=\"#C18BF4\"><center><b>Descripción</b></center></td>";
+    htmlCadena += "<td width=\"75\" bgcolor=\"#C18BF4\"><center><b>Línea</b></center></td>";
+    htmlCadena += "<td width=\"75\" bgcolor=\"#C18BF4\"><center><b>Columna</b></center></td>";
+    htmlCadena += "<td width=\"75\" bgcolor=\"#C18BF4\"><center><b>Tipo</b></center></td>";
+    htmlCadena += "<td width=\"250\" bgcolor=\"#C18BF4\"><center><b>Descripción</b></center></td>";
     htmlCadena += "</tr>";
     if(lista.size()>0){
         for(int i = 0; i<lista.size(); i++){
@@ -139,10 +142,10 @@ void MainWindow::presentarErrores(QVector<error_analisis*> lista, asttree *tree)
     htmlCadena += "</br><table>";
     htmlCadena += "<tr><td colspan=\"4\" bgcolor=\"#CC11E9\"><center><font color=\"#FFFFFF\"><h2 margin=\"25\">Errores semánticos</h2></font></center></td></tr>";
     htmlCadena += "<tr>";
-    htmlCadena += "<td width=\"100\" bgcolor=\"#EA94F8\"><center><b>Línea</b></center></td>";
-    htmlCadena += "<td width=\"100\" bgcolor=\"#EA94F8\"><center><b>Columna</b></center></td>";
-    htmlCadena += "<td width=\"100\" bgcolor=\"#EA94F8\"><center><b>Tipo</b></center></td>";
-    htmlCadena += "<td width=\"500\" bgcolor=\"#EA94F8\"><center><b>Descripción</b></center></td>";
+    htmlCadena += "<td width=\"75\" bgcolor=\"#EA94F8\"><center><b>Línea</b></center></td>";
+    htmlCadena += "<td width=\"75\" bgcolor=\"#EA94F8\"><center><b>Columna</b></center></td>";
+    htmlCadena += "<td width=\"75\" bgcolor=\"#EA94F8\"><center><b>Tipo</b></center></td>";
+    htmlCadena += "<td width=\"250\" bgcolor=\"#EA94F8\"><center><b>Descripción</b></center></td>";
     htmlCadena += "</tr>";
     if(tree->errores.size()>0){
         for(int i = 0; i<tree->errores.size(); i++){

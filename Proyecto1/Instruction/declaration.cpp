@@ -19,15 +19,61 @@ declaration::declaration(int line, int col, std::string nombre, expression *val,
 }
 
 void declaration::traducir(environment *env, asttree *tree, generator_code *gen){
-    std::cout<<"Traduciendo declaracion"<<std::endl;
-    std::string tmpTraduccion = env->obtenerTipoTraduccion(this->tipo);
-    tmpTraduccion += " ";
-    tmpTraduccion += this->nombre;
-    tmpTraduccion += " = ";
-    value v = this->Valor->traducir(env, tree, gen);
-    tmpTraduccion += v.Value;
-    tmpTraduccion += ";\n";
-    gen->Code.append(tmpTraduccion);
+    gen->MainCode = true;
+    value val("",false,NULO);
+    symbol newVar;
+
+    gen->AddComment("=== DECLARACION ===");
+    val = Valor->traducir(env, tree, gen);
+    //Validar que los tipos de dato concuerden
+    TipoDato t = NULO;
+    switch (this->tipo) {
+    case 0: {t=INTEGER; }   break;
+    case 1: {t=FLOAT;   }   break;
+    case 2: {t=STRING;  }   break;
+    case 3: {t=BOOL;    }   break;
+    case 4: {t=NULO;    }   break;
+    default:                break;
+    }
+    //Los tipos de datos no coinciden
+    if(t != val.TipoExpresion){
+        //ERROR SEMANTICO
+        std::string contenido_error =  "Los tipos de dato no coinciden ";
+        tree->errores.append(*new error_analisis(0, 0, 3, contenido_error));
+        tree->erroresSemanticos++;
+        return;
+    }
+    //Los tipos de datos si coinciden
+    newVar = env->SaveVariable2(this->nombre, t, tree);
+
+    if(val.TipoExpresion == BOOL)
+        {
+            //si no es temporal (valor booleano)
+            std::string newLabel = gen->newLabel();
+            //add true labels
+            for(int i=0; i < val.TrueLvl.size(); i++)
+            {
+                gen->AddLabel(val.TrueLvl[i]);
+            }
+
+            gen->AddSetStack(std::to_string(newVar.Posicion),"1");
+            gen->AddGoto(newLabel);
+            //add false labels
+            for(int i=0; i < val.FalseLvl.size(); i++)
+            {
+                gen->AddLabel(val.FalseLvl[i]);
+            }
+            gen->AddSetStack(std::to_string(newVar.Posicion),"0");
+            gen->AddGoto(newLabel);
+            gen->AddLabel(newLabel);
+        }
+        else
+        {
+             //si es temporal (num, string, etc)
+            gen->AddSetStack(std::to_string(newVar.Posicion), val.Value);
+        }
+        gen->AddBr();
+
 }
 
 //METODO EJECUTAR DE LA DECLARACION
