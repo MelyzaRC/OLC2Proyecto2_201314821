@@ -37,6 +37,8 @@ value primitive::traducir(environment *env, asttree *tree, generator_code *gen){
               gen->AddAssign(newTemp, "H");
               //recorrer cadena
               for (int i = 0; i < StrVal.length(); i++) {
+                  std::string s(1, StrVal[i]);
+                  gen->AddComment(s);
                   //se agrega ascii a heap
                   gen->AddSetHeap("(int)H", std::to_string(int(StrVal[i])));
                   //suma heap pointer
@@ -53,17 +55,18 @@ value primitive::traducir(environment *env, asttree *tree, generator_code *gen){
             {
                 //if cond goto LT;
                 //goto LF;
+
                std::string trueLabel = gen->newLabel();
                std::string falseLabel = gen->newLabel();
                if(BoolVal)
                {
                    gen->AddGoto(trueLabel);
-                   val = value("true",true,BOOL);
+                   val = value("1",false,BOOL);
                }
                else
                {
                    gen->AddGoto(falseLabel);
-                   val = value("false",true,BOOL);
+                   val = value("0",false,BOOL);
                }
                val.TrueLvl.append(trueLabel);
                val.FalseLvl.append(falseLabel);

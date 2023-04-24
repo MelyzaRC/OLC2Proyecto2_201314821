@@ -38,9 +38,14 @@ void declaration::traducir(environment *env, asttree *tree, generator_code *gen)
     //Los tipos de datos no coinciden
     if(t != val.TipoExpresion){
         //ERROR SEMANTICO
-        std::string contenido_error =  "Los tipos de dato no coinciden ";
+        std::string contenido_error =  "Los tipos de dato no coinciden [";
+        contenido_error += env->obtenerTipo(t);
+        contenido_error += " - ";
+        contenido_error += env->obtenerTipo(val.TipoExpresion);
+        contenido_error += "]";
         tree->errores.append(*new error_analisis(0, 0, 3, contenido_error));
         tree->erroresSemanticos++;
+        std::cout<<contenido_error<<std::endl;
         return;
     }
     //Los tipos de datos si coinciden

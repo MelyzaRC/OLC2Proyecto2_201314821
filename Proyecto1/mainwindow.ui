@@ -110,9 +110,8 @@ border-radius:10px;
        <enum>Qt::ScrollBarAlwaysOff</enum>
       </property>
       <property name="plainText">
-       <string>int main(){
-bool a = true;
-return 0;
+       <string>void main(){
+int a = 10 + 2 * 3 / 1;
 }</string>
       </property>
       <property name="placeholderText">

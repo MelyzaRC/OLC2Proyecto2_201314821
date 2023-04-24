@@ -10,7 +10,23 @@ llamada_variable::llamada_variable(int line, int col, std::string name)
 
 value llamada_variable::traducir(environment *env, asttree *tree, generator_code *gen){
     value val("", false, NULO);
-    return val;
+        gen->AddComment("Llamando una variable");
+        symbol retSym = env->GetVariable(this->nombre, env, tree);
+        std::string newTemp1 = gen->newTemp();
+        std::string newTemp2 = gen->newTemp();
+
+        if(gen->MainCode)
+        {
+            gen->AddGetStack(std::to_string(retSym.Posicion),newTemp2);
+        }
+        else
+        {
+            gen->AddExpression(newTemp1, "P", std::to_string(retSym.Posicion), "+");
+            gen->AddGetStack(newTemp2, "(int)"+newTemp1);
+        }
+
+        val = value(newTemp2, true, retSym.Tipo);
+        return val;
 }
 
 symbol llamada_variable::ejecutar(environment *env, asttree *tree){

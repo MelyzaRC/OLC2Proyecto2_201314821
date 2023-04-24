@@ -12,6 +12,8 @@ void list_instruction_second::traducir(environment *env, asttree *tree, generato
     for(int i = 0; i < this->ListInst.size(); i++){
         this->ListInst.value(i)->traducir(env, tree, gen);
     }
+
+    //tree->cadenaTab += env->graficar();
 }
 
 void list_instruction_second::ejecutar(environment *env, asttree *tree)

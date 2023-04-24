@@ -77,15 +77,163 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
         value op2 = Op_der->traducir(env, tree, gen);
         TipoDato DominanteDato = MatrizSuma[op1.TipoExpresion][op2.TipoExpresion];
         if(DominanteDato == INTEGER){
-            gen->AddExpression(newTemp,op1.Value,op2.Value,"+");
-            val = value(newTemp, true, DominanteDato);
+            //CASOS
+            //int + int = int
+            //int + bool = int =================================================================
+            if(op2.TipoExpresion == BOOL && op1.TipoExpresion == INTEGER){
+                if(op2.Value== "1"){
+                    //TRUE
+                    for(int i = 0; i <op2.TrueLvl.size(); i++){
+                        gen->AddLabel(op2.TrueLvl.value(i));
+                    }
+                }else{
+                    //FALSE
+                    for(int i = 0; i <op2.FalseLvl.size(); i++){
+                        gen->AddLabel(op2.FalseLvl.value(i));
+                    }
+                }
+                gen->AddExpression(newTemp,op1.Value,op2.Value,"+");
+            }else if(op1.TipoExpresion == BOOL && op2.TipoExpresion == INTEGER){
+                //bool + int = int =================================================================
+                if(op1.Value== "1"){
+                    //TRUE
+                    for(int i = 0; i <op1.TrueLvl.size(); i++){
+                        gen->AddLabel(op1.TrueLvl.value(i));
+                    }
+                }else{
+                    //FALSE
+                    for(int i = 0; i <op1.FalseLvl.size(); i++){
+                        gen->AddLabel(op1.FalseLvl.value(i));
+                    }
+                }
+                gen->AddExpression(newTemp,op1.Value,op2.Value,"+");
+            }else if(op1.TipoExpresion == BOOL && op2.TipoExpresion == BOOL){
+                //bool + bool = int =================================================================
+                if(op1.Value== "1"){
+                    //TRUE
+                    for(int i = 0; i <op1.TrueLvl.size(); i++){
+                        gen->AddLabel(op1.TrueLvl.value(i));
+                    }
+                    if(op2.Value== "1"){
+                        //TRUE
+                        for(int i = 0; i <op2.TrueLvl.size(); i++){
+                            gen->AddLabel(op2.TrueLvl.value(i));
+                        }
+                    }else{
+                        //FALSE
+                        for(int i = 0; i <op2.FalseLvl.size(); i++){
+                            gen->AddLabel(op2.FalseLvl.value(i));
+                        }
+                    }
+                }else{
+                    //FALSE
+                    for(int i = 0; i <op1.FalseLvl.size(); i++){
+                        gen->AddLabel(op1.FalseLvl.value(i));
+                    }
+                    if(op2.Value== "1"){
+                        //TRUE
+                        for(int i = 0; i <op2.TrueLvl.size(); i++){
+                            gen->AddLabel(op2.TrueLvl.value(i));
+                        }
+                    }else{
+                        //FALSE
+                        for(int i = 0; i <op2.FalseLvl.size(); i++){
+                            gen->AddLabel(op2.FalseLvl.value(i));
+                        }
+                    }
+                }
+                gen->AddExpression(newTemp,op1.Value,op2.Value,"+");
+            }else{
+               gen->AddExpression(newTemp,op1.Value,op2.Value,"+");
+            }
+            val = value(newTemp, true, INTEGER);
             return val;
         }else if(DominanteDato == FLOAT){
-
-        }else if(DominanteDato == BOOL){
-
+            //int + float = float =================================================================
+            //float + float = float ===============================================================
+            //float + int = float =================================================================
+            if(op1.TipoExpresion == FLOAT && op2.TipoExpresion == BOOL){
+                //float + bool = float ================================================================
+                if(op2.Value== "1"){
+                    //TRUE
+                    for(int i = 0; i <op2.TrueLvl.size(); i++){
+                        gen->AddLabel(op2.TrueLvl.value(i));
+                    }
+                }else{
+                    //FALSE
+                    for(int i = 0; i <op2.FalseLvl.size(); i++){
+                        gen->AddLabel(op2.FalseLvl.value(i));
+                    }
+                }
+                gen->AddExpression(newTemp,op1.Value,op2.Value,"+");
+            }else if(op1.TipoExpresion == BOOL && op2.TipoExpresion == FLOAT){
+                 //bool + float = float ================================================================
+                if(op1.Value== "1"){
+                    //TRUE
+                    for(int i = 0; i <op1.TrueLvl.size(); i++){
+                        gen->AddLabel(op1.TrueLvl.value(i));
+                    }
+                }else{
+                    //FALSE
+                    for(int i = 0; i <op1.FalseLvl.size(); i++){
+                        gen->AddLabel(op1.FalseLvl.value(i));
+                    }
+                }
+                gen->AddExpression(newTemp,op1.Value,op2.Value,"+");
+            }
+            val = value(newTemp, true, FLOAT);
+            return val;
         }else if(DominanteDato == STRING){
+            //CONCATENACION
+            if(op1.TipoExpresion == STRING){
+                if(op2.TipoExpresion == INTEGER){
+                    gen->AddExpression("H", "H", "1", "-");
+                    std::string valor_concatenado = op2.Value;
+                }
+                else if(op2.TipoExpresion == FLOAT){
+                    gen->AddExpression("H", "H", "1", "-");
+                    std::string valor_concatenado = op2.Value;
+                }
+                else if(op2.TipoExpresion == BOOL){
+                    gen->AddExpression("H", "H", "1", "-");
+                    if(op2.Value == "true"){
+                        std::string valor_concatenado = "true";
+                    }else{
+                        std::string valor_concatenado = "false";
+                    }
+                }
+                else if(op2.TipoExpresion == STRING){}
+            }
+            //Retrocedo una posicion en el heap para que quede junto al string
 
+
+            //nuevo temporal
+            //std::string newTemp = gen->newTemp();
+            //igualar a Heap Pointer
+            //gen->AddAssign(newTemp, "H");
+            //recorrer cadena
+            //for (int i = 0; i < valor_concatenado.length(); i++) {
+                //se agrega ascii a heap
+               // gen->AddSetHeap("(int)H", std::to_string(int(valor_concatenado[i])));
+                //suma heap pointer
+              //  gen->AddExpression("H", "H", "1", "+");
+           // }
+            //caracteres de escape
+            //gen->AddSetHeap("(int)H", "-1");
+            //gen->AddExpression("H", "H", "1", "+");
+            //gen->AddBr();
+
+            //gen->AddExpression(newTemp,op1.Value,op2.Value,"+");
+            val = value(newTemp, true, STRING);
+            return val;
+        }else{
+            //ERROR SEMANTICO
+            std::string contenido_error =  "No se puede operar la suma entre ";
+            contenido_error += env->obtenerTipo(op1.TipoExpresion);
+            contenido_error += " y ";
+            contenido_error += env->obtenerTipo(op2.TipoExpresion);
+            tree->errores.append(*new error_analisis(Line, Col, 3, contenido_error));
+            tree->erroresSemanticos++;
         }
 
     }

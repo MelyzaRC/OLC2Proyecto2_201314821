@@ -65,7 +65,7 @@ void MainWindow::on_pushButton_clicked()
         if(Root->erroresSemanticos>0){
             presentarErrores(*new QVector<error_analisis*> , Root);
         }
-        this->presentarTablaSimbolos(Root);*/
+        */
         generator_code *GeneratorC3D = new generator_code();
         analizador.Main->traducir(GlobalEnv, Root, GeneratorC3D);
         if(Root->erroresSemanticos>0){
@@ -74,6 +74,7 @@ void MainWindow::on_pushButton_clicked()
         GeneratorC3D->MainCode = true;
         GeneratorC3D->GenerateFinalCode();
         ui->textEdit->setText(QString::fromStdString(GeneratorC3D->FinalCode));
+        //this->presentarTablaSimbolos(Root);
     }
 }
 
