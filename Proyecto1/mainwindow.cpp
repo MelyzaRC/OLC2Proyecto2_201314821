@@ -266,7 +266,7 @@ void MainWindow::on_actionAcerca_de_triggered()
     std::string acerca_de = "Melyza Alejandra Rodriguez Contreras";
     acerca_de += "\n201314821";
     acerca_de += "\n2593602600101@ingenieria.usac.edu.gt";
-    acerca_de += "\n\nProyecto 1";
+    acerca_de += "\n\nProyecto 2";
     acerca_de += "\nLaboratorio de Organización de Lenguajes y Compiladores 2";
     acerca_de += "\nPrimer Semestre, 2023";
     QMessageBox::information(this,"OLC2", QString::fromStdString(acerca_de), QMessageBox::Ok);
