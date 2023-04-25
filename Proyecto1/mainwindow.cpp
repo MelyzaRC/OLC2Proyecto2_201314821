@@ -214,41 +214,6 @@ void MainWindow::on_plainTextEdit_textChanged()
 {
 }
 
-void MainWindow::on_pushButton_3_clicked()
-{
-
-}
-
-void MainWindow::on_pushButton_7_clicked()
-{
-
-}
-
-//BOTON GUARDAR
-void MainWindow::on_pushButton_8_clicked()
-{
-
-}
-
-
-void MainWindow::on_pushButton_4_clicked()
-{
-
-}
-
-
-void MainWindow::on_pushButton_5_clicked()
-{
-
-}
-
-
-void MainWindow::on_pushButton_6_clicked()
-{
-
-}
-
-
 void MainWindow::on_actionSalir_triggered()
 {
     QMessageBox::StandardButton reply;

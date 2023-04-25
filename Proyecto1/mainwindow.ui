@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>OLC2 - Proyecto 1</string>
+   <string>OLC2 - Proyecto 2</string>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
@@ -111,7 +111,8 @@ border-radius:10px;
       </property>
       <property name="plainText">
        <string>void main(){
-int a = 10 + 2 * 3 / 1;
+string a = &quot;cien&quot; + 100;
+printf(a);
 }</string>
       </property>
       <property name="placeholderText">
