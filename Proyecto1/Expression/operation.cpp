@@ -304,37 +304,41 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
                 std::string tmp = gen->newTemp();
                 gen->AddAssign(tmp,"H");
                 gen->AddComment("Parte BOOL");
-                if(op1.Value=="1"){
-                    //concatenar true
-                    gen->AddComment("t");
-                    gen->AddSetHeap("(int)H","116" );
-                    gen->AddExpression("H", "H", "1", "+");
-                    gen->AddComment("r");
-                    gen->AddSetHeap("(int)H","114" );
-                    gen->AddExpression("H", "H", "1", "+");
-                    gen->AddComment("u");
-                    gen->AddSetHeap("(int)H","117" );
-                    gen->AddExpression("H", "H", "1", "+");
-                    gen->AddComment("e");
-                    gen->AddSetHeap("(int)H","101" );
-                    gen->AddExpression("H", "H", "1", "+");
+                if(op1.IsTemp){
+                    //AQUI AGREGAR BOOL RESULTANTE DE LOGICAS Y RELACIONALES
                 }else{
-                    //concatenar false
-                    gen->AddComment("f");
-                    gen->AddSetHeap("(int)H","102" );
-                    gen->AddExpression("H", "H", "1", "+");
-                    gen->AddComment("a");
-                    gen->AddSetHeap("(int)H","97" );
-                    gen->AddExpression("H", "H", "1", "+");
-                    gen->AddComment("l");
-                    gen->AddSetHeap("(int)H","108" );
-                    gen->AddExpression("H", "H", "1", "+");
-                    gen->AddComment("s");
-                    gen->AddSetHeap("(int)H","115" );
-                    gen->AddExpression("H", "H", "1", "+");
-                    gen->AddComment("e");
-                    gen->AddSetHeap("(int)H","101" );
-                    gen->AddExpression("H", "H", "1", "+");
+                    if(op1.Value=="1"){
+                        //concatenar true
+                        gen->AddComment("t");
+                        gen->AddSetHeap("(int)H","116" );
+                        gen->AddExpression("H", "H", "1", "+");
+                        gen->AddComment("r");
+                        gen->AddSetHeap("(int)H","114" );
+                        gen->AddExpression("H", "H", "1", "+");
+                        gen->AddComment("u");
+                        gen->AddSetHeap("(int)H","117" );
+                        gen->AddExpression("H", "H", "1", "+");
+                        gen->AddComment("e");
+                        gen->AddSetHeap("(int)H","101" );
+                        gen->AddExpression("H", "H", "1", "+");
+                    }else{
+                        //concatenar false
+                        gen->AddComment("f");
+                        gen->AddSetHeap("(int)H","102" );
+                        gen->AddExpression("H", "H", "1", "+");
+                        gen->AddComment("a");
+                        gen->AddSetHeap("(int)H","97" );
+                        gen->AddExpression("H", "H", "1", "+");
+                        gen->AddComment("l");
+                        gen->AddSetHeap("(int)H","108" );
+                        gen->AddExpression("H", "H", "1", "+");
+                        gen->AddComment("s");
+                        gen->AddSetHeap("(int)H","115" );
+                        gen->AddExpression("H", "H", "1", "+");
+                        gen->AddComment("e");
+                        gen->AddSetHeap("(int)H","101" );
+                        gen->AddExpression("H", "H", "1", "+");
+                    }
                 }
                 gen->AddComment("Parte STRING");
                 //NO AGREGO -1 PORQUE QUIERO CONCATENAR
@@ -365,14 +369,16 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
                 return val;
             }
             else  if(op2.TipoExpresion == BOOL ){
-                if(op2.Value=="1"){
-                    for(int i = 0; i < op2.TrueLvl.size(); i++){
-                        gen->AddLabel(op2.TrueLvl.value(i));
+                if(!op2.IsTemp){
+                    if(op2.Value=="1"){
+                        for(int i = 0; i < op2.TrueLvl.size(); i++){
+                            gen->AddLabel(op2.TrueLvl.value(i));
+                        }
                     }
-                }
-                else{
-                    for(int i = 0; i < op2.FalseLvl.size(); i++){
-                        gen->AddLabel(op2.FalseLvl.value(i));
+                    else{
+                        for(int i = 0; i < op2.FalseLvl.size(); i++){
+                            gen->AddLabel(op2.FalseLvl.value(i));
+                        }
                     }
                 }
                 //string + bool   = string ==============================================================
@@ -401,37 +407,41 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
                 //encuentra en el heap -1
                 gen->AddLabel(labelSalir);
                 gen->AddComment("Parte BOOL");
-                if(op2.Value=="1"){
-                    //concatenar true
-                    gen->AddComment("t");
-                    gen->AddSetHeap("(int)H","116" );
-                    gen->AddExpression("H", "H", "1", "+");
-                    gen->AddComment("r");
-                    gen->AddSetHeap("(int)H","114" );
-                    gen->AddExpression("H", "H", "1", "+");
-                    gen->AddComment("u");
-                    gen->AddSetHeap("(int)H","117" );
-                    gen->AddExpression("H", "H", "1", "+");
-                    gen->AddComment("e");
-                    gen->AddSetHeap("(int)H","101" );
-                    gen->AddExpression("H", "H", "1", "+");
+                if(op2.IsTemp){
+                //AQUI AGREGAR BOOL RESULTANTE DE LOGICAS Y RELACIONALES
                 }else{
-                    //concatenar false
-                    gen->AddComment("f");
-                    gen->AddSetHeap("(int)H","102" );
-                    gen->AddExpression("H", "H", "1", "+");
-                    gen->AddComment("a");
-                    gen->AddSetHeap("(int)H","97" );
-                    gen->AddExpression("H", "H", "1", "+");
-                    gen->AddComment("l");
-                    gen->AddSetHeap("(int)H","108" );
-                    gen->AddExpression("H", "H", "1", "+");
-                    gen->AddComment("s");
-                    gen->AddSetHeap("(int)H","115" );
-                    gen->AddExpression("H", "H", "1", "+");
-                    gen->AddComment("e");
-                    gen->AddSetHeap("(int)H","101" );
-                    gen->AddExpression("H", "H", "1", "+");
+                    if(op2.Value=="1"){
+                        //concatenar true
+                        gen->AddComment("t");
+                        gen->AddSetHeap("(int)H","116" );
+                        gen->AddExpression("H", "H", "1", "+");
+                        gen->AddComment("r");
+                        gen->AddSetHeap("(int)H","114" );
+                        gen->AddExpression("H", "H", "1", "+");
+                        gen->AddComment("u");
+                        gen->AddSetHeap("(int)H","117" );
+                        gen->AddExpression("H", "H", "1", "+");
+                        gen->AddComment("e");
+                        gen->AddSetHeap("(int)H","101" );
+                        gen->AddExpression("H", "H", "1", "+");
+                    }else{
+                        //concatenar false
+                        gen->AddComment("f");
+                        gen->AddSetHeap("(int)H","102" );
+                        gen->AddExpression("H", "H", "1", "+");
+                        gen->AddComment("a");
+                        gen->AddSetHeap("(int)H","97" );
+                        gen->AddExpression("H", "H", "1", "+");
+                        gen->AddComment("l");
+                        gen->AddSetHeap("(int)H","108" );
+                        gen->AddExpression("H", "H", "1", "+");
+                        gen->AddComment("s");
+                        gen->AddSetHeap("(int)H","115" );
+                        gen->AddExpression("H", "H", "1", "+");
+                        gen->AddComment("e");
+                        gen->AddSetHeap("(int)H","101" );
+                        gen->AddExpression("H", "H", "1", "+");
+                    }
                 }
                 gen->AddSetHeap("(int)H", "-1");
                 gen->AddExpression("H", "H", "1", "+");
