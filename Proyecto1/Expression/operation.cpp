@@ -192,10 +192,21 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
                 gen->AddComment("Parte NUMERO");
                 std::string tmp = gen->newTemp();
                 gen->AddAssign(tmp,"H");
-                for(int i = 0; i < op1.Value.size(); i++){
-                    std::string s(1, op1.Value[i]);
-                    gen->AddComment(s);
-                    gen->AddSetHeap("(int)H",std::to_string(int(op1.Value[i])));
+                //Agregar el numero al heap seguido de -2 para indicarle que es un numero y no un ascii
+                gen->AddComment("Parte NUMERO");
+                if(op1.IsTemp){
+                    std::string tmpNumero = gen->newTemp();
+                    gen->AddAssign(tmpNumero, op1.Value);
+                    gen->AddSetHeap("(int)H",tmpNumero);
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddSetHeap("(int)H","-2");
+                    gen->AddExpression("H", "H", "1", "+");
+
+                }else{
+                    //es un valor
+                    gen->AddSetHeap("(int)H",op1.Value);
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddSetHeap("(int)H", "-2");//INDICA QUE ES VALOR ENTERO
                     gen->AddExpression("H", "H", "1", "+");
                 }
                 gen->AddComment("Parte STRING");
@@ -205,7 +216,7 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
                 //EL SEGUNDO OPERANDO TIENE QUE SER STRING
                 //Temporal del string
                 std::string tmpInicio = gen->newTemp();
-                gen->AddAssign(tmpInicio, "stack[(int)"+op2.Value+"]");
+                gen->AddAssign(tmpInicio, op2.Value);
                 gen->AddLabel(labelRepetir);
                 std::string tmpIterar = gen->newTemp();
                 gen->AddAssign(tmpIterar, "heap[(int)"+tmpInicio+"]");
@@ -227,14 +238,16 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
                 return val;
 
             }else if(op2.TipoExpresion == INTEGER || op2.TipoExpresion == FLOAT){
-                //string + int = string ================================================================
+                //string + int   = string ==============================================================
                 //string + float = string ==============================================================
-                gen->AddComment("Concatenando STRING+NUMERO");
+                gen->AddComment("Concatenando STRING + NUMERO");
                 std::string tmp = gen->newTemp();
                 gen->AddAssign(tmp,"H");
                 gen->AddComment("Parte STRING");
                 std::string labelRepetir = gen->newLabel();
                 std::string labelSalir = gen->newLabel();
+                //EL SEGUNDO OPERANDO TIENE QUE SER STRING
+                //Temporal del string
                 std::string tmpInicio = gen->newTemp();
                 gen->AddAssign(tmpInicio, op1.Value);
                 gen->AddLabel(labelRepetir);
@@ -250,10 +263,174 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
                 gen->AddGoto(labelRepetir);
                 //encuentra en el heap -1
                 gen->AddLabel(labelSalir);
-                for(int i = 0; i < op2.Value.size(); i++){
-                    std::string s(1, op2.Value[i]);
-                    gen->AddComment(s);
-                    gen->AddSetHeap("(int)H",std::to_string(int(op2.Value[i])));
+
+               // gen->AddExpression("H", "H", "1", "+");
+
+                //Agregar el numero al heap seguido de -2 para indicarle que es un numero y no un ascii
+                gen->AddComment("Parte NUMERO");
+                if(op2.IsTemp){
+                    std::string tmpNumero = gen->newTemp();
+                    gen->AddAssign(tmpNumero, op2.Value);
+                    gen->AddSetHeap("(int)H",tmpNumero);
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddSetHeap("(int)H","-2");
+                    gen->AddExpression("H", "H", "1", "+");
+                }else{
+                    //es un valor
+                    gen->AddSetHeap("(int)H",op2.Value);
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddSetHeap("(int)H", "-2");//INDICA QUE ES VALOR ENTERO
+                    gen->AddExpression("H", "H", "1", "+");
+                }
+                gen->AddSetHeap("(int)H", "-1");
+                gen->AddExpression("H", "H", "1", "+");
+                //string retorna el temporal creado al inicio
+                val = value(tmp, true, STRING);
+                return val;
+            }
+            else  if(op1.TipoExpresion == BOOL ){
+                if(op1.Value=="1"){
+                    for(int i = 0; i < op1.TrueLvl.size(); i++){
+                        gen->AddLabel(op1.TrueLvl.value(i));
+                    }
+                }
+                else{
+                    for(int i = 0; i < op1.FalseLvl.size(); i++){
+                        gen->AddLabel(op1.FalseLvl.value(i));
+                    }
+                }
+                //bool + string   = string ==============================================================
+                gen->AddComment("Concatenando BOOL + STRING");
+                std::string tmp = gen->newTemp();
+                gen->AddAssign(tmp,"H");
+                gen->AddComment("Parte BOOL");
+                if(op1.Value=="1"){
+                    //concatenar true
+                    gen->AddComment("t");
+                    gen->AddSetHeap("(int)H","116" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("r");
+                    gen->AddSetHeap("(int)H","114" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("u");
+                    gen->AddSetHeap("(int)H","117" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("e");
+                    gen->AddSetHeap("(int)H","101" );
+                    gen->AddExpression("H", "H", "1", "+");
+                }else{
+                    //concatenar false
+                    gen->AddComment("f");
+                    gen->AddSetHeap("(int)H","102" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("a");
+                    gen->AddSetHeap("(int)H","97" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("l");
+                    gen->AddSetHeap("(int)H","108" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("s");
+                    gen->AddSetHeap("(int)H","115" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("e");
+                    gen->AddSetHeap("(int)H","101" );
+                    gen->AddExpression("H", "H", "1", "+");
+                }
+                gen->AddComment("Parte STRING");
+                //NO AGREGO -1 PORQUE QUIERO CONCATENAR
+                std::string labelRepetir = gen->newLabel();
+                std::string labelSalir = gen->newLabel();
+                //EL SEGUNDO OPERANDO TIENE QUE SER STRING
+                //Temporal del string
+                std::string tmpInicio = gen->newTemp();
+                gen->AddAssign(tmpInicio, op2.Value);
+                gen->AddLabel(labelRepetir);
+                std::string tmpIterar = gen->newTemp();
+                gen->AddAssign(tmpIterar, "heap[(int)"+tmpInicio+"]");
+                std::string labelTrue = gen->newLabel();
+                gen->AddIf(tmpIterar,"-1","!=",labelTrue);
+                gen->AddGoto(labelSalir);
+                gen->AddLabel(labelTrue);
+                gen->AddSetHeap("(int)H", tmpIterar);
+                gen->AddExpression("H", "H", "1", "+");
+                gen->AddExpression(tmpInicio, tmpInicio, "1", "+");
+                gen->AddGoto(labelRepetir);
+                //encuentra en el heap -1
+                gen->AddLabel(labelSalir);
+                gen->AddSetHeap("(int)H", "-1");
+                gen->AddExpression("H", "H", "1", "+");
+                gen->AddBr();
+                //string retorna el temporal creado al inicio
+                val = value(tmp, true, STRING);
+                return val;
+            }
+            else  if(op2.TipoExpresion == BOOL ){
+                if(op2.Value=="1"){
+                    for(int i = 0; i < op2.TrueLvl.size(); i++){
+                        gen->AddLabel(op2.TrueLvl.value(i));
+                    }
+                }
+                else{
+                    for(int i = 0; i < op2.FalseLvl.size(); i++){
+                        gen->AddLabel(op2.FalseLvl.value(i));
+                    }
+                }
+                //string + bool   = string ==============================================================
+                gen->AddComment("Concatenando STRING + BOOL");
+                std::string tmp = gen->newTemp();
+                gen->AddAssign(tmp,"H");
+                gen->AddComment("Parte STRING");
+                //NO AGREGO -1 PORQUE QUIERO CONCATENAR
+                std::string labelRepetir = gen->newLabel();
+                std::string labelSalir = gen->newLabel();
+                //EL SEGUNDO OPERANDO TIENE QUE SER STRING
+                //Temporal del string
+                std::string tmpInicio = gen->newTemp();
+                gen->AddAssign(tmpInicio, op1.Value);
+                gen->AddLabel(labelRepetir);
+                std::string tmpIterar = gen->newTemp();
+                gen->AddAssign(tmpIterar, "heap[(int)"+tmpInicio+"]");
+                std::string labelTrue = gen->newLabel();
+                gen->AddIf(tmpIterar,"-1","!=",labelTrue);
+                gen->AddGoto(labelSalir);
+                gen->AddLabel(labelTrue);
+                gen->AddSetHeap("(int)H", tmpIterar);
+                gen->AddExpression("H", "H", "1", "+");
+                gen->AddExpression(tmpInicio, tmpInicio, "1", "+");
+                gen->AddGoto(labelRepetir);
+                //encuentra en el heap -1
+                gen->AddLabel(labelSalir);
+                gen->AddComment("Parte BOOL");
+                if(op2.Value=="1"){
+                    //concatenar true
+                    gen->AddComment("t");
+                    gen->AddSetHeap("(int)H","116" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("r");
+                    gen->AddSetHeap("(int)H","114" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("u");
+                    gen->AddSetHeap("(int)H","117" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("e");
+                    gen->AddSetHeap("(int)H","101" );
+                    gen->AddExpression("H", "H", "1", "+");
+                }else{
+                    //concatenar false
+                    gen->AddComment("f");
+                    gen->AddSetHeap("(int)H","102" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("a");
+                    gen->AddSetHeap("(int)H","97" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("l");
+                    gen->AddSetHeap("(int)H","108" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("s");
+                    gen->AddSetHeap("(int)H","115" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("e");
+                    gen->AddSetHeap("(int)H","101" );
                     gen->AddExpression("H", "H", "1", "+");
                 }
                 gen->AddSetHeap("(int)H", "-1");
@@ -261,11 +438,59 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
                 val = value(tmp, true, STRING);
                 return val;
             }
+            else{
+                //string + string = string ==============================================================
+                gen->AddComment("Concatenando STRING + STRING");
+                std::string tmp = gen->newTemp();
+                gen->AddAssign(tmp,"H");
+                gen->AddComment("Primer STRING");
+                //NO AGREGO -1 PORQUE QUIERO CONCATENAR
+                std::string labelRepetir = gen->newLabel();
+                std::string labelSalir = gen->newLabel();
+                //Temporal del string
+                std::string tmpInicio = gen->newTemp();
+                gen->AddAssign(tmpInicio, op1.Value);
+                gen->AddLabel(labelRepetir);
+                std::string tmpIterar = gen->newTemp();
+                gen->AddAssign(tmpIterar, "heap[(int)"+tmpInicio+"]");
+                std::string labelTrue = gen->newLabel();
+                gen->AddIf(tmpIterar,"-1","!=",labelTrue);
+                gen->AddGoto(labelSalir);
+                gen->AddLabel(labelTrue);
+                gen->AddSetHeap("(int)H", tmpIterar);
+                gen->AddExpression("H", "H", "1", "+");
+                gen->AddExpression(tmpInicio, tmpInicio, "1", "+");
+                gen->AddGoto(labelRepetir);
+                //encuentra en el heap -1
+                gen->AddLabel(labelSalir);
+                gen->AddComment("Segundo STRING");
+                //NO AGREGO -1 PORQUE QUIERO CONCATENAR
+                labelRepetir = gen->newLabel();
+                labelSalir = gen->newLabel();
+                //Temporal del string
+                tmpInicio = gen->newTemp();
+                gen->AddAssign(tmpInicio, op2.Value);
+                gen->AddLabel(labelRepetir);
+                tmpIterar = gen->newTemp();
+                gen->AddAssign(tmpIterar, "heap[(int)"+tmpInicio+"]");
+                labelTrue = gen->newLabel();
+                gen->AddIf(tmpIterar,"-1","!=",labelTrue);
+                gen->AddGoto(labelSalir);
+                gen->AddLabel(labelTrue);
+                gen->AddSetHeap("(int)H", tmpIterar);
+                gen->AddExpression("H", "H", "1", "+");
+                gen->AddExpression(tmpInicio, tmpInicio, "1", "+");
+                gen->AddGoto(labelRepetir);
+                //encuentra en el heap -1
+                gen->AddLabel(labelSalir);
 
-            //string + string = sring ==============================================================
 
-            //string + bool = string ===============================================================
-            //bool + string = string ===============================================================
+                gen->AddSetHeap("(int)H", "-1");
+                gen->AddExpression("H", "H", "1", "+");
+                val = value(tmp, true, STRING);
+                return val;
+            }
+
             val = value(newTemp, true, STRING);
             return val;
         }else{

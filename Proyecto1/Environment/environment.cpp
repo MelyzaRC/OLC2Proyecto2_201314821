@@ -113,7 +113,6 @@ symbol environment::SaveVariable2(std::string id, TipoDato tipo, asttree *tree)
         symbol sym = *new symbol (0, 0, id, tipo, *i);
         Tabla[id] = sym;
         this->Size++;
-        std::cout<<Size<<std::endl;
         return sym;
     }
     else
@@ -142,6 +141,8 @@ symbol environment::GetVariable(std::string id, environment *env, asttree *tree)
                             tmpEnv.Tabla[id].Id,
                             tmpEnv.Tabla[id].Tipo,
                             tmpEnv.Tabla[id].valor);
+
+            tempSym.Posicion = tmpEnv.Tabla[id].Posicion;
             sym = tempSym;
             return sym;
         }

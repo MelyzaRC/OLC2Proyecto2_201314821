@@ -111,7 +111,8 @@ border-radius:10px;
       </property>
       <property name="plainText">
        <string>void main(){
-string a = &quot;cien&quot; + 100;
+string b = &quot;hola2&quot;;
+string a = &quot;hola1 &quot; + b;
 printf(a);
 }</string>
       </property>

@@ -195,19 +195,43 @@ void generator_code::GeneratePrintString()
         std::string newTemp1 = newTemp();
         std::string newTemp2 = newTemp();
         std::string newTemp3 = newTemp();
+        std::string newTemp4 = newTemp();
+
+
         std::string newLvl1 = newLabel();
         std::string newLvl2 = newLabel();
+        std::string newLvl3 = newLabel();
+        std::string newLvl4 = newLabel();
+        std::string newLvl5 = newLabel();
+
+
         //se genera la funcion printstring
         Natives.append("void olc3d_printString() {\n");
         Natives.append("\t" + newTemp1 + " = P + 1;\n");
         Natives.append("\t" + newTemp2 + " = stack[(int)" + newTemp1 + "];\n");
-        Natives.append("\t" + newLvl2 + ":\n");
+        Natives.append("\t" + newLvl1 + ":\n");
         Natives.append("\t" + newTemp3 + " = heap[(int)" + newTemp2 + "];\n");
-        Natives.append("\tif(" + newTemp3 + " == -1) goto " + newLvl1 + ";\n");
+        //Evaluar siguiente linea -2
+        Natives.append("\t" + newTemp4 + " = heap[(int)(" + newTemp2 + "+1)];\n");
+
+        Natives.append("\tif(" + newTemp3 + " == -2) goto " + newLvl2 + ";\n");
+        Natives.append("\tif(" + newTemp4 + " == -2) goto " + newLvl3 + ";\n");
+        Natives.append("\tgoto " + newLvl4+ ";\n");
+        Natives.append("\t"+newLvl4+ ":\n");
+
+
+        Natives.append("\tif(" + newTemp3 + " == -1) goto " + newLvl5 + ";\n");
         Natives.append("\tprintf(\"%c\", (char)" + newTemp3 + ");\n");
         Natives.append("\t" + newTemp2 + " = " + newTemp2 + " + 1;\n");
-        Natives.append("\tgoto " + newLvl2 + ";\n");
-        Natives.append("\t" + newLvl1 + ":\n");
+        Natives.append("\tgoto " + newLvl1 + ";\n");
+        Natives.append("\t" + newLvl2 + ":\n");
+        Natives.append("\t" + newTemp2 + " = " + newTemp2 + " + 1;\n");
+        Natives.append("\tgoto " + newLvl1 + ";\n");
+        Natives.append("\t" + newLvl3 + ":\n");
+        Natives.append("\tprintf(\"%i\", (int)" + newTemp3 + ");\n");
+        Natives.append("\t" + newTemp2 + " = " + newTemp2 + " + 1;\n");
+        Natives.append("\tgoto " + newLvl1 + ";\n");
+        Natives.append("\t" + newLvl5 + ":\n");
         Natives.append("\treturn;\n");
         Natives.append("}\n\n");
         PrintStringFlag = false;
