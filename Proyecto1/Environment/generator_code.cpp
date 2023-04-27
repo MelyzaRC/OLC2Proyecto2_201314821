@@ -203,6 +203,7 @@ void generator_code::GeneratePrintString()
         std::string newLvl3 = newLabel();
         std::string newLvl4 = newLabel();
         std::string newLvl5 = newLabel();
+        std::string newLvl6 = newLabel();
 
 
         //se genera la funcion printstring
@@ -216,6 +217,7 @@ void generator_code::GeneratePrintString()
 
         Natives.append("\tif(" + newTemp3 + " == -2) goto " + newLvl2 + ";\n");
         Natives.append("\tif(" + newTemp4 + " == -2) goto " + newLvl3 + ";\n");
+        Natives.append("\tif(" + newTemp4 + " == -3) goto " + newLvl6 + ";\n");
         Natives.append("\tgoto " + newLvl4+ ";\n");
         Natives.append("\t"+newLvl4+ ":\n");
 
@@ -229,6 +231,10 @@ void generator_code::GeneratePrintString()
         Natives.append("\tgoto " + newLvl1 + ";\n");
         Natives.append("\t" + newLvl3 + ":\n");
         Natives.append("\tprintf(\"%i\", (int)" + newTemp3 + ");\n");
+        Natives.append("\t" + newTemp2 + " = " + newTemp2 + " + 1;\n");
+        Natives.append("\tgoto " + newLvl1 + ";\n");
+        Natives.append("\t" + newLvl6 + ":\n");
+        Natives.append("\tprintf(\"%f\", (float)" + newTemp3 + ");\n");
         Natives.append("\t" + newTemp2 + " = " + newTemp2 + " + 1;\n");
         Natives.append("\tgoto " + newLvl1 + ";\n");
         Natives.append("\t" + newLvl5 + ":\n");

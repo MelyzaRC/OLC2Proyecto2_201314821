@@ -199,14 +199,22 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
                     gen->AddAssign(tmpNumero, op1.Value);
                     gen->AddSetHeap("(int)H",tmpNumero);
                     gen->AddExpression("H", "H", "1", "+");
-                    gen->AddSetHeap("(int)H","-2");
+                    if(op1.TipoExpresion == INTEGER){
+                        gen->AddSetHeap("(int)H","-2");
+                    }else if(op1.TipoExpresion == FLOAT){
+                        gen->AddSetHeap("(int)H","-3");
+                    }
                     gen->AddExpression("H", "H", "1", "+");
 
                 }else{
                     //es un valor
                     gen->AddSetHeap("(int)H",op1.Value);
                     gen->AddExpression("H", "H", "1", "+");
-                    gen->AddSetHeap("(int)H", "-2");//INDICA QUE ES VALOR ENTERO
+                    if(op1.TipoExpresion == INTEGER){
+                        gen->AddSetHeap("(int)H","-2");
+                    }else if(op1.TipoExpresion == FLOAT){
+                        gen->AddSetHeap("(int)H","-3");
+                    }//INDICA QUE ES VALOR ENTERO
                     gen->AddExpression("H", "H", "1", "+");
                 }
                 gen->AddComment("Parte STRING");
@@ -273,13 +281,21 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
                     gen->AddAssign(tmpNumero, op2.Value);
                     gen->AddSetHeap("(int)H",tmpNumero);
                     gen->AddExpression("H", "H", "1", "+");
-                    gen->AddSetHeap("(int)H","-2");
+                    if(op2.TipoExpresion == INTEGER){
+                        gen->AddSetHeap("(int)H","-2");
+                    }else if(op2.TipoExpresion == FLOAT){
+                        gen->AddSetHeap("(int)H","-3");
+                    }
                     gen->AddExpression("H", "H", "1", "+");
                 }else{
                     //es un valor
                     gen->AddSetHeap("(int)H",op2.Value);
                     gen->AddExpression("H", "H", "1", "+");
-                    gen->AddSetHeap("(int)H", "-2");//INDICA QUE ES VALOR ENTERO
+                    if(op2.TipoExpresion == INTEGER){
+                        gen->AddSetHeap("(int)H","-2");
+                    }else if(op2.TipoExpresion == FLOAT){
+                        gen->AddSetHeap("(int)H","-3");
+                    }//INDICA QUE ES VALOR ENTERO
                     gen->AddExpression("H", "H", "1", "+");
                 }
                 gen->AddSetHeap("(int)H", "-1");
@@ -306,6 +322,45 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
                 gen->AddComment("Parte BOOL");
                 if(op1.IsTemp){
                     //AQUI AGREGAR BOOL RESULTANTE DE LOGICAS Y RELACIONALES
+                    std::string labelTrueTmp = gen->newLabel();
+                    std::string labelFalseTmp = gen->newLabel();
+                    std::string labelSalirTmp = gen->newLabel();
+                    gen->AddIf(op1.Value,"1","==",labelTrueTmp);
+                    gen->AddGoto(labelFalseTmp);
+                    gen->AddLabel(labelTrueTmp);
+                    //concatenar true
+                    gen->AddComment("t");
+                    gen->AddSetHeap("(int)H","116" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("r");
+                    gen->AddSetHeap("(int)H","114" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("u");
+                    gen->AddSetHeap("(int)H","117" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("e");
+                    gen->AddSetHeap("(int)H","101" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddGoto(labelSalirTmp);
+                    gen->AddLabel(labelFalseTmp);
+                    //concatenar false
+                    gen->AddComment("f");
+                    gen->AddSetHeap("(int)H","102" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("a");
+                    gen->AddSetHeap("(int)H","97" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("l");
+                    gen->AddSetHeap("(int)H","108" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("s");
+                    gen->AddSetHeap("(int)H","115" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddComment("e");
+                    gen->AddSetHeap("(int)H","101" );
+                    gen->AddExpression("H", "H", "1", "+");
+                    gen->AddGoto(labelSalirTmp);
+                    gen->AddLabel(labelSalirTmp);
                 }else{
                     if(op1.Value=="1"){
                         //concatenar true

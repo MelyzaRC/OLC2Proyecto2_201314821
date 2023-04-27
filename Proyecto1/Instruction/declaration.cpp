@@ -61,14 +61,14 @@ void declaration::traducir(environment *env, asttree *tree, generator_code *gen)
                 gen->AddLabel(val.TrueLvl[i]);
             }
 
-            gen->AddSetStack(std::to_string(newVar.Posicion),"1");
+            gen->AddSetStack(std::to_string(newVar.Posicion),val.Value);
             gen->AddGoto(newLabel);
             //add false labels
             for(int i=0; i < val.FalseLvl.size(); i++)
             {
                 gen->AddLabel(val.FalseLvl[i]);
             }
-            gen->AddSetStack(std::to_string(newVar.Posicion),"0");
+            gen->AddSetStack(std::to_string(newVar.Posicion),val.Value);
             gen->AddGoto(newLabel);
             gen->AddLabel(newLabel);
         }
