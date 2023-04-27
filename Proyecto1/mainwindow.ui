@@ -111,9 +111,8 @@ border-radius:10px;
       </property>
       <property name="plainText">
        <string>void main(){
-string b = &quot;hola2&quot;;
-string a = &quot;hola1 &quot; + b;
-printf(a);
+string a = &quot;hola&quot;;
+printf(1,1,a);
 }</string>
       </property>
       <property name="placeholderText">
