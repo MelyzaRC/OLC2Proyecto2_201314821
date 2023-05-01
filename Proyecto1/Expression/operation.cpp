@@ -1283,7 +1283,43 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
             return val;
         }
     }
-    else if(Operator == "!"){}
+    else if(Operator == "!"){
+        //Evaluo el primer operando
+        value op1 = Op_izq->traducir(env, tree, gen);
+        if(op1.TipoExpresion == BOOL){
+            std::string tmpNotTrue = gen->newLabel();
+            std::string tmpNotFalse = gen->newLabel();
+            std::string tmpNotSalir = gen->newLabel();
+            std::string resultadoNot = gen->newTemp();
+
+            //if valor == 1 goto lT
+            //goto lF
+            gen->AddIf(op1.Value,"1","==",tmpNotTrue);
+            gen->AddGoto(tmpNotFalse);
+            //LT
+            gen->AddLabel(tmpNotTrue);
+            gen->AddAssign(resultadoNot, "0");
+            gen->AddGoto(tmpNotSalir);
+            //LF
+            gen->AddLabel(tmpNotFalse);
+            gen->AddAssign(resultadoNot, "1");
+            gen->AddGoto(tmpNotSalir);
+            //Salir
+            gen->AddLabel(tmpNotSalir);
+            //Retornar
+            val = value(resultadoNot, true, BOOL);
+            return val;
+
+        }else{
+            //ERROR SEMANTICO
+            std::string contenido_error =  "La operacion NOT requiere un valor de tipo BOOL - Se detecto ";
+            contenido_error += env->obtenerTipo(op1.TipoExpresion);
+            tree->errores.append(*new error_analisis(Line, Col, 3, contenido_error));
+            tree->erroresSemanticos++;
+            val= *new value("NULO", false, NULO);
+            return val;
+        }
+    }
     //FIN
     val= *new value(tmpTraduccion, false, INTEGER);
     return val;
