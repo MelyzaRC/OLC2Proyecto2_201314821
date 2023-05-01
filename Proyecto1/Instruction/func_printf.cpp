@@ -12,6 +12,7 @@ func_printf::func_printf(int line, int col, lista_expresiones *val)
 }
 
 void func_printf::traducir(environment *env, asttree *tree, generator_code *gen){
+    gen->MainCode = true ;
     for(int i = 0; i < this->contenido->lista.size(); i++){
         value result = contenido->lista.value(i)->traducir(env, tree, gen);
 
@@ -23,7 +24,7 @@ void func_printf::traducir(environment *env, asttree *tree, generator_code *gen)
             tree->errores.append(*new error_analisis(Line, Col, 3, contenido_error));
             tree->erroresSemanticos++;
 
-            gen->MainCode = true;
+
             //concatenar false
             std::string tmpNulo = gen->newTemp();
             gen->AddAssign(tmpNulo, "H");

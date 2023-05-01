@@ -13,6 +13,7 @@ public:
     QVector<std::string> TempList;
     bool MainCode;
     bool PrintStringFlag;
+    bool mathErrorFlag;
     std::string FinalCode;
 
     generator_code();
@@ -31,6 +32,7 @@ public:
     void AddBr();
     void AddPrintf(std::string typePrint, std::string value);
     void GeneratePrintString();
+    void GenerateMathError();
     void GenerateFinalCode();
 };
 

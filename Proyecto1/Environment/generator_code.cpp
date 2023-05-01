@@ -11,6 +11,7 @@ generator_code::generator_code()
     Natives = QVector<std::string>();
     MainCode = false;
     PrintStringFlag = true;
+    this->mathErrorFlag = true;
     FinalCode = "";
 }
 // Generar un nuevo temporal
@@ -184,6 +185,41 @@ void  generator_code::AddPrintf(std::string typePrint, std::string value)
     else
     {
         FuncCode.append("printf(\"%" + typePrint + "\", " + value + ");\n");
+    }
+}
+
+void generator_code::GenerateMathError(){
+    if(mathErrorFlag){
+        Natives.append("void olc3d_mathError() {\n");
+        Natives.append("\t//IMPRIME ERROR - DIVISION ENTRE 0 \n");
+        Natives.append("\tprintf(\"%c\", (char) 69);\n");//E
+        Natives.append("\tprintf(\"%c\", (char) 82);\n");//R
+        Natives.append("\tprintf(\"%c\", (char) 82);\n");//R
+        Natives.append("\tprintf(\"%c\", (char) 79);\n");//O
+        Natives.append("\tprintf(\"%c\", (char) 82);\n");//R
+        Natives.append("\tprintf(\"%c\", (char) 32);\n");//
+        Natives.append("\tprintf(\"%c\", (char) 45);\n");//-
+        Natives.append("\tprintf(\"%c\", (char) 32);\n");//
+        Natives.append("\tprintf(\"%c\", (char) 68);\n");//D
+        Natives.append("\tprintf(\"%c\", (char) 73);\n");//I
+        Natives.append("\tprintf(\"%c\", (char) 86);\n");//V
+        Natives.append("\tprintf(\"%c\", (char) 73);\n");//I
+        Natives.append("\tprintf(\"%c\", (char) 83);\n");//S
+        Natives.append("\tprintf(\"%c\", (char) 73);\n");//I
+        Natives.append("\tprintf(\"%c\", (char) 79);\n");//O
+        Natives.append("\tprintf(\"%c\", (char) 78);\n");//N
+        Natives.append("\tprintf(\"%c\", (char) 32);\n");//
+        Natives.append("\tprintf(\"%c\", (char) 69);\n");//E
+        Natives.append("\tprintf(\"%c\", (char) 78);\n");//N
+        Natives.append("\tprintf(\"%c\", (char) 84);\n");//T
+        Natives.append("\tprintf(\"%c\", (char) 82);\n");//R
+        Natives.append("\tprintf(\"%c\", (char) 69);\n");//E
+        Natives.append("\tprintf(\"%c\", (char) 32);\n");//
+        Natives.append("\tprintf(\"%c\", (char) 48);\n");//0
+        Natives.append("\tprintf(\"%c\", (char) 10);\n");//SALTO DE LINEA
+        Natives.append("\treturn;\n");
+        Natives.append("}\n\n");
+        mathErrorFlag = false;
     }
 }
 
