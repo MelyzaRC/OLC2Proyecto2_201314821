@@ -12,6 +12,7 @@ public:
     std::string ErrorOut;
     std::string GraphOut;
     std::string cadenaTab;
+    std::string salirLbl;
     bool breakFlag;
     bool continueFlag;
     bool ElseIfFlag;

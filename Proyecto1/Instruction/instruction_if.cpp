@@ -14,7 +14,65 @@ instruction_if::instruction_if(int line, int col, expression *condition, instruc
 }
 
 void instruction_if::traducir(environment *env, asttree *tree, generator_code *gen){
+    gen->MainCode= true;
+    gen->AddComment("generando instruccion if");
+        value condicion = Condition->traducir(env, tree, gen);
+        std::string salir = gen->newLabel(); //etiqueta de salida
+        if(condicion.TipoExpresion == BOOL){
 
+            std::string labelTrueIf = gen->newLabel();
+            std::string labelFalseIf = gen->newLabel();
+
+            gen->AddIf(condicion.Value,"1","==",labelTrueIf);
+            gen->AddGoto(labelFalseIf);
+
+            gen->AddLabel(labelTrueIf);
+            //agregando etiquetas verdaderas
+            for(int i=0; i < condicion.TrueLvl.size(); i++)
+            {
+                gen->AddLabel(condicion.TrueLvl.value(i));
+            }
+            //instrucción del IF - entra al if
+            Block->traducir(env, tree, gen);
+            if(tree->salirLbl == ""){
+                gen->AddGoto(salir);
+                tree->salirLbl = salir;
+            }else{
+                gen->AddGoto(tree->salirLbl);
+            }
+            //No entra al if
+            gen->AddLabel(labelFalseIf);
+            for(int i=0; i < condicion.FalseLvl.size(); i++)
+            {
+                gen->AddLabel(condicion.FalseLvl.value(i));
+            }
+            //Tiene else if??
+            //etiqueta salida
+            if(this->ElseIfBlock != nullptr){
+                //agregar else if
+                this->ElseIfBlock->traducir(env,tree,gen);
+                //gen->AddGoto(salir);
+            }
+            //Tiene else???
+            if(this->ElseBlock != nullptr){
+                //agregar else
+                this->ElseBlock->traducir(env, tree, gen);
+                gen->AddGoto(salir);
+            }
+
+            //salida
+            gen->AddLabel(salir);
+            tree->salirLbl="";
+
+        }else{
+            //ERROR SEMANTICO
+            gen->AddGoto(salir);
+            gen->AddLabel(salir);
+            std::string contenido_error =  "La condicion no retorno un valor de tipo BOOL - Se detectó ";
+            contenido_error += env->obtenerTipo(condicion.TipoExpresion);
+            tree->errores.append(*new error_analisis(Line, Col, 3, contenido_error));
+            tree->erroresSemanticos++;
+        }
 }
 
 void instruction_if::ejecutar(environment *env, asttree *tree){

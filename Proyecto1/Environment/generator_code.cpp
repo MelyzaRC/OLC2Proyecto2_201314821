@@ -272,7 +272,7 @@ void generator_code::GeneratePrintString()
         Natives.append("\t" + newTemp2 + " = " + newTemp2 + " + 1;\n");
         Natives.append("\tgoto " + newLvl1 + ";\n");
         Natives.append("\t" + newLvl6 + ":\n");
-        Natives.append("\tprintf(\"%f\", (float)" + newTemp3 + ");\n");
+        Natives.append("\tprintf(\"%.3f\", (float)" + newTemp3 + ");\n");
         Natives.append("\t" + newTemp2 + " = " + newTemp2 + " + 1;\n");
         Natives.append("\tgoto " + newLvl1 + ";\n");
         Natives.append("\t" + newLvl5 + ":\n");

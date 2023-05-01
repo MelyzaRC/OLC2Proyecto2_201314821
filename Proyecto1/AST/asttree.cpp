@@ -9,6 +9,7 @@ asttree::asttree()
     errores =  QVector<error_analisis>();
     this->erroresSemanticos = 0;
     this->cadenaTab = "";
+    this->salirLbl = "";
 }
 
 void asttree::addError(error_analisis er){
