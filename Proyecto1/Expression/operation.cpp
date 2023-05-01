@@ -1192,7 +1192,97 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
             return val;
         }
     }
-    else if(Operator == "||"){}
+    else if(Operator == "||"){
+        //Evaluo el primer operando
+        value op1 = Op_izq->traducir(env, tree, gen);
+        //Label de salida
+        std::string salir = gen->newLabel();
+        if(op1.TipoExpresion == BOOL ){
+            //if cond goto LTrue
+            //goto LFalse
+            std::string primerTrue = gen->newLabel();
+            std::string primerFalse = gen->newLabel();
+
+            //Condicion
+            gen->AddIf(op1.Value,"1","==",primerTrue);
+            gen->AddGoto(primerFalse);
+            //Guardo sus etiquetas true
+            op1.TrueLvl.append(primerTrue);
+            //Guardo sus etiquetas false
+            op1.FalseLvl.append(primerFalse);
+
+            //&& Se une por sus etiquetas False
+            for(int i = 0; i < op1.FalseLvl.size();i++){
+                gen->AddLabel(op1.FalseLvl.value(i));
+            }
+            value op2 = Op_der->traducir(env, tree, gen);
+            if(op2.TipoExpresion == BOOL ){
+
+
+                //if cond goto LTrue
+                //goto LFalse
+                std::string segundoTrue = gen->newLabel();
+                std::string segundoFalse = gen->newLabel();
+
+                gen->AddIf(op2.Value,"1","==",segundoTrue);
+                gen->AddGoto(segundoFalse);
+
+                for(int i = 0; i<op1.TrueLvl.size();i++){
+                    op2.TrueLvl.append(op1.TrueLvl.value(i));
+                }
+                op2.TrueLvl.append(segundoTrue);
+                op2.FalseLvl.append(segundoFalse);
+
+                for(int i = 0; i<op2.TrueLvl.size();i++){
+                    gen->AddLabel(op2.TrueLvl.value(i));
+                }
+
+                std::string tmpTrueR = gen->newTemp();
+                gen->AddAssign(tmpTrueR,"1");
+                gen->AddGoto(salir);
+
+                for(int i = 0; i<op2.FalseLvl.size();i++){
+                    gen->AddLabel(op2.FalseLvl.value(i));
+                }
+                gen->AddAssign(tmpTrueR,"0");
+                gen->AddGoto(salir);
+
+                gen->AddLabel(salir);
+                val = value(tmpTrueR, true, BOOL);
+                return val;
+            }else{
+                //Si llega a esta punto es porque el segundo valor
+                //no es BOOL y necesita salir
+                for(int i = 0; i<op1.TrueLvl.size();i++){
+                    gen->AddLabel(op1.TrueLvl.value(i));
+                }
+                gen->AddGoto(salir);
+                gen->AddLabel(salir);
+                //ERROR SEMANTICO
+                std::string contenido_error =  "Se detecto un operacion OR con el segundo operador de tipo ";
+                contenido_error += env->obtenerTipo(op2.TipoExpresion);
+                contenido_error += " - ";
+                contenido_error += " Se esperaba BOOL";
+                tree->errores.append(*new error_analisis(Line, Col, 3, contenido_error));
+                tree->erroresSemanticos++;
+                val= *new value("NULO", false, NULO);
+                return val;
+            }
+
+        }else{
+            gen->AddGoto(salir);
+            gen->AddLabel(salir);
+            //ERROR SEMANTICO
+            std::string contenido_error =  "Se detecto un operacion OR con el primer operador de tipo ";
+            contenido_error += env->obtenerTipo(op1.TipoExpresion);
+            contenido_error += " - ";
+            contenido_error += " Se esperaba BOOL";
+            tree->errores.append(*new error_analisis(Line, Col, 3, contenido_error));
+            tree->erroresSemanticos++;
+            val= *new value("NULO", false, NULO);
+            return val;
+        }
+    }
     else if(Operator == "!"){}
     //FIN
     val= *new value(tmpTraduccion, false, INTEGER);
