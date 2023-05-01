@@ -55,7 +55,6 @@ value primitive::traducir(environment *env, asttree *tree, generator_code *gen){
             {
                 //if cond goto LT;
                 //goto LF;
-
                std::string trueLabel = gen->newLabel();
                std::string falseLabel = gen->newLabel();
                if(BoolVal)
