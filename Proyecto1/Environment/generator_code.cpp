@@ -232,6 +232,7 @@ void generator_code::GeneratePrintString()
         std::string newTemp2 = newTemp();
         std::string newTemp3 = newTemp();
         std::string newTemp4 = newTemp();
+        std::string newTempAdicional = newTemp();
 
 
         std::string newLvl1 = newLabel();
@@ -248,8 +249,9 @@ void generator_code::GeneratePrintString()
         Natives.append("\t" + newTemp2 + " = stack[(int)" + newTemp1 + "];\n");
         Natives.append("\t" + newLvl1 + ":\n");
         Natives.append("\t" + newTemp3 + " = heap[(int)" + newTemp2 + "];\n");
+        Natives.append("\t" + newTempAdicional + " = " + newTemp2 + " +1 ;\n");
         //Evaluar siguiente linea -2
-        Natives.append("\t" + newTemp4 + " = heap[(int)(" + newTemp2 + "+1)];\n");
+        Natives.append("\t" + newTemp4 + " = heap[(int)" + newTempAdicional + "];\n");
 
         Natives.append("\tif(" + newTemp3 + " == -2) goto " + newLvl2 + ";\n");
         Natives.append("\tif(" + newTemp4 + " == -2) goto " + newLvl3 + ";\n");
