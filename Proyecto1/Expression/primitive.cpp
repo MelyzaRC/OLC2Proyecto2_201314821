@@ -60,12 +60,12 @@ value primitive::traducir(environment *env, asttree *tree, generator_code *gen){
                std::string falseLabel = gen->newLabel();
                if(BoolVal)
                {
-                   gen->AddGoto(trueLabel);
+                   //gen->AddGoto(trueLabel);
                    val = value("1",false,BOOL);
                }
                else
                {
-                   gen->AddGoto(falseLabel);
+                  // gen->AddGoto(falseLabel);
                    val = value("0",false,BOOL);
                }
                val.TrueLvl.append(trueLabel);
