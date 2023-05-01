@@ -841,6 +841,101 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
         val= *new value(newDivisionModulo, true, DominanteDato);
         return val;
     }
+    else if(Operator == "=="){
+        std::string newIgualIgualTmp = gen->newTemp();
+        value op1 = Op_izq->traducir(env, tree, gen);
+        value op2 = Op_der->traducir(env, tree, gen);
+        TipoDato DominanteDato = MatrizComparacion[op1.TipoExpresion][op2.TipoExpresion];
+
+        if(DominanteDato == NULO){
+            //ERROR SEMANTICO
+            std::string contenido_error =  "No se puede comparar un tipo de dato ";
+            contenido_error += env->obtenerTipo(op1.TipoExpresion);
+            contenido_error += " con un tipo de dato ";
+            contenido_error += env->obtenerTipo(op2.TipoExpresion);
+            tree->errores.append(*new error_analisis(Line, Col, 3, contenido_error));
+            tree->erroresSemanticos++;
+            val= *new value("NULO", false, NULO);
+            return val;
+        }
+
+        //SI se puede comparar
+        std::string newResultTmp = gen->newTemp();
+        std::string newIgualTmp = gen->newLabel();
+        std::string newDifTmp = gen->newLabel();
+        std::string newSalirTmp = gen->newLabel();
+        //Pregunta comparacion
+        gen->AddIf(op1.Value, op2.Value, "==", newIgualTmp);
+        gen->AddGoto(newDifTmp);
+
+        //Si es igual
+        gen->AddLabel(newIgualTmp);
+        gen->AddAssign(newResultTmp, "1");
+        gen->AddGoto(newSalirTmp);
+
+        //No es igual
+        gen->AddLabel(newDifTmp);
+        gen->AddAssign(newResultTmp, "0");
+        gen->AddGoto(newSalirTmp);
+
+        //Sale
+        gen->AddLabel(newSalirTmp);
+
+        //RETORNO
+        val= *new value(newResultTmp, true, BOOL);
+        return val;
+    }
+    else if(Operator == "!="){
+        std::string newIgualIgualTmp = gen->newTemp();
+        value op1 = Op_izq->traducir(env, tree, gen);
+        value op2 = Op_der->traducir(env, tree, gen);
+        TipoDato DominanteDato = MatrizComparacion[op1.TipoExpresion][op2.TipoExpresion];
+
+        if(DominanteDato == NULO){
+            //ERROR SEMANTICO
+            std::string contenido_error =  "No se puede comparar un tipo de dato ";
+            contenido_error += env->obtenerTipo(op1.TipoExpresion);
+            contenido_error += " con un tipo de dato ";
+            contenido_error += env->obtenerTipo(op2.TipoExpresion);
+            tree->errores.append(*new error_analisis(Line, Col, 3, contenido_error));
+            tree->erroresSemanticos++;
+            val= *new value("NULO", false, NULO);
+            return val;
+        }
+
+        //SI se puede comparar
+        std::string newResultTmp = gen->newTemp();
+        std::string newIgualTmp = gen->newLabel();
+        std::string newDifTmp = gen->newLabel();
+        std::string newSalirTmp = gen->newLabel();
+        //Pregunta comparacion
+        gen->AddIf(op1.Value, op2.Value, "!=", newIgualTmp);
+        gen->AddGoto(newDifTmp);
+
+        //Si es igual
+        gen->AddLabel(newIgualTmp);
+        gen->AddAssign(newResultTmp, "1");
+        gen->AddGoto(newSalirTmp);
+
+        //No es igual
+        gen->AddLabel(newDifTmp);
+        gen->AddAssign(newResultTmp, "0");
+        gen->AddGoto(newSalirTmp);
+
+        //Sale
+        gen->AddLabel(newSalirTmp);
+
+        //RETORNO
+        val= *new value(newResultTmp, true, BOOL);
+        return val;
+    }
+    else if(Operator == ">"){}
+    else if(Operator == "<"){}
+    else if(Operator == ">="){}
+    else if(Operator == "<="){}
+    else if(Operator == "&&"){}
+    else if(Operator == "||"){}
+    else if(Operator == "!"){}
     //FIN
     val= *new value(tmpTraduccion, false, INTEGER);
     return val;
