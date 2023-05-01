@@ -12,7 +12,42 @@ declaracion_sin_valor::declaracion_sin_valor(int line, int col, std::string nomb
 }
 
 void declaracion_sin_valor::traducir(environment *env, asttree *tree, generator_code *gen){
+    std::cout<<"Traduciendo una declaracion sin valor"<<std::endl;
+    gen->MainCode = true;
+    value val("",false,NULO);
+    symbol newVar;
+    TipoDato t = NULO;
+    switch (this->tipo) {
+    case 0: {t=INTEGER; }   break;
+    case 1: {t=FLOAT;   }   break;
+    case 2: {t=STRING;  }   break;
+    case 3: {t=BOOL;    }   break;
+    case 4: {t=NULO;    }   break;
+    default:                break;
+    }
 
+    gen->AddComment("=== DECLARACION SIN VALOR ===");
+    newVar = env->SaveVariable2(this->nombre, t, tree);
+
+    switch(t){
+    case INTEGER:{
+        val.Value= "0";
+    }break;
+    case FLOAT:{
+        val.Value= "0.0";
+    }break;
+    case STRING:{
+        std::string tmpString = gen->newTemp();
+        gen->AddAssign(tmpString, "H");
+        gen->AddSetHeap("(int)H","00");
+        gen->AddExpression("H","H","1","+");
+        val.Value= tmpString;
+    }break;
+    case BOOL:{
+        val.Value= "0";
+    }break;
+    }
+    gen->AddSetStack(std::to_string(newVar.Posicion), val.Value);
 }
 
 void declaracion_sin_valor::ejecutar(environment *env, asttree *tree){

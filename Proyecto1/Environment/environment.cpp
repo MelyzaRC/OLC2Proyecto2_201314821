@@ -117,8 +117,21 @@ symbol environment::SaveVariable2(std::string id, TipoDato tipo, asttree *tree)
     }
     else
     {
-        //se reporta un error
-        tree->ErrorOut += "Ya existe la variable "+id;
+
+        if(Tabla[id].Tipo == tipo){
+            int* i = new int;
+            *i = Size;
+            symbol sym = *new symbol (0, 0, id, tipo, *i);
+            Tabla[id] = sym;
+            this->Size++;
+            return sym;
+        }else{
+            std::string contenido_error = "Ya existe la variable ";
+            contenido_error += id;
+            tree->errores.append(*new error_analisis(0, 0, 3, contenido_error));
+            tree->IncrementaErroresSemanticos();
+            return *new symbol (0, 0, "", NULO, 0);
+        }
         return Tabla[id];
     }
 }
