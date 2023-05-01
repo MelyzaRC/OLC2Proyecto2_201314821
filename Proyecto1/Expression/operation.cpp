@@ -51,7 +51,7 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
                                         }
                                         ;
     TipoDato MatrizModulo[5][5] =       {
-                                            {INTEGER,   NULO,   NULO,   FLOAT,      NULO},
+                                            {INTEGER,   NULO,   NULO,   INTEGER,    NULO},
                                             {NULO,      NULO,   NULO,   NULO,       NULO},
                                             {NULO,      NULO,   NULO,   NULO,       NULO},
                                             {INTEGER,   NULO,   NULO,   INTEGER,    NULO},
@@ -768,7 +768,80 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
         val= *new value(newDivisionTmp, true, DominanteDato);
         return val;
     }
+    else if(Operator == "%"){
+        std::string newDivisionModulo = gen->newTemp();
+        value op1 = Op_izq->traducir(env, tree, gen);
+        value op2 = Op_der->traducir(env, tree, gen);
+        TipoDato DominanteDato = MatrizModulo[op1.TipoExpresion][op2.TipoExpresion];
+        //CASOS
+        //int % int = int       ******************************************************
+        //int % bool = int      ******************************************************
+        //bool % bool = int     ******************************************************
+        //bool % int = int      ******************************************************
 
+        if(DominanteDato == NULO){
+            //ERROR SEMANTICO
+            std::string contenido_error =  "No se puede operar MODULO entre ";
+            contenido_error += env->obtenerTipo(op1.TipoExpresion);
+            contenido_error += " y ";
+            contenido_error += env->obtenerTipo(op2.TipoExpresion);
+            tree->errores.append(*new error_analisis(Line, Col, 3, contenido_error));
+            tree->erroresSemanticos++;
+            val= *new value("NULO", false, NULO);
+            return val;
+        }
+
+        if(op1.TipoExpresion == BOOL && !op1.IsTemp){
+            if(op1.Value=="1"){
+                for(int i = 0; i < op1.TrueLvl.size(); i++){
+                    gen->AddLabel(op1.TrueLvl.value(i));
+                }
+            }
+            else{
+                for(int i = 0; i < op1.FalseLvl.size(); i++){
+                    gen->AddLabel(op1.FalseLvl.value(i));
+                }
+            }
+        }
+
+        if(op1.TipoExpresion == BOOL && !op2.IsTemp){
+            if(op2.Value=="1"){
+                for(int i = 0; i < op2.TrueLvl.size(); i++){
+                    gen->AddLabel(op2.TrueLvl.value(i));
+                }
+            }
+            else{
+                for(int i = 0; i < op2.FalseLvl.size(); i++){
+                    gen->AddLabel(op2.FalseLvl.value(i));
+                }
+            }
+        }
+        //Agregar la validacion de division entre 0
+        std::string divCeroTrue = gen->newLabel();
+        std::string divCeroFalse = gen->newLabel();
+        std::string divCeroSalir = gen->newLabel();
+        //El divisor es 0?
+        gen->AddIf(op2.Value,"0","==",divCeroTrue );
+        gen->AddGoto(divCeroFalse);
+
+        //SI es 0
+        gen->AddLabel(divCeroTrue);
+        //Muestro math error en pantalla
+        gen->GenerateMathError();
+        gen->AddCall("olc3d_mathError");
+        gen->AddGoto(divCeroSalir);
+
+        //NO es 0
+        gen->AddLabel(divCeroFalse);
+        gen->AddExpression(newDivisionModulo, "(int)"+op1.Value, "(int)"+op2.Value, "%");
+        gen->AddGoto(divCeroSalir);
+
+        //Sale
+        gen->AddLabel(divCeroSalir);
+        val= *new value(newDivisionModulo, true, DominanteDato);
+        return val;
+    }
+    //FIN
     val= *new value(tmpTraduccion, false, INTEGER);
     return val;
 

@@ -12,7 +12,6 @@ declaracion_sin_valor::declaracion_sin_valor(int line, int col, std::string nomb
 }
 
 void declaracion_sin_valor::traducir(environment *env, asttree *tree, generator_code *gen){
-    std::cout<<"Traduciendo una declaracion sin valor"<<std::endl;
     gen->MainCode = true;
     value val("",false,NULO);
     symbol newVar;
