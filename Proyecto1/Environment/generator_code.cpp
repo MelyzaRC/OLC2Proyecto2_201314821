@@ -291,6 +291,7 @@ void generator_code::GeneratePrintString()
         Natives.append("\t" + newTemp4 + " = heap[(int)" + newTempAdicional + "];\n");
 
         Natives.append("\tif(" + newTemp3 + " == -2) goto " + newLvl2 + ";\n");
+        Natives.append("\tif(" + newTemp3 + " == -3) goto " + newLvl2 + ";\n");
         Natives.append("\tif(" + newTemp4 + " == -2) goto " + newLvl3 + ";\n");
         Natives.append("\tif(" + newTemp4 + " == -3) goto " + newLvl6 + ";\n");
         Natives.append("\tgoto " + newLvl4+ ";\n");
