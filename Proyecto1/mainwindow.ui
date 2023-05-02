@@ -111,8 +111,8 @@ border-radius:10px;
       </property>
       <property name="plainText">
        <string>void main(){
-string a = &quot;hola&quot;;
-printf(1,1,a);
+int a = atoi(&quot;510&quot;);
+printf(a+&quot;&quot;);
 }</string>
       </property>
       <property name="placeholderText">
