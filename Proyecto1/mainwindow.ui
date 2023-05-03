@@ -116,9 +116,10 @@ en este
 editor
 */
 
-void main(){
-string varImprimir = &quot;OLC2&quot;;
-printf(varImprimir);
+void main (){
+for(int i = 0; i &lt; 25 ; i++){
+printf(i+&quot;&quot;);
+}
 }
 
 //Fin de sentencias</string>

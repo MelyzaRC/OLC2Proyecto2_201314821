@@ -16,13 +16,44 @@ instruction_for::instruction_for(int line, int col, instruction* inst_iterador, 
 }
 
 void instruction_for::traducir(environment *env, asttree *tree, generator_code *gen){
+    gen->MainCode = true;
+    std::string LRepetir = gen->newLabel();
+    std::string LSalir = gen->newLabel();
+    std::string LSalto = gen->newLabel();
+    tree->LabelContinue = LSalto;
+    tree->LabelBreak = LSalir;
+    gen->AddComment("FOR ===================");
+    this->variable_iterador->traducir(env, tree, gen);
+    //ejecuto la condicion
+    gen->AddLabel(LRepetir);
+    value valCondicion = this->Condicion->traducir(env, tree, gen);
+    //ejecuto las sentencias
+    std::string LTrue = gen->newLabel();
+    std::string LFalse = gen->newLabel();
+    gen->AddIf(valCondicion.Value, "1","==", LTrue);
+    gen->AddGoto(LFalse);
 
+    gen->AddLabel(LTrue);
+    this->ListInst->traducir(env,tree,gen);
+    //ejecuto el saltos
+    gen->AddLabel(LSalto);
+    this->salto->traducir(env,tree,gen);
+    gen->AddGoto(LRepetir);
+    gen->AddLabel(LFalse);
+    gen->AddGoto(LSalir);
+    //Salir
+    gen->AddLabel(LSalir);
+    //tree->LabelContinue = "";
+    //tree->LabelBreak = "";
 }
 
 void instruction_for::ejecutar(environment *env, asttree *tree){
     environment *ForEnv = new environment(env, "FOR");
     this->variable_iterador->ejecutar(ForEnv, tree);
+    //ejecuta la instruccion del iterador
     this->cadenaPrint = ejecutarFor(ForEnv, tree);
+
+
 }
 
 bool instruction_for::validarIterador(environment *env, asttree *ast){
