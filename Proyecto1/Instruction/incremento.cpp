@@ -11,7 +11,29 @@ incremento::incremento(int line, int col, std::string nombre)
 }
 
 void incremento::traducir(environment *env, asttree *tree, generator_code *gen){
-
+    gen->MainCode=true;
+    symbol sym = env->GetVariable(this->nombre,env,tree);
+    if(sym.Tipo != NULO){
+        if(sym.Tipo == INTEGER){
+            std::string tmp1 = gen->newTemp();
+            //incrementa
+             gen->AddGetStack(std::to_string(sym.Posicion),tmp1);
+             gen->AddExpression(tmp1,tmp1,"1","+");
+             gen->AddSetStack(std::to_string(sym.Posicion), tmp1);
+        }else if(sym.Tipo == FLOAT){
+            std::string tmp1 = gen->newTemp();
+            //incrementa
+             gen->AddGetStack(std::to_string(sym.Posicion),tmp1);
+             gen->AddExpression(tmp1,tmp1,"1","+");
+             gen->AddSetStack(std::to_string(sym.Posicion), tmp1);
+        }else{
+            //ERROR SEMANTICO
+            std::string contenido_error =  "No se puede incrementar una variable de tipo ";
+            contenido_error += env->obtenerTipo(sym.Tipo);
+            tree->errores.append(*new error_analisis(Line, Col, 3, contenido_error));
+            tree->erroresSemanticos++;
+        }
+    }
 }
 
 void incremento::ejecutar(environment *env, asttree *tree){
