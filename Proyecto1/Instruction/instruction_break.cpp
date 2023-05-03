@@ -8,7 +8,10 @@ instruction_break::instruction_break(int a , int b)
 }
 
 void instruction_break::traducir(environment *env, asttree *tree, generator_code *gen){
-
+    gen->MainCode= true;
+    if(tree->LabelBreak != ""){
+        gen->AddGoto(tree->LabelBreak);
+    }
 }
 
 void instruction_break::ejecutar(environment *env, asttree *tree){

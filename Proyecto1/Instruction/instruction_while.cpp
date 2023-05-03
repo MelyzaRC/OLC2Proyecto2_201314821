@@ -18,6 +18,8 @@ void instruction_while::traducir(environment *env, asttree *tree, generator_code
     //etiqueta de retorno
     std::string RetLvl = gen->newLabel();
     std::string SLvl = gen->newLabel();
+    tree->LabelContinue=RetLvl;
+    tree->LabelBreak=SLvl;
     gen->AddLabel(RetLvl);
     //ejecutando expresion
     condition = condicion->traducir(env, tree, gen);
@@ -49,6 +51,8 @@ void instruction_while::traducir(environment *env, asttree *tree, generator_code
     gen->AddGoto(RetLvl);
     //Sale del ciclo
     gen->AddLabel(SLvl);
+    tree->LabelContinue="";
+    tree->LabelBreak="";
 }
 
 void instruction_while::ejecutar(environment *env, asttree *tree){

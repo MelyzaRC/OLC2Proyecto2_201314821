@@ -8,6 +8,8 @@
 class asttree
 {
 public:
+    std::string LabelBreak;
+    std::string LabelContinue;
     std::string ConsoleOut;
     std::string ErrorOut;
     std::string GraphOut;

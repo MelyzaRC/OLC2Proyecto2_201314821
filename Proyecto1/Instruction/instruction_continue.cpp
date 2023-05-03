@@ -8,7 +8,10 @@ instruction_continue::instruction_continue(int a , int b)
 }
 
 void instruction_continue::traducir(environment *env, asttree *tree, generator_code *gen){
-
+    gen->MainCode= true;
+    if(tree->LabelContinue != ""){
+        gen->AddGoto(tree->LabelContinue);
+    }
 }
 
 void instruction_continue::ejecutar(environment *env, asttree *tree){
