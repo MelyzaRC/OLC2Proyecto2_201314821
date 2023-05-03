@@ -10,6 +10,47 @@ negacion_unaria::negacion_unaria(int line, int col, expression *exp)
 
 value negacion_unaria::traducir(environment *env, asttree *tree, generator_code *gen){
     value val("", false, NULO);
+    gen->MainCode = true;
+    value op1 = this->valor->traducir(env, tree, gen);
+    if(op1.TipoExpresion != NULO){
+        std::string tmpR = gen->newTemp();
+        if(op1.TipoExpresion == INTEGER){
+            gen->AddExpression(tmpR, op1.Value,"-1","*");
+            value val(tmpR, true, INTEGER);
+            return val;
+        }
+        else if(op1.TipoExpresion == FLOAT){
+            gen->AddExpression(tmpR, op1.Value,"-1","*");
+            value val(tmpR, true, FLOAT);
+            return val;
+        }
+        else if(op1.TipoExpresion == BOOL){
+            std::string Lt = gen->newLabel();
+            std::string Lf = gen->newLabel();
+            std::string Ls = gen->newLabel();
+
+            gen->AddIf(op1.Value,"1","==", Lt);
+            gen->AddGoto(Lf);
+            gen->AddLabel(Lt);
+            gen->AddAssign(tmpR, "0");
+            gen->AddGoto(Ls);
+            gen->AddLabel(Lf);
+            gen->AddAssign(tmpR, "1");
+            gen->AddGoto(Ls);
+            gen->AddLabel(Ls);
+            value val(tmpR, true, BOOL);
+            return val;
+        }
+        else{
+            //ERROR SEMANTICO
+            std::string contenido_error =  "No se puede negar una expresion de tipo ";
+            contenido_error += env->obtenerTipo(op1.TipoExpresion);
+            tree->errores.append(*new error_analisis(Line, Col, 3, contenido_error));
+            tree->erroresSemanticos++;
+            val= *new value("NULO", false, NULO);
+            return val;
+        }
+    }
     return val;
 }
 
