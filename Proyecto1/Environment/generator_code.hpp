@@ -15,6 +15,7 @@ public:
     bool PrintStringFlag;
     bool mathErrorFlag;
     bool mathErrorAtoiFlag;
+    bool mathErrorAtofFlag;
     std::string FinalCode;
 
     generator_code();
@@ -35,6 +36,7 @@ public:
     void GeneratePrintString();
     void GenerateMathError();
     void GenerateMathErrorATOI();
+    void GenerateMathErrorATOF();
     void GenerateFinalCode();
 };
 

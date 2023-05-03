@@ -65,6 +65,7 @@ value expr_atoi::traducir(environment *env, asttree *tree, generator_code *gen){
         gen->AddIf(t6,"-2","==", L6);
         gen->AddIf(t6,"-3","==", L5);
         gen->AddIf(t6,"-1","==", LSalir);
+        gen->AddIf(t5,"-1","==",LSalir);
         gen->AddGoto(L7);
 
         //es -2 es un int

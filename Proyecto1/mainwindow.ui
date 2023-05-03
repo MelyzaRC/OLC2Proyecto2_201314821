@@ -111,7 +111,8 @@ border-radius:10px;
       </property>
       <property name="plainText">
        <string>void main(){
-int a = atoi(&quot;510&quot;);
+string c = &quot;510.255&quot;;
+float a = atof(c);
 printf(a+&quot;&quot;);
 }</string>
       </property>
