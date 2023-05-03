@@ -10,6 +10,8 @@ asttree::asttree()
     this->erroresSemanticos = 0;
     this->cadenaTab = "";
     this->salirLbl = "";
+    this->LabelBreak = "";
+    this->LabelContinue= "";
 }
 
 void asttree::addError(error_analisis er){

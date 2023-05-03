@@ -344,3 +344,4 @@ void MainWindow::on_pushButton_2_clicked()
     QMessageBox::information(this,"OLC2", "Texto copiado al portapapeles", QMessageBox::Ok);
 }
 
+

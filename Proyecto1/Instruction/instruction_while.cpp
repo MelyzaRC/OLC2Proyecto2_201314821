@@ -12,7 +12,43 @@ instruction_while::instruction_while(int line, int col, expression* ex, list_ins
 }
 
 void instruction_while::traducir(environment *env, asttree *tree, generator_code *gen){
+    gen->MainCode = true;
+    gen->AddComment("WHILE =================");
+    value condition("",false,NULO);
+    //etiqueta de retorno
+    std::string RetLvl = gen->newLabel();
+    std::string SLvl = gen->newLabel();
+    gen->AddLabel(RetLvl);
+    //ejecutando expresion
+    condition = condicion->traducir(env, tree, gen);
+    //aqui se agregarian etiquetas break y continue
+    //agregando etiquetas verdaderas
+    /*for(int i=0; i < condition.TrueLvl.size(); i++)
+    {
+        gen->AddLabel(condition.TrueLvl[i]);
+    }
+    //ejecutando instrucciones
+    ListInst->traducir(env, tree, gen);
+    //retorno
+    gen->AddGoto(RetLvl);
 
+    //agregando etiquetas falsas
+    for(int i=0; i < condition.FalseLvl.size(); i++)
+    {
+        gen->AddLabel(condition.FalseLvl[i]);
+    }
+    gen->AddGoto(SLvl);
+    gen->AddLabel(SLvl);*/
+    std::string labelWhile = gen->newLabel();
+    gen->AddIf(condition.Value,"1","==",labelWhile);
+    gen->AddGoto(SLvl);
+    gen->AddLabel(labelWhile);
+    //ejecutando instrucciones
+    ListInst->traducir(env, tree, gen);
+    //retorno
+    gen->AddGoto(RetLvl);
+    //Sale del ciclo
+    gen->AddLabel(SLvl);
 }
 
 void instruction_while::ejecutar(environment *env, asttree *tree){

@@ -1,5 +1,6 @@
 #include "generator_code.hpp"
 #include <iostream>
+#include <ctime>
 
 generator_code::generator_code()
 {
@@ -362,8 +363,16 @@ void generator_code::GenerateFinalCode()
 {
     //creando cabecera
     FinalCode += "//==========================================\n";
-    FinalCode += "//    MELYZA RODRIGUEZ\n";
-    FinalCode += "//    201314821\n";
+    FinalCode += "//    MELYZA RODRIGUEZ - 201314821\n";
+
+    std::time_t t = std::time(nullptr);
+    std::tm* now = std::localtime(&t);
+    char buffer[128];
+    strftime(buffer, sizeof(buffer), "%m/%d/%Y %X", now);
+
+    FinalCode += "//    Traducción realizada: ";
+    FinalCode += buffer;
+    FinalCode += "\n";
     FinalCode += "//==========================================\n\n";
     FinalCode += "#include <stdio.h>\n";
     FinalCode += "float stack[100000];\n";

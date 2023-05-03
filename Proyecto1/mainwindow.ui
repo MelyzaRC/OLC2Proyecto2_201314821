@@ -86,9 +86,9 @@ border-radius:10px;
      <widget class="QPlainTextEdit" name="plainTextEdit">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>20</x>
         <y>0</y>
-        <width>531</width>
+        <width>521</width>
         <height>471</height>
        </rect>
       </property>
@@ -110,11 +110,18 @@ border-radius:10px;
        <enum>Qt::ScrollBarAlwaysOff</enum>
       </property>
       <property name="plainText">
-       <string>void main(){
-string c = &quot;510.255&quot;;
-float a = atof(c);
-printf(a+&quot;&quot;);
-}</string>
+       <string>/*
+Inserte sus sentencias
+en este 
+editor
+*/
+
+void main(){
+string varImprimir = &quot;OLC2&quot;;
+printf(varImprimir);
+}
+
+//Fin de sentencias</string>
       </property>
       <property name="placeholderText">
        <string>Ingrese su codigo aquí...</string>
@@ -125,7 +132,7 @@ printf(a+&quot;&quot;);
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>16</width>
+        <width>21</width>
         <height>471</height>
        </rect>
       </property>

@@ -8,6 +8,7 @@ list_instruction_second::list_instruction_second()
 }
 
 void list_instruction_second::traducir(environment *env, asttree *tree, generator_code *gen){
+    gen->MainCode= true;
     for(int i = 0; i < this->ListInst.size(); i++){
         this->ListInst.value(i)->traducir(env, tree, gen);
     }
