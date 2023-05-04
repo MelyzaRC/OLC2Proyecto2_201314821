@@ -14,7 +14,8 @@ generator_code::generator_code()
     PrintStringFlag = true;
     this->mathErrorFlag = true;
     this->mathErrorAtoiFlag = true;
-     this->mathErrorAtofFlag = true;
+    this->mathErrorAtofFlag = true;
+    this->fueraRangoFlag = true;
     FinalCode = "";
 }
 // Generar un nuevo temporal
@@ -357,6 +358,39 @@ void generator_code::GeneratePrintString()
         PrintStringFlag = false;
     }
 }
+
+void generator_code::GenerateFueraRango(){
+    if(this->fueraRangoFlag){
+        Natives.append("void olc3d_fueraRango() {\n");
+        Natives.append("\t//IMPRIME INDICE FUERA DE RANGO \n");
+        Natives.append("\tprintf(\"%c\", (char) 73);\n");//I
+        Natives.append("\tprintf(\"%c\", (char) 78);\n");//N
+        Natives.append("\tprintf(\"%c\", (char) 68);\n");//D
+        Natives.append("\tprintf(\"%c\", (char) 73);\n");//I
+        Natives.append("\tprintf(\"%c\", (char) 67);\n");//C
+        Natives.append("\tprintf(\"%c\", (char) 69);\n");//E
+        Natives.append("\tprintf(\"%c\", (char) 32);\n");//
+        Natives.append("\tprintf(\"%c\", (char) 70);\n");//F
+        Natives.append("\tprintf(\"%c\", (char) 85);\n");//U
+        Natives.append("\tprintf(\"%c\", (char) 69);\n");//E
+        Natives.append("\tprintf(\"%c\", (char) 82);\n");//R
+        Natives.append("\tprintf(\"%c\", (char) 65);\n");//A
+        Natives.append("\tprintf(\"%c\", (char) 32);\n");//
+        Natives.append("\tprintf(\"%c\", (char) 68);\n");//D
+        Natives.append("\tprintf(\"%c\", (char) 69);\n");//E
+        Natives.append("\tprintf(\"%c\", (char) 32);\n");//
+        Natives.append("\tprintf(\"%c\", (char) 82);\n");//R
+        Natives.append("\tprintf(\"%c\", (char) 65);\n");//A
+        Natives.append("\tprintf(\"%c\", (char) 78);\n");//N
+        Natives.append("\tprintf(\"%c\", (char) 71);\n");//G
+        Natives.append("\tprintf(\"%c\", (char) 79);\n");//O
+        Natives.append("\tprintf(\"%c\", (char) 10);\n");//SALTO DE LINEA
+        Natives.append("\treturn;\n");
+        Natives.append("}\n\n");
+        fueraRangoFlag = false;
+    }
+}
+
 
 //agregar headers
 void generator_code::GenerateFinalCode()

@@ -16,6 +16,7 @@ public:
     bool mathErrorFlag;
     bool mathErrorAtoiFlag;
     bool mathErrorAtofFlag;
+    bool fueraRangoFlag;
     std::string FinalCode;
 
     generator_code();
@@ -37,6 +38,7 @@ public:
     void GenerateMathError();
     void GenerateMathErrorATOI();
     void GenerateMathErrorATOF();
+    void GenerateFueraRango();
     void GenerateFinalCode();
 };
 
