@@ -8,10 +8,13 @@ expr_size_vector::expr_size_vector(int line, int col, std::string id)
 }
 
 value expr_size_vector::traducir(environment *env, asttree *tree, generator_code *gen){
+    gen->MainCode = true;
     value val("", false, NULO);
     symbol sym = env->GetVariable(this->id,env,tree);
     if(sym.Tipo != NULO){
+        std::cout<<"si entra a no nulo"<<std::endl;
         if(sym.Tipo == VINT || sym.Tipo == VFLOAT || sym.Tipo == VBOOL || sym.Tipo == VSTRING){
+            std::cout<<"si entra a vector"<<std::endl;
             std::string tmpRes = gen->newTemp();
             gen->AddAssign(tmpRes, std::to_string(sym.size));
             value v(tmpRes,true,INTEGER);
@@ -23,7 +26,7 @@ value expr_size_vector::traducir(environment *env, asttree *tree, generator_code
             contenido_error += " no es un vector";
             tree->errores.append(*new error_analisis(Line, Col, 3, contenido_error));
             tree->erroresSemanticos++;
-            val= *new value("NULO", false, NULO);
+            val= *new value("", false, NULO);
             return val;
         }
     }

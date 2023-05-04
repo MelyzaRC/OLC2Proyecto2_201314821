@@ -40,6 +40,7 @@ public:
     std::string obtenerTipo(int _tipo);
     std::string obtenerTipoTraduccion(int _tipo);
     std::string graficar();
+    void saveSize(std::string nombre, int tam);
 };
 
 #endif // ENVIRONMENT_HPP

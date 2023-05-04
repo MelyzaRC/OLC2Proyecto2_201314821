@@ -49,6 +49,14 @@ map<std::string, TipoDato> environment::GetStruct(std::string id, environment *e
     return sym_struct;
 }
 
+void environment::saveSize(std::string nombre, int tam){
+    if (Tabla.find(nombre) != Tabla.end()){
+        int* n = new int;
+        *n = tam;
+        Tabla[nombre].size = *n;
+    }
+}
+
 void environment::ModificarVariable(symbol sym, std::string id){
     if (Tabla.find(id) != Tabla.end()){
         switch (sym.Tipo) {
@@ -153,9 +161,11 @@ symbol environment::GetVariable(std::string id, environment *env, asttree *tree)
                             tmpEnv.Tabla[id].Col,
                             tmpEnv.Tabla[id].Id,
                             tmpEnv.Tabla[id].Tipo,
-                            tmpEnv.Tabla[id].valor);
+                            tmpEnv.Tabla[id].valor)
+                            ;
 
             tempSym.Posicion = tmpEnv.Tabla[id].Posicion;
+            tempSym.size = tmpEnv.Tabla[id].size;
             sym = tempSym;
             return sym;
         }

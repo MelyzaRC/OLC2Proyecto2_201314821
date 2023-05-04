@@ -49,15 +49,15 @@ void create_vector::traducir(environment *env, asttree *tree, generator_code *ge
 
     if(this->lista->lista.size() > 0 ){
         //Vector tiene valores
-        int* a = new int;
-        *a = this->lista->lista.size();
-        newVar.size = *a;
+        int size = this->lista->lista.size();
+        newVar.size =size;
+
         std::string tVector = gen->newTemp();
         std::string tmpAlmacenar = gen->newTemp();
         std::string tmpPosicion = gen->newTemp();
         std::string LError = gen->newLabel();
         std::string LFinVec = gen->newLabel();
-        int size;
+
         //Posicion donde empieza el vector
         gen->AddComment("Posicion inicial del vector");
         gen->AddAssign(tVector, "H");
@@ -101,7 +101,10 @@ void create_vector::traducir(environment *env, asttree *tree, generator_code *ge
         gen->AddGoto(LFinVec);
 
         gen->AddLabel(LFinVec);
-        env->ModificarVariable(newVar,this->id);
+        env->saveSize(this->id, this->lista->lista.size());
+        symbol s = env->GetVariable(this->id,env,tree);
+        std::cout <<"Regresa " <<s.size<<std::endl;
+
     }else{
         //Vector vacio
         newVar.size = this->lista->lista.size();
