@@ -12,9 +12,7 @@ value expr_size_vector::traducir(environment *env, asttree *tree, generator_code
     value val("", false, NULO);
     symbol sym = env->GetVariable(this->id,env,tree);
     if(sym.Tipo != NULO){
-        std::cout<<"si entra a no nulo"<<std::endl;
         if(sym.Tipo == VINT || sym.Tipo == VFLOAT || sym.Tipo == VBOOL || sym.Tipo == VSTRING){
-            std::cout<<"si entra a vector"<<std::endl;
             std::string tmpRes = gen->newTemp();
             gen->AddAssign(tmpRes, std::to_string(sym.size));
             value v(tmpRes,true,INTEGER);
