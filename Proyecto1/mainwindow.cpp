@@ -44,7 +44,6 @@ void MainWindow::on_pushButton_clicked()
         QMessageBox *msg = new QMessageBox();
         msg->setText("Análisis terminado con errores\nNo se ejecutará ninguna acción");
         msg->exec();
-        std::cout<<"Errores encontrados: " <<analizador.lista_errores.size()<<std::endl;
         ui->textEdit->setText("");
         ui->textEdit_2->setText("");
         ui->textEdit_4->setText("");
@@ -66,6 +65,7 @@ void MainWindow::on_pushButton_clicked()
             presentarErrores(*new QVector<error_analisis*> , Root);
         }
         */
+        std::string contenido_notificacion = "Análisis realizado\n";
         generator_code *GeneratorC3D = new generator_code();
         analizador.Main->traducir(GlobalEnv, Root, GeneratorC3D);
         if(Root->erroresSemanticos>0){
@@ -74,7 +74,10 @@ void MainWindow::on_pushButton_clicked()
         GeneratorC3D->MainCode = true;
         GeneratorC3D->GenerateFinalCode();
         ui->textEdit->setText(QString::fromStdString(GeneratorC3D->FinalCode));
-        //this->presentarTablaSimbolos(Root);
+        this->presentarTablaSimbolos(Root);
+        QMessageBox *msg = new QMessageBox();
+        msg->setText(QString::fromStdString(contenido_notificacion));
+        msg->exec();
     }
 }
 
@@ -262,10 +265,12 @@ void MainWindow::on_actionAbrir_triggered()
                 "Archivoc miniOLC (*.minc)");
     if(!fileName.isEmpty()){
         QFile file(fileName);
+        limpiar();
         if(file.open(QFile::ReadOnly)){
             ui->plainTextEdit->setPlainText(file.readAll());
             urlArchivo = fileName.toStdString();
             ui->label_2->setText(QString::fromStdString(urlArchivo));
+            ui->tabWidget_2->setCurrentIndex(0);
         }
     }
 }

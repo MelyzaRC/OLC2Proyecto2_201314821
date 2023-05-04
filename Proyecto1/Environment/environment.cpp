@@ -319,40 +319,35 @@ std::string environment::graficar(){
     tmp += "</br><table>";
     tmp += "<tr><td colspan=\"3\" bgcolor=\"#950E8B\"><center><font color=\"#FFFFFF\"><h3 margin=\"25\">Variables</h3></font></center></td></tr>";
     tmp += "<tr>";
-    tmp += "<td width=\"100\" bgcolor=\"#EA94F8\"><center><b>Tipo</b></center></td>";
+    tmp += "<td width=\"125\" bgcolor=\"#EA94F8\"><center><b>Tipo</b></center></td>";
     tmp += "<td width=\"100\" bgcolor=\"#EA94F8\"><center><b>Nombre</b></center></td>";
-    tmp += "<td width=\"350\" bgcolor=\"#EA94F8\"><center><b>Valor</b></center></td>";
+    tmp += "<td width=\"200\" bgcolor=\"#EA94F8\"><center><b>Valor*</b></center></td>";
     tmp += "</tr>";
     auto iter = Tabla.begin();
         while (iter != Tabla.end()) {
             tmp +=  "<tr>";
-            tmp +=  "<td width=\"100\"><center>";
+            tmp +=  "<td width=\"125\" bgcolor=\"#FAECF9\">";
             tmp +=  this->obtenerTipo(iter->second.Tipo);
-            tmp +=  "</center></td>";
-            tmp +=  "<td width=\"100\"><center>";
-            tmp +=  iter->first;
-            tmp +=  "</center></td>";
-            tmp +=  "<td width=\"350\">";
-            symbol res = iter->second;
-                if(res.Tipo == INTEGER ){
-                    tmp += std::to_string(*static_cast<int*>(res.valor));
-                }else if(res.Tipo == FLOAT ){
-                    tmp += std::to_string(*static_cast<float*>(res.valor));
-                }else if(res.Tipo == BOOL ){
-                    if(*static_cast<bool*>(res.valor)){
-                        tmp+= "true";
-                    }else{
-                        tmp+= "false";
-                    }
-                }else if(res.Tipo == NULO ){
-                    tmp+= "NULO";
-                }else{
-                    tmp += *static_cast<std::string*>(res.valor);
-                }
             tmp +=  "</td>";
+            tmp +=  "<td width=\"100\" bgcolor=\"#FAECF9\">";
+            tmp +=  iter->first;
+            tmp +=  "</td>";
+            tmp +=  "<td width=\"200\" bgcolor=\"#FAECF9\"><center>";
+            symbol res = iter->second;
+            tmp += std::to_string(res.Posicion);
+            tmp +=  "</enter></td>";
             tmp += "</tr>";
             ++iter;
         }
+    tmp += "<tr><td colspan=\"3\" bgcolor=\"#FFFFFF\"></td></tr>";
+    tmp += "<tr><td colspan=\"3\" bgcolor=\"#FFFFFF\"></td></tr>";
+    tmp += "<tr><td colspan=\"3\" bgcolor=\"#F5F8B4\"><font color=\"#000000\" size=\"3\"><p>";
+    tmp += "<b><i>*Nota:</i></b>";
+    tmp += " Los datos de la columna <b>Valor</b> representan las posiciones que sirven como referencia ";
+    tmp += " para la ejecución de las instrucciones del <i>código fuente</i> a <i>Código Tres Direcciones<i>.";
+    tmp +="</font></p></td></tr>";
+    tmp += "<tr><td colspan=\"3\" bgcolor=\"#FFFFFF\"></td></tr>";
+    tmp += "<tr><td colspan=\"3\" bgcolor=\"#FFFFFF\"></td></tr>";
     tmp += "</table></br></br>";
     //Arrays*****************************************************************************
     //Structs****************************************************************************
@@ -363,13 +358,17 @@ std::string environment::graficar(){
 
 std::string environment::obtenerTipo(int _tipo){
     switch(_tipo){
-        case 0:{ return "INT";      } break;
-        case 1:{ return "FLOAT";    } break;
-        case 2:{ return "STRING";   } break;
-        case 3:{ return "BOOL";     } break;
-        case 4:{ return "NULO";     } break;
-        case 5:{ return "VOID";     } break;
-        case 6:{ return "STRUCT";   } break;
+        case 0: {   return "INT";               } break;
+        case 1: {   return "FLOAT";             } break;
+        case 2: {   return "STRING";            } break;
+        case 3: {   return "BOOL";              } break;
+        case 4: {   return "NULO";              } break;
+        case 5: {   return "VOID";              } break;
+        case 6: {   return "STRUCT";            } break;
+        case 7: {   return "VECTOR [INTEGER]";  } break;
+        case 8: {   return "VECTOR [FLOAT]";    } break;
+        case 9: {   return "VECTOR [BOOL]";     } break;
+        case 10:{   return "VECTOR [STRING]";   } break;
     default:
         return "";
     }
