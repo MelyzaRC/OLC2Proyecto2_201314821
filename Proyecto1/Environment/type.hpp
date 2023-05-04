@@ -1,6 +1,6 @@
 #ifndef TYPE_H
 #define TYPE_H
 
-enum TipoDato { INTEGER, FLOAT, STRING, BOOL, NULO, VOID, STRUCT};
+enum TipoDato { INTEGER, FLOAT, STRING, BOOL, NULO, VOID, STRUCT, VINT, VFLOAT, VBOOL, VSTRING};
 
 #endif // TYPE_H

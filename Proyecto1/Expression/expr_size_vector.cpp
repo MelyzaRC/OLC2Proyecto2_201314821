@@ -9,6 +9,25 @@ expr_size_vector::expr_size_vector(int line, int col, std::string id)
 
 value expr_size_vector::traducir(environment *env, asttree *tree, generator_code *gen){
     value val("", false, NULO);
+    symbol sym = env->GetVariable(this->id,env,tree);
+    if(sym.Tipo != NULO){
+        if(sym.Tipo == VINT || sym.Tipo == VFLOAT || sym.Tipo == VBOOL || sym.Tipo == VSTRING){
+            std::string tmpRes = gen->newTemp();
+            gen->AddAssign(tmpRes, std::to_string(sym.size));
+            value v(tmpRes,true,INTEGER);
+            return v;
+        }else{
+            //ERROR SEMANTICO
+            std::string contenido_error =  "La variable  ";
+            contenido_error += this->id;
+            contenido_error += " no es un vector";
+            tree->errores.append(*new error_analisis(Line, Col, 3, contenido_error));
+            tree->erroresSemanticos++;
+            val= *new value("NULO", false, NULO);
+            return val;
+        }
+    }
+    //No encuentra la variable - error controlado en el entorno
     return val;
 }
 

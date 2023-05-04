@@ -7,6 +7,7 @@ symbol::symbol(int line, int col, std::string id, TipoDato tipo, void *val){
     this->Tipo = tipo;
     this->valor = val;
     this->Posicion = 0;
+    this->size = 0;
 }
 
 symbol::symbol(int line, int col, std::string id, TipoDato tipo, int posicion)

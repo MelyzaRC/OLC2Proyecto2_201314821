@@ -13,6 +13,7 @@ public:
     TipoDato Tipo;
     void *valor;
     int Posicion;
+    int size;
 
     symbol(int line, int col, std::string id, TipoDato tipo, void *val);
     symbol(int line, int col, std::string id, TipoDato tipo, int posicion);
