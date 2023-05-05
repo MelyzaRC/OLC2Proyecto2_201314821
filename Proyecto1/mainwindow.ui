@@ -119,6 +119,8 @@ editor
 void main (){
 vector&lt;int&gt; vec1 = [10,20,30,40,50];
 printf(vec1.size()+&quot;&quot;);
+vec1.remove(0);
+printf(vec1.size()+&quot;&quot;);
 }
 
 //Fin de sentencias</string>
