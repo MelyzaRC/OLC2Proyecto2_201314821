@@ -70,6 +70,7 @@ value operation::traducir(environment *env, asttree *tree, generator_code *gen){
     std::string tmpTraduccion = "";
     std::string newTemp = gen->newTemp();
 
+    gen->AddComment("Calificacion 2");
     //EVALUANDO LA SUMA
     if(Operator == "+")
     {

@@ -53,12 +53,16 @@ void instruction_vector_remove::traducir(environment *env, asttree *tree, genera
             gen->AddLabel(L3);
             gen->AddComment("Remove =============");
             gen->AddAssign(tNuevoVector, "H");
+            std::string posInicial2 = gen->newTemp();
+            gen->AddAssign(posInicial2,std::to_string(symVector.Posicion));
             //recorrer y cuando se encuentre con t1 solo ignorar
             gen->AddAssign(t5,t1);
             //en t5 tengo la pos del heap del vector
             gen->AddAssign(t6,"0");
             //en t6 tengo el contador index
             gen->AddLabel(L7);
+            std::string tmpA = gen->newTemp();
+            gen->AddExpression(tmpA, posInicial2,t6,"+");
             gen->AddIf(t5,t6,"==",L5); // es el indice
             gen->AddGoto(L6);//no es el indice
 
@@ -68,7 +72,7 @@ void instruction_vector_remove::traducir(environment *env, asttree *tree, genera
             gen->AddGoto(L7);
             //NO ES EL INDICE
             gen->AddLabel(L6);
-            gen->AddAssign(t7,"heap[(int)"+t6+"]");
+            gen->AddAssign(t7,"heap[(int)"+tmpA+"]");
             gen->AddIf(t7,"-6","==",L8);
             gen->AddAssign("heap[(int)H]",t7);
             gen->AddExpression("H","H","1","+");
@@ -79,7 +83,9 @@ void instruction_vector_remove::traducir(environment *env, asttree *tree, genera
             gen->AddSetHeap("(int)H","-6");
             gen->AddExpression("H","H","1","+");
             gen->AddSetStack(std::to_string(symVector.Posicion),tNuevoVector);
-            env->saveSize(this->id, symVector.size-1);
+            symVector.size -= 1;
+            env->saveSize(this->id, symVector.size);
+            env->ModificarVariable(symVector,this->id);
             gen->AddGoto(L4);
             //Aqui viene cuando no esta dentro del rango
             gen->AddLabel(L2);

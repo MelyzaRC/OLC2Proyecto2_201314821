@@ -39,7 +39,7 @@ value vector_access::traducir(environment *env, asttree *tree, generator_code *g
             gen->AddGoto(L2);
 
             gen->AddLabel(L3);
-            gen->AddAssign(t3,std::to_string(symVector.Posicion));
+            gen->AddAssign(t3,"stack["+std::to_string(symVector.Posicion)+"]");
             gen->AddExpression(t3,t3,t1,"+");
             //posicion del heap donde se encuentra el valor
 
